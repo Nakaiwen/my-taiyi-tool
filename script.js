@@ -2397,7 +2397,7 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
         const monthSelect = document.getElementById('birth-month');
         const daySelect = document.getElementById('birth-day');
         const hourSelect = document.getElementById('birth-hour');
-        for (let i = 2030; i >= 1930; i--) { const option = document.createElement('option'); option.value = i; option.textContent = i; yearSelect.appendChild(option); }
+        for (let i = 2050; i >= 1930; i--) { const option = document.createElement('option'); option.value = i; option.textContent = i; yearSelect.appendChild(option); }
         for (let i = 1; i <= 12; i++) { const option = document.createElement('option'); option.value = i; option.textContent = i; monthSelect.appendChild(option); }
         for (let i = 1; i <= 31; i++) { const option = document.createElement('option'); option.value = i; option.textContent = i; daySelect.appendChild(option); }
         for (let i = 0; i <= 23; i++) { const option = document.createElement('option'); option.value = i; option.textContent = i; hourSelect.appendChild(option); }
