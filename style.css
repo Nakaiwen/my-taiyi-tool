@@ -75,7 +75,7 @@
     }
     /* 太乙、文昌、始擊 的專屬樣式 */
     .main-star-style {
-        font-size: 15px;  
+        font-size: 14px;  
         fill: #680000;  
         font-weight: bold;
     }
@@ -88,14 +88,14 @@
 
     /* 「小遊」的專屬樣式 */
     .xiaoyou-style {
-        font-size: 15px;
+        font-size: 14px;
         fill: #d16a03;
         font-weight: bold;
     }
 
     /* 「大遊」的專屬樣式 */
     .dayou-style {
-    font-size: 15px;
+    font-size: 14px;
     fill: #d16a03;
     font-weight: bold;
     }
