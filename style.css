@@ -114,6 +114,13 @@
     font-weight: bold;
     }
 
+    /* --- 「皇恩星」的專屬樣式 --- */
+    .huang-en-style {
+    font-size: 14px;    /* 【可調整】設定字體大小 */
+    fill: #DAA520;      /* 【可調整】設定字體顏色 (此為金色 GoldenRod) */
+    font-weight: bold;
+    }
+
 
     /* 圓心特殊宮位的文字樣式 */
     .center-info-style {
@@ -123,7 +130,14 @@
     text-anchor: middle;  
     }
 
-    /* --- 新增：用於凸顯星曜的圓圈樣式 --- */
+    /* 主客定算屬性文字樣式 */
+    .suan-attribute-style {
+    color: #6c757d; /* 設定一個中性的灰色，您可以改成任何您喜歡的顏色 */
+    font-size: 11px; /* 讓屬性文字比數字稍小一些，以示區別 */
+    font-family: sans-serif; /* 建議使用一般黑體，讓註解文字更清晰 */
+    }
+
+    /* 用於凸顯星曜的圓圈樣式 */
     .highlight-circle {
     fill: none;           /* 圓圈內部透明 */
     stroke: #fe7700;      /* 圓圈邊框顏色 (您圖片中的橘紅色) */

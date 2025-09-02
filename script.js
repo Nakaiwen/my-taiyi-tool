@@ -1432,7 +1432,7 @@ document.addEventListener('DOMContentLoaded', () => {
         '卯': { fuXing: ['臣基', '始擊'] }, '未': { fuXing: ['臣基', '始擊'] }, '亥': { fuXing: ['臣基', '始擊'] }
     };
 
-    // ▼▼▼ 新增：行年歲數的規則資料庫 ▼▼▼
+    // ▼▼▼ 行年歲數的規則資料庫 ▼▼▼
     // 1. 男命 1-60 歲的行年干支 (順時鐘)
     const XINGNIAN_GANZHI_MALE = [
         '丙寅', '丁卯', '戊辰', '己巳', '庚午', '辛未', '壬申', '癸酉', '甲戌', '乙亥',
@@ -1451,6 +1451,57 @@ document.addEventListener('DOMContentLoaded', () => {
         '壬辰', '辛卯', '庚寅', '己丑', '戊子', '丁亥', '丙戌', '乙酉', '甲戌', '癸未',
         '壬午', '辛巳', '庚辰', '己卯', '戊寅', '丁丑', '丙子', '乙亥', '甲申', '癸酉'
     ];
+
+    // ▼▼▼ 主算、客算、定算數字的屬性列表 ▼▼▼
+    const SUAN_ATTRIBUTE_DATA = {
+        '1': '雜陽數、短數、無天之數、無地之數',
+        '2': '純陰數、短數、無天之數、無地之數',
+        '3': '純陽數、短數、無天之數、無地之數',
+        '4': '雜陰數、短數、無天之數、無地之數',
+        '5': '短數、杜塞無門、無天之數',
+        '6': '純陰數、短數、無天之數',
+        '7': '雜陽數、短數、無天之數',
+        '8': '雜陰數、短數、無天之數',
+        '9': '純陽數、短數、無天之數',
+        '10': '單陽數、無人之數',
+        '11': '陰中重陽數、孤陽數、無地之數',
+        '12': '下合之數、無地之數',
+        '13': '雜重陽數、孤陽數、無地之數',
+        '14': '上合之數、無地之數',
+        '15': '杜塞無門',
+        '16': '下合之數、三才數',
+        '17': '陰中重陽數、三才數',
+        '18': '上合之數、三才數',
+        '19': '雜重陽數、三才數',
+        '20': '單陰數、無人之數',
+        '21': '下合之數、無地之數',
+        '22': '重陰數、無地之數',
+        '23': '次合之數、無地之數',
+        '24': '雜重陰數、孤陰數、無地之數',
+        '25': '杜塞無門',
+        '26': '重陰數、三才數',
+        '27': '下合之數、三才數',
+        '28': '雜重陰數、三才數',
+        '29': '次合之數、三才數',
+        '30': '單陽數、無人之數',
+        '31': '雜重陽數、無地之數',
+        '32': '次合之數、無地之數',
+        '33': '重陽數、無地之數',
+        '34': '下合之數、無地之數',
+        '35': '杜塞無門',
+        '36': '次合之數、三才數',
+        '37': '雜重陽、孤陽數、三才數',
+        '38': '下合之數、三才數',
+        '39': '重陽數、三才數',
+        '40': '單陰數、無人之數'
+    };
+
+    // ▼▼▼ 皇恩星的規則資料庫 ▼▼▼
+    const HUANG_EN_RULES = {
+        '子': '申', '丑': '巳', '寅': '寅', '卯': '亥',
+        '辰': '申', '巳': '巳', '午': '寅', '未': '亥',
+        '申': '申', '酉': '巳', '戌': '寅', '亥': '亥'
+    };
 
 
 
@@ -1608,7 +1659,6 @@ function addCenterText(text, coords, className) {
 
 // --- 繪圖主函式 (最終整理版) ---
 function renderChart(mainData, palacesData, agesData, sdrData, centerData, outerRingData, xingNianData) {
-console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData); // <-- 新增這一行
         clearDynamicData();
         if (outerRingData) {
             const ringConfig = RADIAL_LAYOUT.outerRing;
@@ -1661,8 +1711,8 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
             if (pData.lineRight) {
                 const getLineRightClass = (starName) => {
                     if (['天乙', '地乙', '四神', '飛符'].includes(starName)) return 'celestial-messenger-style';
-                    return 'deity-style';
-                };
+                    if (starName === '皇恩星') return 'huang-en-style'; return 'deity-style';
+                }; 
                 if (pData.lineRight.fieldE) addRadialText(angleRight, RADIAL_LAYOUT.radii.lineRight.fieldE, pData.lineRight.fieldE, getLineRightClass(pData.lineRight.fieldE));
                 if (pData.lineRight.fieldF) addRadialText(angleRight, RADIAL_LAYOUT.radii.lineRight.fieldF, pData.lineRight.fieldF, getLineRightClass(pData.lineRight.fieldF));
                 if (pData.lineRight.fieldE2) addRadialText(angleRight, RADIAL_LAYOUT.radii.lineRight.fieldE2, pData.lineRight.fieldE2, getLineRightClass(pData.lineRight.fieldE2));
@@ -1683,8 +1733,8 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
      if (mainData && mainData.guiRenData) {
          addRotatedRingText(mainData.guiRenData, RADIAL_LAYOUT.guiRenRing);}
 
-    // ▼▼▼ 新增：繪製行年歲數 ▼▼▼
-        if (xingNianData) {
+    // ▼▼▼ 繪製行年歲數 ▼▼▼
+    if (xingNianData) {
             // 1. 準備一份嚴格按照「子丑寅卯...」順序排列的歲數資料陣列
             const ageDataForRing = VALID_PALACES_CLOCKWISE.map(palaceId => {
                 // 如果該宮位有歲數資料，就將其組合成字串，否則為空字串
@@ -1700,7 +1750,7 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
             
             // 3. 呼叫正確的繪圖函式
             addRotatedRingText(ageDataForRing, xingNianRingConfig);
-        }
+    }
 }
     
 
@@ -1953,8 +2003,6 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
         }
         return null;
     }
-    
-    // ▼▼▼ 計算「月將十二神」位置的函式 (最終修正版) ▼▼▼
     function calculateYueJiang(solarDate, hourBranch) {
 
         // --- 步驟 1: 根據「節氣期間」找出正確的起始月將 ---
@@ -2000,7 +2048,7 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
 
         return result;
     }
-
+    // ▼▼▼ 計算「八門」位置的函式▼▼▼
     function calculateOuterRingData(bureauResult, hourJishu, lookupResult) {
     // 安全檢查：如果缺少必要的資料，則不顯示八門
     if (!bureauResult || !hourJishu || !lookupResult || !lookupResult.太乙) {
@@ -2048,7 +2096,7 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
 
     return finalGates;
     }
-
+    // ▼▼▼ 計算「貴人十二神」位置的函式▼▼▼
     function calculateGuiRen(dayGan, hourBranch, yueJiangData) {
         const result = new Array(12).fill("");
         if (!dayGan || !hourBranch || !yueJiangData || yueJiangData.length === 0) {
@@ -2100,8 +2148,12 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
         const drawingPalaceOrder = RADIAL_LAYOUT.guiRenRing.palaces.map(pId => PALACE_ID_TO_BRANCH[pId]);
         return drawingPalaceOrder.map(zhi => finalResult[solarLunar.zhi.indexOf(zhi)] || "");
     }
-
-    // ▼▼▼ 新增：計算行年歲數與干支的函式 ▼▼▼
+    // ▼▼▼ 新增：計算「皇恩星」位置的函式 ▼▼▼
+    function calculateHuangEn(dayBranch) {
+        if (!dayBranch) return null;
+        return HUANG_EN_RULES[dayBranch] || null;
+    } 
+    // ▼▼▼ 計算行年歲數與干支的函式 ▼▼▼
     function calculateXingNian(gender, startAge, endAge) {
         const result = {};
         VALID_PALACES_CLOCKWISE.forEach(palaceId => {
@@ -2129,7 +2181,6 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
         }
         return result;
     }
-
     // ▼▼▼ 計算所有年日化曜結果的函式 ▼▼▼
     function calculateAllHuaYao(yearStem, dayStem, dayBranch) {
         const results = {};
@@ -2167,9 +2218,8 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
 
         return results;
     }
-
     // ▼▼▼ 每次增加星都要更新的函式 ▼▼▼
-    function generateMainChartData(lookupResult, deitiesResult, suanStarsResult, shiWuFuResult, xiaoYouResult, junJiResult, chenJiResult, minJiResult, tianYiResult, diYiResult, siShenResult, feiFuResult, daYouResult, yueJiangData, guiRenData, xingNianData) {
+    function generateMainChartData(lookupResult, deitiesResult, suanStarsResult, shiWuFuResult, xiaoYouResult, junJiResult, chenJiResult, minJiResult, tianYiResult, diYiResult, siShenResult, feiFuResult, daYouResult, yueJiangData, guiRenData, xingNianData, huangEnResult) {
     const chartData = {};
     const allPalaceKeys = Object.keys(RADIAL_LAYOUT.angles);
     allPalaceKeys.forEach(key => {
@@ -2298,7 +2348,6 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
             '臣基': chenJiResult,
             '民基': minJiResult
     };
-
     const jiStarsByPalace = {};
     for (const starName in jiStars) {
             const palaceBranch = jiStars[starName];
@@ -2312,7 +2361,6 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
                 }
             }
     }
-
     const centerFields = ['fieldC', 'fieldD', 'fieldC2', 'fieldD2'];
     for (const palaceId in jiStarsByPalace) {
             if (chartData[palaceId]) {
@@ -2334,7 +2382,6 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
             '四神': siShenResult,
             '飛符': feiFuResult
     };
-
     const messengerStarsByPalace = {};
     for (const starName in messengerStars) {
             const palaceBranch = messengerStars[starName];
@@ -2348,7 +2395,6 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
                 }
             }
     }
-
     const rightFields = ['fieldE', 'fieldF', 'fieldE2', 'fieldF2'];
     for (const palaceId in messengerStarsByPalace) {
             if (chartData[palaceId]) {
@@ -2362,6 +2408,21 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
                     }
                 });
             }
+    }
+
+    // ▼▼▼ 新增：處理「皇恩星」 ▼▼▼
+    if (huangEnResult) {
+        const palaceId = BRANCH_TO_PALACE_ID[huangEnResult];
+        if (palaceId && chartData.palaces[palaceId]) {
+            // 尋找 lineRight 中第一個空的欄位來放入
+            const fields = ['fieldE', 'fieldF', 'fieldE2', 'fieldF2'];
+            for (const field of fields) {
+                if (!chartData.palaces[palaceId].lineRight[field]) {
+                    chartData.palaces[palaceId].lineRight[field] = '皇恩星';
+                    break;
+                }
+            }
+        }
     }
         
     // 處理「大遊」
@@ -2433,17 +2494,18 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
         parseInt(dataForCalculation.birthDate.split('/')[2], 10),hour);
         const yueJiangData = calculateYueJiang(lunarDateForYueJiang, dataForCalculation.hourPillar.charAt(1));
         const outerRingData = calculateOuterRingData(bureauResult, dataForCalculation.hourJishu, lookupResult);
-        const guiRenData = calculateGuiRen(dataForCalculation.dayPillar.charAt(0), dataForCalculation.hourPillar.charAt(1), yueJiangData);  
+        const guiRenData = calculateGuiRen(dataForCalculation.dayPillar.charAt(0), dataForCalculation.hourPillar.charAt(1), yueJiangData);
+        huangEnResult = calculateHuangEn(dataForCalculation.dayPillar.charAt(1));
 
-
-        // ▼▼▼ 這邊有另外加上月將跟貴人資料 ▼▼▼
+        // ▼▼▼ 這邊有新增新星都要增加，注意要寫成dataForCalculation ▼▼▼
         const newMainChartData = generateMainChartData(
             lookupResult,
             dataForCalculation.deitiesResult, dataForCalculation.suanStarsResult,
             dataForCalculation.shiWuFuResult, dataForCalculation.xiaoYouResult,
             dataForCalculation.junJiResult, dataForCalculation.chenJiResult, dataForCalculation.minJiResult,
             dataForCalculation.tianYiResult, dataForCalculation.diYiResult, dataForCalculation.siShenResult, dataForCalculation.feiFuResult,
-            dataForCalculation.daYouResult, yueJiangData, guiRenData);
+            dataForCalculation.daYouResult, yueJiangData, guiRenData, dataForCalculation.huangEnResult);
+
         const centerData = {
              field1: dataForCalculation.suanStarsResult.centerStars[0] || '',
              field2: dataForCalculation.suanStarsResult.centerStars[1] || '',
@@ -2457,9 +2519,17 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
         const shenPalaceBranch = shenPalaceId ? PALACE_ID_TO_BRANCH[shenPalaceId] : '計算失敗';
         const huaYaoResults = calculateAllHuaYao(dataForCalculation.yearPillar.charAt(0), dataForCalculation.dayPillar.charAt(0), dataForCalculation.dayPillar.charAt(1))
 
-        let outputText = `\n  局數  ： ${bureauResult}\n  命宮  ： ${lifePalaceId ? PALACE_ID_TO_BRANCH[lifePalaceId] + '宮' : '計算失敗'}\n  身宮  ： ${shenPalaceBranch}宮`;
+        let outputText = `\n  局數 : ${bureauResult}\n  命宮 : ${lifePalaceId ? PALACE_ID_TO_BRANCH[lifePalaceId] + '宮' : '計算失敗'}\n  身宮 : ${shenPalaceBranch}宮`;
         if (lookupResult) {
-            outputText += `\n  主算  ： ${lookupResult.主算}\n  客算  ： ${lookupResult.客算}\n  定算  ： ${lookupResult.定算}`;
+            // 從資料庫中查找每個算數對應的屬性文字
+            const zhuSuanAttr = SUAN_ATTRIBUTE_DATA[lookupResult.主算] || '';
+            const keSuanAttr = SUAN_ATTRIBUTE_DATA[lookupResult.客算] || '';
+            const dingSuanAttr = SUAN_ATTRIBUTE_DATA[lookupResult.定算] || '';
+
+            // 在數字後面，加上帶有新 class 的 <span> 標籤來顯示屬性
+            outputText += `\n  主算 : ${lookupResult.主算} <span class="suan-attribute-style">(${zhuSuanAttr})</span>`;
+            outputText += `\n  客算 : ${lookupResult.客算} <span class="suan-attribute-style">(${keSuanAttr})</span>`;
+            outputText += `\n  定算 : ${lookupResult.定算} <span class="suan-attribute-style">(${dingSuanAttr})</span>`;
         }
         if (huaYaoResults && huaYaoResults.nianGan) {
             outputText += `\n\n年干化曜：\n  天元官星: ${huaYaoResults.nianGan.tianYuan}\n  干元星: ${huaYaoResults.nianGan.ganYuan}\n  父母星: ${huaYaoResults.nianGan.fuMu}`;
@@ -2484,56 +2554,49 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
         const day = parseInt(document.getElementById('birth-day').value, 10);
         const hour = parseInt(document.getElementById('birth-hour').value, 10);
 
-        // 2. 計算使用者的「當前實歲」
-        const today = new Date();
-        let currentUserAge = today.getFullYear() - year;
-        // 如果今年的生日還沒過，就減一歲
-        if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) {
-            currentUserAge--;
-        }
-
-        // 3. 根據當前實歲，決定要顯示的年齡範圍
-        const startAge = currentUserAge - 20;
-        const endAge = currentUserAge + 40;
-
         // 步驟 2: 呼叫萬年曆，建立日期物件並自動計算四柱
         const lunarDate = solarLunar.solar2lunar(year, month, day, hour);
-
         const yearPillar = lunarDate.getYearInGanZhi();
         const monthPillar = lunarDate.getMonthInGanZhi();
         const dayPillar = lunarDate.getDayInGanZhi();
         const hourPillar = lunarDate.getTimeInGanZhi();
         
-        // 將年柱拆分並填入
         document.getElementById('year-pillar-stem').textContent = yearPillar.charAt(0);
         document.getElementById('year-pillar-branch').textContent = yearPillar.charAt(1);
-
-        // 將月柱拆分並填入
         document.getElementById('month-pillar-stem').textContent = monthPillar.charAt(0);
         document.getElementById('month-pillar-branch').textContent = monthPillar.charAt(1);
-
-        // 將日柱拆分並填入
         document.getElementById('day-pillar-stem').textContent = dayPillar.charAt(0);
         document.getElementById('day-pillar-branch').textContent = dayPillar.charAt(1);
-
-        // 將時柱拆分並填入
         document.getElementById('hour-pillar-stem').textContent = hourPillar.charAt(0);
         document.getElementById('hour-pillar-branch').textContent = hourPillar.charAt(1);
         
+        
+        // 步驟 3: 準備一個物件，包含所有後續計算需要的資料
         const dataForCalculation = {
             birthDate: `${year}/${month}/${day}`,
             gender: document.querySelector('input[name="gender"]:checked').value === 'male' ? '男' : '女',
-            yearPillar: yearPillar,
-            monthPillar: monthPillar,
-            dayPillar: dayPillar,
-            hourPillar: hourPillar,
+            yearPillar: lunarDate.getYearInGanZhi(),
+            monthPillar: lunarDate.getMonthInGanZhi(),
+            dayPillar: lunarDate.getDayInGanZhi(),
+            hourPillar: lunarDate.getTimeInGanZhi(),
             dayJishu: dayJishuInput.value.trim(),
             hourJishu: hourJishuInput.value.trim()
         };
+
+        // 2. 計算使用者的「當前實歲」
+        const today = new Date();
+        let currentUserAge = today.getFullYear() - year;
+        if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) {
+        currentUserAge--;
+        }
+        const startAge = currentUserAge - 20;
+        const endAge = currentUserAge + 40;
+
         
         // 步驟 4: 執行所有安星計算，並將結果打包到一個物件中，這邊的函式要用等於
         const bureauResult = calculateBureau(dataForCalculation.birthDate, dataForCalculation.hourJishu);
         const lookupResult = lookupBureauData(bureauResult);
+        
         dataForCalculation.deitiesResult = calculateDeities(bureauResult, dataForCalculation.hourPillar.charAt(1));
         dataForCalculation.suanStarsResult = calculateSuanStars(lookupResult);
         dataForCalculation.shiWuFuResult = calculateShiWuFu(dataForCalculation.hourJishu);
@@ -2546,8 +2609,9 @@ console.log('[歲數偵錯] renderChart 收到的 xingNianData:', xingNianData);
         dataForCalculation.siShenResult = calculateSiShen(dataForCalculation.hourJishu);
         dataForCalculation.feiFuResult = calculateFeiFu(dataForCalculation.hourJishu);
         dataForCalculation.daYouResult = calculateDaYou(dataForCalculation.hourJishu);
-        xingNianData = calculateXingNian(dataForCalculation.gender, startAge, endAge)
-
+        xingNianData = calculateXingNian(dataForCalculation.gender, startAge, endAge);
+        dataForCalculation.huangEnResult = calculateHuangEn(dataForCalculation.dayPillar.charAt(1))
+      
         runCalculation(dataForCalculation, hour);
     });
 
