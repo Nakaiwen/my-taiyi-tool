@@ -121,6 +121,13 @@
     font-weight: bold;
     }
 
+    /* 「陽九限」的專屬樣式 */
+    .yang-jiu-style {
+    font-size: 11px;      /* 字體大小 */
+    fill: #006ddbff;      /* 字體顏色 (範例為藍色，可自行修改) */
+    font-weight: bold;
+    }
+
 
     /* 圓心特殊宮位的文字樣式 */
     .center-info-style {

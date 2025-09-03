@@ -33,7 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
         yueJiangRing: { radius: 293, rotationOffset: 5, palaces: ['pZi','pHai','pXu','pYou','pShen','pWei','pWu','pSi','pChen','pMao','pYin','pChou'], flipPalaces: ['pHai','pSi','pXu','pYou','pShen'], color: '#501dd3' },
         guiRenRing: { radius: 293, rotationOffset: -5, palaces: ['pZi','pChou','pYin','pMao','pChen','pSi','pWu','pWei','pShen','pYou','pXu','pHai'], flipPalaces: ['pZi','pHai','pSi','pXu','pYou','pWu','pShen'], color: '#ae00ff' },
         outerRing: { radius: 250, palaces: ['pZi', 'pGen', 'pMao', 'pXun', 'pWu', 'pKun', 'pYou', 'pQian']},
-        xingNianRing: { radius: 270, flipPalaces: ['pZi', 'pHai', 'pXu', 'pYou', 'pShen', 'pSi']} 
+        xingNianRing: { radius: 270, flipPalaces: ['pZi', 'pHai', 'pXu', 'pYou', 'pShen', 'pSi']},
+        // ▼▼▼ 陽九大限 ▼▼▼
+        yangJiuRing: { radius: 314, rotationOffset: 6, className: 'yang-jiu-style', flipPalaces: ['pZi', 'pHai', 'pXu', 'pYou', 'pShen', 'pSi'] } 
     };
 
     // ▼▼▼ 144局的完整資料庫 ▼▼▼
@@ -1503,6 +1505,15 @@ document.addEventListener('DOMContentLoaded', () => {
         '申': '申', '酉': '巳', '戌': '寅', '亥': '亥'
     };
 
+    // ▼▼▼ 陽九大限的規則資料庫 ▼▼▼
+    const YANG_JIU_RULES = {
+    '甲': { startBranch: '午', firstAge: 5 }, '己': { startBranch: '午', firstAge: 5 },
+    '乙': { startBranch: '巳', firstAge: 4 }, '庚': { startBranch: '巳', firstAge: 4 },
+    '丙': { startBranch: '申', firstAge: 1 }, '辛': { startBranch: '申', firstAge: 1 },
+    '丁': { startBranch: '亥', firstAge: 3 }, '壬': { startBranch: '亥', firstAge: 3 },
+    '戊': { startBranch: '寅', firstAge: 2 }, '癸': { startBranch: '寅', firstAge: 2 }
+    };
+
 
 
 // =================================================================
@@ -1658,7 +1669,7 @@ function addCenterText(text, coords, className) {
 }
 
 // --- 繪圖主函式 (最終整理版) ---
-function renderChart(mainData, palacesData, agesData, sdrData, centerData, outerRingData, xingNianData) {
+function renderChart(mainData, palacesData, agesData, sdrData, centerData, outerRingData, xingNianData, yangJiuData) {
         clearDynamicData();
         if (outerRingData) {
             const ringConfig = RADIAL_LAYOUT.outerRing;
@@ -1750,6 +1761,37 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             
             // 3. 呼叫正確的繪圖函式
             addRotatedRingText(ageDataForRing, xingNianRingConfig);
+    }
+
+    // ▼▼▼ 新增：繪製陽九限 (採用 rotationOffset 的新寫法) ▼▼▼
+    if (yangJiuData && yangJiuData.palaceId) {
+        const config = RADIAL_LAYOUT.yangJiuRing; // 直接從第一區讀取設定
+        const palaceId = yangJiuData.palaceId;
+        const text = yangJiuData.text;
+
+        // 從設定檔讀取 rotationOffset，如果沒有就預設為 0
+        const rotationOffset = config.rotationOffset || 0;
+        const angle = RADIAL_LAYOUT.angles[palaceId] + rotationOffset; // 將偏移量加到角度上
+
+        // (後面的繪圖邏輯和之前一樣)
+        const angleRad = angle * (Math.PI / 180);
+        const x = RADIAL_LAYOUT.center.x + config.radius * Math.cos(angleRad);
+        const y = RADIAL_LAYOUT.center.y + config.radius * Math.sin(angleRad);
+
+        let rotation = angle + 90;
+        if (angle > 90 && angle < 270) { rotation = angle - 90; }
+        if (config.flipPalaces.includes(palaceId)) { rotation += 180; }
+        
+        const textElement = document.createElementNS(SVG_NS, 'text');
+        textElement.setAttribute('x', x);
+        textElement.setAttribute('y', y);
+        textElement.setAttribute('text-anchor', 'middle');
+        textElement.setAttribute('dominant-baseline', 'central');
+        textElement.setAttribute('class', `dynamic-text ${config.className}`);
+        textElement.setAttribute('style', 'writing-mode: horizontal-tb;');
+        textElement.setAttribute('transform', `rotate(${rotation}, ${x}, ${y})`);
+        textElement.textContent = text;
+        dynamicGroup.appendChild(textElement);
     }
 }
     
@@ -2218,6 +2260,45 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
 
         return results;
     }
+    // ▼▼▼ 計算「陽九限」的函式 ▼▼▼
+    function calculateYangJiu(monthStem, gender, currentUserAge) {
+    const rule = YANG_JIU_RULES[monthStem];
+    if (!rule) return null; // 如果找不到規則，則返回
+
+    const { startBranch, firstAge } = rule;
+    const direction = (gender === '男') ? 1 : -1; // 男順時鐘(1), 女逆時鐘(-1)
+    const startPalaceIndex = EARTHLY_BRANCHES.indexOf(startBranch);
+
+    let currentPalaceIndex;
+    let ageRangeText;
+
+    if (currentUserAge <= firstAge) {
+        // 年齡在第一區間
+        currentPalaceIndex = startPalaceIndex;
+        ageRangeText = `1-${firstAge}`;
+    } else {
+        // 年齡超過第一區間
+        const ageAfterFirst = currentUserAge - firstAge;
+        // 計算需要走幾步 (每10年一步)
+        const steps = Math.floor((ageAfterFirst - 1) / 10);
+        
+        // 計算目標宮位的索引
+        currentPalaceIndex = (startPalaceIndex + (steps + 1) * direction + 144) % 12;
+        
+        // 計算目標宮位的年齡範圍
+        const ageRangeStart = firstAge + (steps * 10) + 1;
+        const ageRangeEnd = ageRangeStart + 9;
+        ageRangeText = `${ageRangeStart}-${ageRangeEnd}`;
+    }
+
+    const palaceId = BRANCH_TO_PALACE_ID[EARTHLY_BRANCHES[currentPalaceIndex]];
+    
+    return {
+        palaceId: palaceId,
+        text: `陽九${ageRangeText}`
+    };
+    }
+
     // ▼▼▼ 每次增加星都要更新的函式 ▼▼▼
     function generateMainChartData(lookupResult, deitiesResult, suanStarsResult, shiWuFuResult, xiaoYouResult, junJiResult, chenJiResult, minJiResult, tianYiResult, diYiResult, siShenResult, feiFuResult, daYouResult, yueJiangData, guiRenData, xingNianData, huangEnResult) {
     const chartData = {};
@@ -2444,9 +2525,11 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
 
     // 將貴人資料附加到 chartData 物件上 ▼▼▼
     chartData.guiRenData = guiRenData;
+
         
     return chartData;
     }
+    
 
 
     // =================================================================
@@ -2512,7 +2595,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
              field4: dataForCalculation.suanStarsResult.centerStars[3] || ''
         };
 
-        renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData); 
+        renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData, dataForCalculation.yangJiuResult, dataForCalculation.yangJiuResult); 
 
         const shenPalaceId = Object.keys(newSdrData).find(k => newSdrData[k].includes('身'));
         const shenPalaceBranch = shenPalaceId ? PALACE_ID_TO_BRANCH[shenPalaceId] : '計算失敗';
@@ -2603,8 +2686,9 @@ calculateBtn.addEventListener('click', () => {
     dataForCalculation.siShenResult = calculateSiShen(dataForCalculation.hourJishu);
     dataForCalculation.feiFuResult = calculateFeiFu(dataForCalculation.hourJishu);
     dataForCalculation.daYouResult = calculateDaYou(dataForCalculation.hourJishu);
-    const xingNianData = calculateXingNian(dataForCalculation.gender, startAge, endAge); // <-- 注意這裡
-    dataForCalculation.huangEnResult = calculateHuangEn(dataForCalculation.dayPillar.charAt(1))
+    const xingNianData = calculateXingNian(dataForCalculation.gender, startAge, endAge); 
+    dataForCalculation.huangEnResult = calculateHuangEn(dataForCalculation.dayPillar.charAt(1));
+    dataForCalculation.yangJiuResult = calculateYangJiu(dataForCalculation.monthPillar.charAt(0), dataForCalculation.gender, currentUserAge)
   
     // ▼▼▼ 修正點3: 將 xingNianData 作為參數傳入 ▼▼▼
     runCalculation(dataForCalculation, hour, xingNianData); 
