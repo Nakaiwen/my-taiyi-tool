@@ -2410,15 +2410,14 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             }
     }
 
-    // ▼▼▼ 新增：處理「皇恩星」 ▼▼▼
+    // ▼▼▼ 新增：處理「皇恩星」 (已修正筆誤) ▼▼▼
     if (huangEnResult) {
         const palaceId = BRANCH_TO_PALACE_ID[huangEnResult];
-        if (palaceId && chartData.palaces[palaceId]) {
-            // 尋找 lineRight 中第一個空的欄位來放入
+        if (palaceId && chartData[palaceId]) { // <-- 修正點：移除多餘的 .palaces
             const fields = ['fieldE', 'fieldF', 'fieldE2', 'fieldF2'];
             for (const field of fields) {
-                if (!chartData.palaces[palaceId].lineRight[field]) {
-                    chartData.palaces[palaceId].lineRight[field] = '皇恩星';
+                if (!chartData[palaceId].lineRight[field]) { // <-- 修正點：移除多餘的 .palaces
+                    chartData[palaceId].lineRight[field] = '皇恩星'; // <-- 修正點：移除多餘的 .palaces
                     break;
                 }
             }
@@ -2478,7 +2477,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         hourJishuInput.value = '136978272';
     }
 
-    function runCalculation(dataForCalculation, hour) {
+    function runCalculation(dataForCalculation, hour, xingNianData) { // <-- 修正點1: 接收 xingNianData
         const bureauResult = calculateBureau(dataForCalculation.birthDate, dataForCalculation.hourJishu);
         const lookupResult = lookupBureauData(bureauResult);
         const yearStem = dataForCalculation.yearPillar.charAt(0);
@@ -2497,14 +2496,14 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         const guiRenData = calculateGuiRen(dataForCalculation.dayPillar.charAt(0), dataForCalculation.hourPillar.charAt(1), yueJiangData);
         huangEnResult = calculateHuangEn(dataForCalculation.dayPillar.charAt(1));
 
-        // ▼▼▼ 這邊有新增新星都要增加，注意要寫成dataForCalculation ▼▼▼
+        // ▼▼▼ 這邊有新增新星都要增加，注意要寫成dataForCalculation，這個函式是「建築師」 ▼▼▼
         const newMainChartData = generateMainChartData(
             lookupResult,
             dataForCalculation.deitiesResult, dataForCalculation.suanStarsResult,
             dataForCalculation.shiWuFuResult, dataForCalculation.xiaoYouResult,
             dataForCalculation.junJiResult, dataForCalculation.chenJiResult, dataForCalculation.minJiResult,
             dataForCalculation.tianYiResult, dataForCalculation.diYiResult, dataForCalculation.siShenResult, dataForCalculation.feiFuResult,
-            dataForCalculation.daYouResult, yueJiangData, guiRenData, dataForCalculation.huangEnResult);
+            dataForCalculation.daYouResult, yueJiangData, guiRenData, xingNianData, dataForCalculation.huangEnResult);
 
         const centerData = {
              field1: dataForCalculation.suanStarsResult.centerStars[0] || '',
@@ -2547,73 +2546,69 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         summaryP.innerHTML = outputText;
     }
 
-    calculateBtn.addEventListener('click', () => {
-        // 步驟 1: 從介面獲取最原始的輸入資料
-        const year = parseInt(document.getElementById('birth-year').value, 10);
-        const month = parseInt(document.getElementById('birth-month').value, 10);
-        const day = parseInt(document.getElementById('birth-day').value, 10);
-        const hour = parseInt(document.getElementById('birth-hour').value, 10);
+    // (這個calculateBtn.addEventListener 函式就是工廠老闆, runCalculation是老師傅)
+calculateBtn.addEventListener('click', () => {
+    const year = parseInt(document.getElementById('birth-year').value, 10);
+    const month = parseInt(document.getElementById('birth-month').value, 10);
+    const day = parseInt(document.getElementById('birth-day').value, 10);
+    const hour = parseInt(document.getElementById('birth-hour').value, 10);
 
-        // 步驟 2: 呼叫萬年曆，建立日期物件並自動計算四柱
-        const lunarDate = solarLunar.solar2lunar(year, month, day, hour);
-        const yearPillar = lunarDate.getYearInGanZhi();
-        const monthPillar = lunarDate.getMonthInGanZhi();
-        const dayPillar = lunarDate.getDayInGanZhi();
-        const hourPillar = lunarDate.getTimeInGanZhi();
-        
-        document.getElementById('year-pillar-stem').textContent = yearPillar.charAt(0);
-        document.getElementById('year-pillar-branch').textContent = yearPillar.charAt(1);
-        document.getElementById('month-pillar-stem').textContent = monthPillar.charAt(0);
-        document.getElementById('month-pillar-branch').textContent = monthPillar.charAt(1);
-        document.getElementById('day-pillar-stem').textContent = dayPillar.charAt(0);
-        document.getElementById('day-pillar-branch').textContent = dayPillar.charAt(1);
-        document.getElementById('hour-pillar-stem').textContent = hourPillar.charAt(0);
-        document.getElementById('hour-pillar-branch').textContent = hourPillar.charAt(1);
-        
-        
-        // 步驟 3: 準備一個物件，包含所有後續計算需要的資料
-        const dataForCalculation = {
-            birthDate: `${year}/${month}/${day}`,
-            gender: document.querySelector('input[name="gender"]:checked').value === 'male' ? '男' : '女',
-            yearPillar: lunarDate.getYearInGanZhi(),
-            monthPillar: lunarDate.getMonthInGanZhi(),
-            dayPillar: lunarDate.getDayInGanZhi(),
-            hourPillar: lunarDate.getTimeInGanZhi(),
-            dayJishu: dayJishuInput.value.trim(),
-            hourJishu: hourJishuInput.value.trim()
-        };
+    const lunarDate = solarLunar.solar2lunar(year, month, day, hour);
+    const yearPillar = lunarDate.getYearInGanZhi();
+    const monthPillar = lunarDate.getMonthInGanZhi();
+    const dayPillar = lunarDate.getDayInGanZhi();
+    const hourPillar = lunarDate.getTimeInGanZhi();
+    
+    document.getElementById('year-pillar-stem').textContent = yearPillar.charAt(0);
+    document.getElementById('year-pillar-branch').textContent = yearPillar.charAt(1);
+    document.getElementById('month-pillar-stem').textContent = monthPillar.charAt(0);
+    document.getElementById('month-pillar-branch').textContent = monthPillar.charAt(1);
+    document.getElementById('day-pillar-stem').textContent = dayPillar.charAt(0);
+    document.getElementById('day-pillar-branch').textContent = dayPillar.charAt(1);
+    document.getElementById('hour-pillar-stem').textContent = hourPillar.charAt(0);
+    document.getElementById('hour-pillar-branch').textContent = hourPillar.charAt(1);
+    
+    // (您把工具都放進了這個工具箱, 然後您把整個工具箱(dataForCalculation)交給了 runCalculation 工人)
+    const dataForCalculation = {
+        birthDate: `${year}/${month}/${day}`,
+        gender: document.querySelector('input[name="gender"]:checked').value === 'male' ? '男' : '女',
+        yearPillar: lunarDate.getYearInGanZhi(),
+        monthPillar: lunarDate.getMonthInGanZhi(),
+        dayPillar: lunarDate.getDayInGanZhi(),
+        hourPillar: lunarDate.getTimeInGanZhi(),
+        dayJishu: dayJishuInput.value.trim(),
+        hourJishu: hourJishuInput.value.trim()
+    };
 
-        // 2. 計算使用者的「當前實歲」
-        const today = new Date();
-        let currentUserAge = today.getFullYear() - year;
-        if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) {
-        currentUserAge--;
-        }
-        const startAge = currentUserAge - 20;
-        const endAge = currentUserAge + 40;
+    const today = new Date();
+    let currentUserAge = today.getFullYear() - year;
+    if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) {
+    currentUserAge--;
+    }
+    const startAge = currentUserAge - 20;
+    const endAge = currentUserAge + 40;
 
-        
-        // 步驟 4: 執行所有安星計算，並將結果打包到一個物件中，這邊的函式要用等於
-        const bureauResult = calculateBureau(dataForCalculation.birthDate, dataForCalculation.hourJishu);
-        const lookupResult = lookupBureauData(bureauResult);
-        
-        dataForCalculation.deitiesResult = calculateDeities(bureauResult, dataForCalculation.hourPillar.charAt(1));
-        dataForCalculation.suanStarsResult = calculateSuanStars(lookupResult);
-        dataForCalculation.shiWuFuResult = calculateShiWuFu(dataForCalculation.hourJishu);
-        dataForCalculation.xiaoYouResult = calculateXiaoYou(dataForCalculation.hourJishu);
-        dataForCalculation.junJiResult = calculateJunJi(dataForCalculation.hourJishu);
-        dataForCalculation.chenJiResult = calculateChenJi(dataForCalculation.hourJishu);
-        dataForCalculation.minJiResult = calculateMinJi(dataForCalculation.hourJishu);
-        dataForCalculation.tianYiResult = calculateTianYi(dataForCalculation.hourJishu);
-        dataForCalculation.diYiResult = calculateDiYi(dataForCalculation.hourJishu);
-        dataForCalculation.siShenResult = calculateSiShen(dataForCalculation.hourJishu);
-        dataForCalculation.feiFuResult = calculateFeiFu(dataForCalculation.hourJishu);
-        dataForCalculation.daYouResult = calculateDaYou(dataForCalculation.hourJishu);
-        xingNianData = calculateXingNian(dataForCalculation.gender, startAge, endAge);
-        dataForCalculation.huangEnResult = calculateHuangEn(dataForCalculation.dayPillar.charAt(1))
-      
-        runCalculation(dataForCalculation, hour);
-    });
+    const bureauResult = calculateBureau(dataForCalculation.birthDate, dataForCalculation.hourJishu);
+    const lookupResult = lookupBureauData(bureauResult);
+    
+    dataForCalculation.deitiesResult = calculateDeities(bureauResult, dataForCalculation.hourPillar.charAt(1));
+    dataForCalculation.suanStarsResult = calculateSuanStars(lookupResult);
+    dataForCalculation.shiWuFuResult = calculateShiWuFu(dataForCalculation.hourJishu);
+    dataForCalculation.xiaoYouResult = calculateXiaoYou(dataForCalculation.hourJishu);
+    dataForCalculation.junJiResult = calculateJunJi(dataForCalculation.hourJishu);
+    dataForCalculation.chenJiResult = calculateChenJi(dataForCalculation.hourJishu);
+    dataForCalculation.minJiResult = calculateMinJi(dataForCalculation.hourJishu);
+    dataForCalculation.tianYiResult = calculateTianYi(dataForCalculation.hourJishu);
+    dataForCalculation.diYiResult = calculateDiYi(dataForCalculation.hourJishu);
+    dataForCalculation.siShenResult = calculateSiShen(dataForCalculation.hourJishu);
+    dataForCalculation.feiFuResult = calculateFeiFu(dataForCalculation.hourJishu);
+    dataForCalculation.daYouResult = calculateDaYou(dataForCalculation.hourJishu);
+    const xingNianData = calculateXingNian(dataForCalculation.gender, startAge, endAge); // <-- 注意這裡
+    dataForCalculation.huangEnResult = calculateHuangEn(dataForCalculation.dayPillar.charAt(1))
+  
+    // ▼▼▼ 修正點3: 將 xingNianData 作為參數傳入 ▼▼▼
+    runCalculation(dataForCalculation, hour, xingNianData); 
+});
 
     populateDateSelectors();
     prefillTestData();

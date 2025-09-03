@@ -116,7 +116,7 @@
 
     /* --- 「皇恩星」的專屬樣式 --- */
     .huang-en-style {
-    font-size: 14px;    /* 【可調整】設定字體大小 */
+    font-size: 12px;    /* 【可調整】設定字體大小 */
     fill: #DAA520;      /* 【可調整】設定字體顏色 (此為金色 GoldenRod) */
     font-weight: bold;
     }
