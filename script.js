@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
         guiRenRing: { radius: 293, rotationOffset: -5, palaces: ['pZi','pChou','pYin','pMao','pChen','pSi','pWu','pWei','pShen','pYou','pXu','pHai'], flipPalaces: ['pZi','pHai','pSi','pXu','pYou','pWu','pShen'], color: '#ae00ff' },
         outerRing: { radius: 250, palaces: ['pZi', 'pGen', 'pMao', 'pXun', 'pWu', 'pKun', 'pYou', 'pQian']},
         xingNianRing: { radius: 270, flipPalaces: ['pZi', 'pHai', 'pXu', 'pYou', 'pShen', 'pSi']},
-        // ▼▼▼ 陽九大限 ▼▼▼
-        yangJiuRing: { radius: 314, rotationOffset: 6, className: 'yang-jiu-style', flipPalaces: ['pZi', 'pHai', 'pXu', 'pYou', 'pShen', 'pSi'] } 
+        yangJiuRing: { radius: 314, rotationOffset: 6, className: 'yang-jiu-style', flipPalaces: ['pHai','pSi','pXu','pYou','pShen'] },
+        baiLiuRing: { radius: 314, rotationOffset: -6, className: 'bai-liu-style', flipPalaces: ['pZi', 'pHai', 'pXu', 'pYou', 'pShen', 'pSi'] } 
     };
 
     // ▼▼▼ 144局的完整資料庫 ▼▼▼
@@ -1362,7 +1362,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '癸酉': 33, '癸未': 33, '癸巳': 23, '癸卯': 31, '癸丑': 33, '癸亥': 21
     };
 
-    // ▼▼▼ 易經六十四卦資料庫 (引號修正版) ▼▼▼
+    // ▼▼▼ 易經六十四卦資料庫 ▼▼▼
     const I_CHING_HEXAGRAMS = [
     { number: 1,  name: '乾為天',    symbol: '䷀' }, { number: 2,  name: '坤為地',    symbol: '䷁' },
     { number: 3,  name: '水雷屯',    symbol: '䷂' }, { number: 4,  name: '山水蒙',    symbol: '䷃' },
@@ -1398,7 +1398,7 @@ document.addEventListener('DOMContentLoaded', () => {
     { number: 63, name: '水火既濟',  symbol: '䷾' }, { number: 64, name: '火水未濟',  symbol: '䷿' }
     ];
 
-    // ▼▼▼ 易經六十四卦數位化資料庫 ▼▼▼// 爻的順序由下到上 (初爻 -> 上爻)，1為陽爻，0為陰爻
+    // ▼▼▼ 易經六十四卦數位化資料庫 爻的順序由下到上 (初爻 -> 上爻)，1為陽爻，0為陰爻 ▼▼▼// 
     const HEXAGRAM_DATA = {
     '䷀': "111111", '䷁': "000000", '䷂': "100010", '䷃': "010001", '䷄': "111010",
     '䷅': "010111", '䷆': "000010", '䷇': "010000", '䷈': "111011", '䷉': "110111",
@@ -1449,13 +1449,11 @@ document.addEventListener('DOMContentLoaded', () => {
         '神后子', '大吉丑', '功曹寅', '太衝卯', '天罡辰', '太乙巳',
         '勝光午', '小吉未', '傳送申', '從魁酉', '河魁戌', '登明亥'
     ];
-
     // 1. 貴人十二神的完整順時鐘順序
     const GUI_REN_ORDER = [
         '貴人', '騰蛇', '朱雀', '六合', '勾陳', '青龍', 
         '天空', '白虎', '太常', '玄武', '太陰', '天后'
     ];
-
     // 2. 日干對應的起始月將表
     const GUI_REN_YUE_JIANG_MAP = {
         '甲': { day: '小吉未', night: '大吉丑' }, '己': { day: '神后子', night: '傳送申' },
@@ -1464,7 +1462,6 @@ document.addEventListener('DOMContentLoaded', () => {
         '丁': { day: '登明亥', night: '從魁酉' }, '壬': { day: '太衝卯', night: '太乙巳' },
         '戊': { day: '大吉丑', night: '小吉未' }, '癸': { day: '太乙巳', night: '太衝卯' }
     };
-
     // 3. 用來判斷貴人十二神順逆時鐘的宮位群組
     const GUI_REN_DAY_BRANCHES = ['卯', '辰', '巳', '午', '未', '申']; // 晝貴
     const GUI_REN_NIGHT_BRANCHES = ['酉', '戌', '亥', '子', '丑', '寅']; // 夜貴
@@ -1746,7 +1743,7 @@ function addCenterText(text, coords, className) {
 }
 
 // --- 繪圖主函式 (最終整理版) ---
-function renderChart(mainData, palacesData, agesData, sdrData, centerData, outerRingData, xingNianData, yangJiuData) {
+function renderChart(mainData, palacesData, agesData, sdrData, centerData, outerRingData, xingNianData, yangJiuData, baiLiuData) {
         clearDynamicData();
         if (outerRingData) {
             const ringConfig = RADIAL_LAYOUT.outerRing;
@@ -1840,25 +1837,44 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             addRotatedRingText(ageDataForRing, xingNianRingConfig);
     }
 
-    // ▼▼▼ 新增：繪製陽九限 (採用 rotationOffset 的新寫法) ▼▼▼
+    // ▼▼▼ 新增：繪製陽九限 ▼▼▼
     if (yangJiuData && yangJiuData.palaceId) {
-        const config = RADIAL_LAYOUT.yangJiuRing; // 直接從第一區讀取設定
+        const config = RADIAL_LAYOUT.yangJiuRing;
         const palaceId = yangJiuData.palaceId;
         const text = yangJiuData.text;
-
-        // 從設定檔讀取 rotationOffset，如果沒有就預設為 0
         const rotationOffset = config.rotationOffset || 0;
-        const angle = RADIAL_LAYOUT.angles[palaceId] + rotationOffset; // 將偏移量加到角度上
-
-        // (後面的繪圖邏輯和之前一樣)
+        const angle = RADIAL_LAYOUT.angles[palaceId] + rotationOffset;
         const angleRad = angle * (Math.PI / 180);
         const x = RADIAL_LAYOUT.center.x + config.radius * Math.cos(angleRad);
         const y = RADIAL_LAYOUT.center.y + config.radius * Math.sin(angleRad);
-
         let rotation = angle + 90;
         if (angle > 90 && angle < 270) { rotation = angle - 90; }
         if (config.flipPalaces.includes(palaceId)) { rotation += 180; }
-        
+        const textElement = document.createElementNS(SVG_NS, 'text');
+        textElement.setAttribute('x', x);
+        textElement.setAttribute('y', y);
+        textElement.setAttribute('text-anchor', 'middle');
+        textElement.setAttribute('dominant-baseline', 'central');
+        textElement.setAttribute('class', `dynamic-text ${config.className}`);
+        textElement.setAttribute('style', 'writing-mode: horizontal-tb;');
+        textElement.setAttribute('transform', `rotate(${rotation}, ${x}, ${y})`);
+        textElement.textContent = text;
+        dynamicGroup.appendChild(textElement);
+    }
+
+    // ▼▼▼ 新增：繪製百六限 ▼▼▼
+    if (baiLiuData && baiLiuData.palaceId) {
+        const config = RADIAL_LAYOUT.baiLiuRing;
+        const palaceId = baiLiuData.palaceId; // <-- 已修正
+        const text = baiLiuData.text;         // <-- 已修正
+        const rotationOffset = config.rotationOffset || 0;
+        const angle = RADIAL_LAYOUT.angles[palaceId] + rotationOffset;
+        const angleRad = angle * (Math.PI / 180);
+        const x = RADIAL_LAYOUT.center.x + config.radius * Math.cos(angleRad);
+        const y = RADIAL_LAYOUT.center.y + config.radius * Math.sin(angleRad);
+        let rotation = angle + 90;
+        if (angle > 90 && angle < 270) { rotation = angle - 90; }
+        if (config.flipPalaces.includes(palaceId)) { rotation += 180; }
         const textElement = document.createElementNS(SVG_NS, 'text');
         textElement.setAttribute('x', x);
         textElement.setAttribute('y', y);
@@ -2340,29 +2356,22 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     // ▼▼▼ 計算「陽九限」的函式 ▼▼▼
     function calculateYangJiu(monthStem, gender, currentUserAge) {
     const rule = YANG_JIU_RULES[monthStem];
-    if (!rule) return null; // 如果找不到規則，則返回
+    if (!rule) return null;
 
     const { startBranch, firstAge } = rule;
-    const direction = (gender === '男') ? 1 : -1; // 男順時鐘(1), 女逆時鐘(-1)
+    const direction = (gender === '男') ? 1 : -1;
     const startPalaceIndex = EARTHLY_BRANCHES.indexOf(startBranch);
 
     let currentPalaceIndex;
     let ageRangeText;
 
     if (currentUserAge <= firstAge) {
-        // 年齡在第一區間
         currentPalaceIndex = startPalaceIndex;
         ageRangeText = `1-${firstAge}`;
     } else {
-        // 年齡超過第一區間
         const ageAfterFirst = currentUserAge - firstAge;
-        // 計算需要走幾步 (每10年一步)
         const steps = Math.floor((ageAfterFirst - 1) / 10);
-        
-        // 計算目標宮位的索引
         currentPalaceIndex = (startPalaceIndex + (steps + 1) * direction + 144) % 12;
-        
-        // 計算目標宮位的年齡範圍
         const ageRangeStart = firstAge + (steps * 10) + 1;
         const ageRangeEnd = ageRangeStart + 9;
         ageRangeText = `${ageRangeStart}-${ageRangeEnd}`;
@@ -2375,6 +2384,42 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         text: `陽九${ageRangeText}`
     };
     }
+    // ▼▼▼ 計算「百六限」的函式 ▼▼▼
+    function calculateBaiLiuLimit(shouQiGong, gender, currentUserAge) {
+    if (!shouQiGong || !shouQiGong.palace || currentUserAge === undefined) {
+        return null;
+    }
+
+    const shouQiStem = shouQiGong.palace.charAt(0);
+    const rule = YANG_JIU_RULES[shouQiStem];
+    if (!rule) return null;
+
+    const { startBranch, firstAge } = rule;
+    const direction = (gender === '男') ? 1 : -1;
+    const startPalaceIndex = EARTHLY_BRANCHES.indexOf(startBranch);
+
+    let currentPalaceIndex;
+    let ageRangeText;
+
+    if (currentUserAge <= firstAge) {
+        currentPalaceIndex = startPalaceIndex;
+        ageRangeText = `1-${firstAge}`;
+    } else {
+        const ageAfterFirst = currentUserAge - firstAge;
+        const steps = Math.floor((ageAfterFirst - 1) / 10);
+        currentPalaceIndex = (startPalaceIndex + (steps + 1) * direction + 144) % 12;
+        const ageRangeStart = firstAge + (steps * 10) + 1;
+        const ageRangeEnd = ageRangeStart + 9;
+        ageRangeText = `${ageRangeStart}-${ageRangeEnd}`;
+    }
+
+    const palaceId = BRANCH_TO_PALACE_ID[EARTHLY_BRANCHES[currentPalaceIndex]];
+    
+    return {
+        palaceId: palaceId,
+        text: `百六${ageRangeText}`
+    };
+    }   
     // ▼▼▼ 計算「受氣之數」與「受氣之宮」的函式 ▼▼▼
     function calculateShouQi(dayPillar, hourPillar) {
     // 1. 從資料庫查找日柱和時柱的天地生成數
@@ -2482,6 +2527,29 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     const liYeHexagram = I_CHING_HEXAGRAMS.find(h => h.symbol === newSymbol);
 
     return liYeHexagram || { name: '查無此卦', symbol: '' };
+    }
+    // ▼▼▼ 計算「流年卦」的函式 ▼▼▼
+    function calculateAnnualHexagram(birthHexagram, currentUserAge) {
+    if (!birthHexagram || !birthHexagram.number || currentUserAge === undefined) {
+        return null;
+    }
+
+    // 1. 將出生卦編號與當前歲數相加
+    const sum = birthHexagram.number + currentUserAge;
+
+    // 2. 如果總和超過 64，則除以 64 取餘數
+    let annualHexagramNumber;
+    if (sum > 64) {
+        const remainder = sum % 64;
+        annualHexagramNumber = (remainder === 0) ? 64 : remainder; // 餘數為 0 代表第 64 卦
+    } else {
+        annualHexagramNumber = sum;
+    }
+
+    // 3. 從64卦資料庫中找到對應的卦 (陣列索引需減 1)
+    const annualHexagram = I_CHING_HEXAGRAMS[annualHexagramNumber - 1];
+
+    return annualHexagram || { name: '計算錯誤', symbol: '' };
     }
 
     // ▼▼▼ 每次增加星都要更新的函式 ▼▼▼
@@ -2780,7 +2848,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
              field4: dataForCalculation.suanStarsResult.centerStars[3] || ''
         };
 
-        renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData, dataForCalculation.yangJiuResult, dataForCalculation.yangJiuResult); 
+        renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData, dataForCalculation.yangJiuResult, dataForCalculation.baiLiuResult); 
 
         const shenPalaceId = Object.keys(newSdrData).find(k => newSdrData[k].includes('身'));
         const shenPalaceBranch = shenPalaceId ? PALACE_ID_TO_BRANCH[shenPalaceId] : '計算失敗';
@@ -2788,7 +2856,9 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         const shouQiResult = dataForCalculation.shouQiResult;
         const birthHexagramResult = dataForCalculation.birthHexagramResult;
         const liYeHexagramResult = dataForCalculation.liYeHexagramResult;
-
+        const annualHexagramResult = dataForCalculation.annualHexagramResult;
+    
+        
         // 2. 按照您想要的順序，重新組合 outputText 字串
         let outputText = ''; // 先建立一個空字串
         outputText += `  局數 : ${bureauResult}\n  命宮 : ${lifePalaceId ? PALACE_ID_TO_BRANCH[lifePalaceId] + '宮' : '計算失敗'}\n  身宮 : ${shenPalaceBranch}宮`;
@@ -2813,6 +2883,10 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         if (liYeHexagramResult) {
         outputText += `\n  立業卦 : ${liYeHexagramResult.number} ${liYeHexagramResult.name} ${liYeHexagramResult.symbol}`;
         }
+        if (annualHexagramResult) {
+        const currentYear = new Date().getFullYear();
+        outputText += `\n  流年卦 : ${annualHexagramResult.number} ${annualHexagramResult.name} ${annualHexagramResult.symbol} (${currentYear}年${dataForCalculation.currentUserAge}歲)`;
+        } 
         if (huaYaoResults && huaYaoResults.nianGan) {
             outputText += `\n\n年干化曜：\n  天元官星: ${huaYaoResults.nianGan.tianYuan}\n  干元星: ${huaYaoResults.nianGan.ganYuan}\n  父母星: ${huaYaoResults.nianGan.fuMu}`;
         }
@@ -2830,7 +2904,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     }
 
     // (這個calculateBtn.addEventListener 函式就是工廠老闆, runCalculation是老師傅)
-calculateBtn.addEventListener('click', () => {
+    calculateBtn.addEventListener('click', () => {
     const year = parseInt(document.getElementById('birth-year').value, 10);
     const month = parseInt(document.getElementById('birth-month').value, 10);
     const day = parseInt(document.getElementById('birth-day').value, 10);
@@ -2851,6 +2925,12 @@ calculateBtn.addEventListener('click', () => {
     document.getElementById('hour-pillar-stem').textContent = hourPillar.charAt(0);
     document.getElementById('hour-pillar-branch').textContent = hourPillar.charAt(1);
     
+    const today = new Date();
+    // 虛歲的算法為：當年年份 - 出生年份 + 1
+    const currentUserAge = today.getFullYear() - year + 1;
+    const startAge = currentUserAge - 20;
+    const endAge = currentUserAge + 40;
+
     // (您把工具都放進了這個工具箱, 然後您把整個工具箱(dataForCalculation)交給了 runCalculation 工人)
     const dataForCalculation = {
         birthDate: `${year}/${month}/${day}`,
@@ -2860,16 +2940,9 @@ calculateBtn.addEventListener('click', () => {
         dayPillar: lunarDate.getDayInGanZhi(),
         hourPillar: lunarDate.getTimeInGanZhi(),
         dayJishu: dayJishuInput.value.trim(),
-        hourJishu: hourJishuInput.value.trim()
+        hourJishu: hourJishuInput.value.trim(),
+        currentUserAge: currentUserAge
     };
-
-    const today = new Date();
-    let currentUserAge = today.getFullYear() - year;
-    if (today.getMonth() + 1 < month || (today.getMonth() + 1 === month && today.getDate() < day)) {
-    currentUserAge--;
-    }
-    const startAge = currentUserAge - 20;
-    const endAge = currentUserAge + 40;
 
     const bureauResult = calculateBureau(dataForCalculation.birthDate, dataForCalculation.hourJishu);
     const lookupResult = lookupBureauData(bureauResult);
@@ -2891,7 +2964,9 @@ calculateBtn.addEventListener('click', () => {
     dataForCalculation.shouQiResult = calculateShouQi(dataForCalculation.dayPillar, dataForCalculation.hourPillar);
     dataForCalculation.birthHexagramResult = calculateBirthHexagram(dataForCalculation.yearPillar, dataForCalculation.monthPillar, dataForCalculation.dayPillar, dataForCalculation.hourPillar);
     dataForCalculation.liYeHexagramResult = calculateLiYeHexagram(dataForCalculation.shouQiResult.palace, dataForCalculation.birthHexagramResult);
-    dataForCalculation.yangJiuResult = calculateYangJiu(dataForCalculation.monthPillar.charAt(0), dataForCalculation.gender, currentUserAge)
+    dataForCalculation.annualHexagramResult = calculateAnnualHexagram(dataForCalculation.birthHexagramResult, dataForCalculation.currentUserAge);
+    dataForCalculation.yangJiuResult = calculateYangJiu(dataForCalculation.monthPillar.charAt(0), dataForCalculation.gender, dataForCalculation.currentUserAge);
+    dataForCalculation.baiLiuResult = calculateBaiLiuLimit(dataForCalculation.shouQiResult, dataForCalculation.gender, dataForCalculation.currentUserAge)
   
     // ▼▼▼ 修正點3: 將 xingNianData 作為參數傳入 ▼▼▼
     runCalculation(dataForCalculation, hour, xingNianData); 

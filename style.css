@@ -128,6 +128,13 @@
     font-weight: bold;
     }
 
+    /* 「百六限」的專屬樣式 */
+    .bai-liu-style {
+    font-size: 11px;      /* 字體大小 */
+    fill: #bf00b8ff;      /* 字體顏色 (範例為紫色，可自行修改) */
+    font-weight: bold;
+    }
+
 
     /* 圓心特殊宮位的文字樣式 */
     .center-info-style {
@@ -157,7 +164,7 @@
 
 /* 1. 控制「整個左欄」的寬度 */
 .controls-column {
-    flex: 0 0 320px;  /* 這是在Flexbox佈局中設定欄位寬度為 400px，您可以調整這個數值 */
+    flex: 0 0 330px;  /* 這是在Flexbox佈局中設定欄位寬度為 400px，您可以調整這個數值 */
 }
 
 /* 2. 控制「資訊容器」的整體外觀 */
