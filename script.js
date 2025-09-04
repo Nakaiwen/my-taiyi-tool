@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
         angleOffset: 6,
         radii: {
             lineLeft:   { fieldA: 144, fieldB: 185, fieldG: 226 },
-            lineCenter: { fieldC: 144, fieldD: 179, fieldC2: 214, fieldD2: 250 },
-            lineRight:  { fieldE: 144, fieldF: 179, fieldE2: 214, fieldF2: 250 }
+            lineCenter: { fieldC: 144, fieldD: 174, fieldC2: 200, fieldD2: 230 },
+            lineRight:  { fieldE: 144, fieldF: 174, fieldE2: 200, fieldF2: 230 }
         },
         // ▼▼▼ 定義圓心 4 個欄位的座標 ▼▼▼
         centerFields: {
@@ -1338,6 +1338,83 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     ];
 
+    // ▼▼▼ 六十甲子標準順序 ▼▼▼
+    const JIAZI_CYCLE_ORDER = [
+    '甲子', '乙丑', '丙寅', '丁卯', '戊辰', '己巳', '庚午', '辛未', '壬申', '癸酉',
+    '甲戌', '乙亥', '丙子', '丁丑', '戊寅', '己卯', '庚辰', '辛巳', '壬午', '癸未',
+    '甲申', '乙酉', '丙戌', '丁亥', '戊子', '己丑', '庚寅', '辛卯', '壬辰', '癸巳',
+    '甲午', '乙未', '丙申', '丁酉', '戊戌', '己亥', '庚子', '辛丑', '壬寅', '癸卯',
+    '甲辰', '乙巳', '丙午', '丁未', '戊申', '己酉', '庚戌', '辛亥', '壬子', '癸丑',
+    '甲寅', '乙卯', '丙辰', '丁巳', '戊午', '己未', '庚申', '辛酉', '壬戌', '癸亥'
+    ];
+
+    // ▼▼▼ 六十甲子天地生成數 ▼▼▼
+    const GANZI_GENERATION_NUMBERS = {
+    '甲子': 31, '甲戌': 35, '甲申': 31, '甲午': 33, '甲辰': 35, '甲寅': 29,
+    '乙丑': 39, '乙亥': 27, '乙酉': 31, '乙未': 39, '乙巳': 29, '乙卯': 29,
+    '丙寅': 29, '丙子': 23, '丙戌': 39, '丙申': 31, '丙午': 25, '丙辰': 39,
+    '丁卯': 29, '丁丑': 31, '丁亥': 31, '丁酉': 31, '丁未': 31, '丁巳': 33,
+    '戊辰': 41, '戊寅': 41, '戊子': 31, '戊戌': 41, '戊申': 43, '戊午': 33,
+    '己巳': 35, '己卯': 41, '己丑': 39, '己亥': 33, '己酉': 43, '己未': 39,
+    '庚午': 37, '庚辰': 41, '庚寅': 35, '庚子': 35, '庚戌': 41, '庚申': 37,
+    '辛未': 43, '辛巳': 35, '辛卯': 35, '辛丑': 43, '辛亥': 33, '辛酉': 37,
+    '壬申': 33, '壬午': 27, '壬辰': 29, '壬寅': 31, '壬子': 25, '壬戌': 29,
+    '癸酉': 33, '癸未': 33, '癸巳': 23, '癸卯': 31, '癸丑': 33, '癸亥': 21
+    };
+
+    // ▼▼▼ 易經六十四卦資料庫 (引號修正版) ▼▼▼
+    const I_CHING_HEXAGRAMS = [
+    { number: 1,  name: '乾為天',    symbol: '䷀' }, { number: 2,  name: '坤為地',    symbol: '䷁' },
+    { number: 3,  name: '水雷屯',    symbol: '䷂' }, { number: 4,  name: '山水蒙',    symbol: '䷃' },
+    { number: 5,  name: '水天需',    symbol: '䷄' }, { number: 6,  name: '天水訟',    symbol: '䷅' },
+    { number: 7,  name: '地水師',    symbol: '䷆' }, { number: 8,  name: '水地比',    symbol: '䷇' },
+    { number: 9,  name: '風天小畜',  symbol: '䷈' }, { number: 10, name: '天澤履',    symbol: '䷉' },
+    { number: 11, name: '地天泰',    symbol: '䷊' }, { number: 12, name: '天地否',    symbol: '䷋' },
+    { number: 13, name: '天火同人',  symbol: '䷌' }, { number: 14, name: '火天大有',  symbol: '䷍' },
+    { number: 15, name: '地山謙',    symbol: '䷎' }, { number: 16, name: '雷地豫',    symbol: '䷏' },
+    { number: 17, name: '澤雷隨',    symbol: '䷐' }, { number: 18, name: '山風蠱',    symbol: '䷑' },
+    { number: 19, name: '地澤臨',    symbol: '䷒' }, { number: 20, name: '風地觀',    symbol: '䷓' },
+    { number: 21, name: '火雷噬嗑',  symbol: '䷔' }, { number: 22, name: '山火賁',    symbol: '䷕' },
+    { number: 23, name: '山地剝',    symbol: '䷖' }, { number: 24, name: '地雷復',    symbol: '䷗' },
+    { number: 25, name: '天雷无妄',  symbol: '䷘' }, { number: 26, name: '山天大畜',  symbol: '䷙' },
+    { number: 27, name: '山雷頤',    symbol: '䷚' }, { number: 28, name: '澤風大過',  symbol: '䷛' },
+    { number: 29, name: '坎為水',    symbol: '䷜' }, { number: 30, name: '離為火',    symbol: '䷝' },
+    { number: 31, name: '澤山咸',    symbol: '䷞' }, { number: 32, name: '雷風恆',    symbol: '䷟' },
+    { number: 33, name: '天山遯',    symbol: '䷠' }, { number: 34, name: '雷天大壯',  symbol: '䷡' },
+    { number: 35, name: '火地晉',    symbol: '䷢' }, { number: 36, name: '地火明夷',  symbol: '䷣' },
+    { number: 37, name: '風火家人',  symbol: '䷤' }, { number: 38, name: '火澤睽',    symbol: '䷥' },
+    { number: 39, name: '水山蹇',    symbol: '䷦' }, { number: 40, name: '雷水解',    symbol: '䷧' },
+    { number: 41, name: '山澤損',    symbol: '䷨' }, { number: 42, name: '風雷益',    symbol: '䷩' },
+    { number: 43, name: '澤天夬',    symbol: '䷪' }, { number: 44, name: '天風姤',    symbol: '䷫' },
+    { number: 45, name: '澤地萃',    symbol: '䷬' }, { number: 46, name: '地風升',    symbol: '䷭' },
+    { number: 47, name: '澤水困',    symbol: '䷮' }, { number: 48, name: '水風井',    symbol: '䷯' },
+    { number: 49, name: '澤火革',    symbol: '䷰' }, { number: 50, name: '火風鼎',    symbol: '䷱' },
+    { number: 51, name: '震為雷',    symbol: '䷲' }, { number: 52, name: '艮為山',    symbol: '䷳' },
+    { number: 53, name: '風山漸',    symbol: '䷴' }, { number: 54, name: '雷澤歸妹',  symbol: '䷵' },
+    { number: 55, name: '雷火豐',    symbol: '䷶' }, { number: 56, name: '火山旅',    symbol: '䷷' },
+    { number: 57, name: '巽為風',    symbol: '䷸' }, { number: 58, name: '兌為澤',    symbol: '䷹' },
+    { number: 59, name: '風水渙',    symbol: '䷺' }, { number: 60, name: '水澤節',    symbol: '䷻' },
+    { number: 61, name: '風澤中孚',  symbol: '䷼' }, { number: 62, name: '雷山小過',  symbol: '䷽' },
+    { number: 63, name: '水火既濟',  symbol: '䷾' }, { number: 64, name: '火水未濟',  symbol: '䷿' }
+    ];
+
+    // ▼▼▼ 易經六十四卦數位化資料庫 ▼▼▼// 爻的順序由下到上 (初爻 -> 上爻)，1為陽爻，0為陰爻
+    const HEXAGRAM_DATA = {
+    '䷀': "111111", '䷁': "000000", '䷂': "100010", '䷃': "010001", '䷄': "111010",
+    '䷅': "010111", '䷆': "000010", '䷇': "010000", '䷈': "111011", '䷉': "110111",
+    '䷊': "111000", '䷋': "000111", '䷌': "101111", '䷍': "111101", '䷎': "000100",
+    '䷏': "001000", '䷐': "100110", '䷑': "011001", '䷒': "110000", '䷓': "000011",
+    '䷔': "101001", '䷕': "100101", '䷖': "000001", '䷗': "100000", '䷘': "111001",
+    '䷙': "100111", '䷚': "100001", '䷛': "011110", '䷜': "010010", '䷝': "101101",
+    '䷞': "001110", '䷟': "011100", '䷠': "111100", '䷡': "001111", '䷢': "000101",
+    '䷣': "101000", '䷤': "101011", '䷥': "110101", '䷦': "010001", '䷧': "001010",
+    '䷨': "110001", '䷩': "100110", '䷪': "111110", '䷫': "011111", '䷬': "000110",
+    '䷭': "011000", '䷮': "010110", '䷯': "011010", '䷰': "101110", '䷱': "011101",
+    '䷲': "100100", '䷳': "001001", '䷴': "110011", '䷵': "110100", '䷶': "101100",
+    '䷷': "001101", '䷸': "011011", '䷹': "110110", '䷺': "010011", '䷻': "110010",
+    '䷼': "110011", '䷽': "001100", '䷾': "101010", '䷿': "010101"
+    };
+
     // ▼▼▼ 太歲合神計神的判斷式 ▼▼▼
     const DEITY_RULES_DATA = [
         {"陰陽局":"陽局","時支":"子","太歲":"子","合神":"丑","計神":"寅"}, {"陰陽局":"陽局","時支":"丑","太歲":"丑","合神":"子","計神":"丑"}, {"陰陽局":"陽局","時支":"寅","太歲":"寅","合神":"亥","計神":"子"}, {"陰陽局":"陽局","時支":"卯","太歲":"卯","合神":"戌","計神":"亥"}, {"陰陽局":"陽局","時支":"辰","太歲":"辰","合神":"酉","計神":"戌"}, {"陰陽局":"陽局","時支":"巳","太歲":"巳","合神":"申","計神":"酉"}, {"陰陽局":"陽局","時支":"午","太歲":"午","合神":"未","計神":"申"}, {"陰陽局":"陽局","時支":"未","太歲":"未","合神":"午","計神":"未"}, {"陰陽局":"陽局","時支":"申","太歲":"申","合神":"巳","計神":"午"}, {"陰陽局":"陽局","時支":"酉","太歲":"酉","合神":"辰","計神":"巳"}, {"陰陽局":"陽局","時支":"戌","太歲":"戌","合神":"卯","計神":"辰"}, {"陰陽局":"陽局","時支":"亥","太歲":"亥","合神":"寅","計神":"卯"},
@@ -2298,6 +2375,114 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         text: `陽九${ageRangeText}`
     };
     }
+    // ▼▼▼ 計算「受氣之數」與「受氣之宮」的函式 ▼▼▼
+    function calculateShouQi(dayPillar, hourPillar) {
+    // 1. 從資料庫查找日柱和時柱的天地生成數
+    const dayNum = GANZI_GENERATION_NUMBERS[dayPillar];
+    const hourNum = GANZI_GENERATION_NUMBERS[hourPillar];
+
+    // 如果找不到資料，則返回錯誤訊息
+    if (dayNum === undefined || hourNum === undefined) {
+        return { palace: '查無資料', number: '' };
+    }
+
+    // 2. 根據公式計算「受氣之數」
+    const shouQiNumberRaw = (dayNum + hourNum + 55) % 60;
+    // 處理餘數為 0 的情況，根據規則應視為 60
+    const shouQiNumber = (shouQiNumberRaw === 0) ? 60 : shouQiNumberRaw;
+    
+    // 3. 查找日柱在六十甲子順序中的位置
+    const startIndex = JIAZI_CYCLE_ORDER.indexOf(dayPillar);
+    if (startIndex === -1) {
+        return { palace: '順序錯誤', number: shouQiNumber };
+    }
+    
+    // 4. 從起始位置開始「逆數」，找到「受氣之宮」
+    // 逆數 N 位，且起始位算1，相當於索引值減去 (N-1)
+    const palaceIndex = (startIndex - (shouQiNumber - 1) + 60) % 60;
+    const shouQiPalace = JIAZI_CYCLE_ORDER[palaceIndex];
+
+    return { palace: shouQiPalace, number: shouQiNumber };
+    }
+    // ▼▼▼ 計算「出生卦」的函式 ▼▼▼
+    function calculateBirthHexagram(yearPillar, monthPillar, dayPillar, hourPillar) {
+    // 1. 從資料庫查找四柱的天地生成數
+    const yearNum = GANZI_GENERATION_NUMBERS[yearPillar];
+    const monthNum = GANZI_GENERATION_NUMBERS[monthPillar];
+    const dayNum = GANZI_GENERATION_NUMBERS[dayPillar];
+    const hourNum = GANZI_GENERATION_NUMBERS[hourPillar];
+
+    // 安全檢查，如果任一柱的資料找不到，則返回錯誤
+    if ([yearNum, monthNum, dayNum, hourNum].includes(undefined)) {
+        return { name: '資料錯誤', symbol: '' };
+    }
+
+    // 2. 根據公式計算總和，再除以64取餘數
+    const remainder = (yearNum + monthNum + dayNum + hourNum + 55) % 64;
+    
+    // 3. 處理餘數為 0 的情況，根據易經順序，餘 0 應為第 64 卦
+    const hexagramNumber = (remainder === 0) ? 64 : remainder;
+
+    // 4. 從 I_CHING_HEXAGRAMS 陣列中找出對應的卦
+    // (陣列索引是從 0 開始，所以要用卦的編號減 1)
+    const hexagram = I_CHING_HEXAGRAMS[hexagramNumber - 1];
+
+    return hexagram || { name: '計算錯誤', symbol: '' };
+    }
+    // ▼▼▼ 計算「立業卦」的函式 ▼▼▼
+    function calculateLiYeHexagram(shouQiGong, birthHexagram) {
+    if (!shouQiGong || !birthHexagram || !birthHexagram.symbol) {
+        return null;
+    }
+
+    const shouQiStem = shouQiGong.charAt(0);
+    const shouQiBranch = shouQiGong.charAt(1);
+    const yangStems = ['甲', '丙', '戊', '庚', '壬'];
+    const isYang = yangStems.includes(shouQiStem);
+
+    // 1. 取得出生卦的數位化爻象 (例如 "110011")
+    const originalYaoStr = HEXAGRAM_DATA[birthHexagram.symbol];
+    if (!originalYaoStr) return { name: '卦象資料錯誤', symbol: '' };
+
+    // 2. 根據陰陽干，找出目標爻(陽爻或陰爻)的位置
+    const targetYaoType = isYang ? '1' : '0';
+    let targetYaoIndices = [];
+    for (let i = 0; i < originalYaoStr.length; i++) {
+        if (originalYaoStr[i] === targetYaoType) {
+            targetYaoIndices.push(i); // 儲存爻的索引 (0到5)
+        }
+    }
+    
+    // 如果是陰干，爻的順序要由上往下
+    if (!isYang) {
+        targetYaoIndices.reverse();
+    }
+
+    // 如果找不到任何可以變的爻，直接返回
+    if (targetYaoIndices.length === 0) {
+        return { name: '無爻可變', symbol: '' };
+    }
+
+    // 3. 計算從子到受氣地支的步數
+    const startIndex = EARTHLY_BRANCHES.indexOf('子');
+    const endIndex = EARTHLY_BRANCHES.indexOf(shouQiBranch);
+    const steps = (endIndex - startIndex + 12) % 12 + 1; // 加1是因為"子"算第一步
+
+    // 4. 循環計數，找到要變的那個爻
+    const stopIndex = (steps - 1) % targetYaoIndices.length;
+    const yaoToChangeIndex = targetYaoIndices[stopIndex];
+
+    // 5. 執行爻變 (陽變陰，陰變陽)
+    let yaoArray = originalYaoStr.split('');
+    yaoArray[yaoToChangeIndex] = (yaoArray[yaoToChangeIndex] === '1') ? '0' : '1';
+    const newYaoStr = yaoArray.join('');
+
+    // 6. 根據新的爻象字串，反向查找對應的卦
+    const newSymbol = Object.keys(HEXAGRAM_DATA).find(key => HEXAGRAM_DATA[key] === newYaoStr);
+    const liYeHexagram = I_CHING_HEXAGRAMS.find(h => h.symbol === newSymbol);
+
+    return liYeHexagram || { name: '查無此卦', symbol: '' };
+    }
 
     // ▼▼▼ 每次增加星都要更新的函式 ▼▼▼
     function generateMainChartData(lookupResult, deitiesResult, suanStarsResult, shiWuFuResult, xiaoYouResult, junJiResult, chenJiResult, minJiResult, tianYiResult, diYiResult, siShenResult, feiFuResult, daYouResult, yueJiangData, guiRenData, xingNianData, huangEnResult) {
@@ -2599,9 +2784,14 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
 
         const shenPalaceId = Object.keys(newSdrData).find(k => newSdrData[k].includes('身'));
         const shenPalaceBranch = shenPalaceId ? PALACE_ID_TO_BRANCH[shenPalaceId] : '計算失敗';
-        const huaYaoResults = calculateAllHuaYao(dataForCalculation.yearPillar.charAt(0), dataForCalculation.dayPillar.charAt(0), dataForCalculation.dayPillar.charAt(1))
+        const huaYaoResults = calculateAllHuaYao(dataForCalculation.yearPillar.charAt(0), dataForCalculation.dayPillar.charAt(0), dataForCalculation.dayPillar.charAt(1));
+        const shouQiResult = dataForCalculation.shouQiResult;
+        const birthHexagramResult = dataForCalculation.birthHexagramResult;
+        const liYeHexagramResult = dataForCalculation.liYeHexagramResult;
 
-        let outputText = `\n  局數 : ${bureauResult}\n  命宮 : ${lifePalaceId ? PALACE_ID_TO_BRANCH[lifePalaceId] + '宮' : '計算失敗'}\n  身宮 : ${shenPalaceBranch}宮`;
+        // 2. 按照您想要的順序，重新組合 outputText 字串
+        let outputText = ''; // 先建立一個空字串
+        outputText += `  局數 : ${bureauResult}\n  命宮 : ${lifePalaceId ? PALACE_ID_TO_BRANCH[lifePalaceId] + '宮' : '計算失敗'}\n  身宮 : ${shenPalaceBranch}宮`;
         if (lookupResult) {
             // 從資料庫中查找每個算數對應的屬性文字
             const zhuSuanAttr = SUAN_ATTRIBUTE_DATA[lookupResult.主算] || '';
@@ -2612,6 +2802,16 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             outputText += `\n  主算 : ${lookupResult.主算} <span class="suan-attribute-style">(${zhuSuanAttr})</span>`;
             outputText += `\n  客算 : ${lookupResult.客算} <span class="suan-attribute-style">(${keSuanAttr})</span>`;
             outputText += `\n  定算 : ${lookupResult.定算} <span class="suan-attribute-style">(${dingSuanAttr})</span>`;
+        }
+        // 第一行：受氣之宮 (視覺上會在四柱下方)
+        if (shouQiResult) {
+        outputText += `\n\n  受氣之宮 : ${shouQiResult.palace}${shouQiResult.number}`;
+        }
+        if (birthHexagramResult) {
+        outputText += `\n  出生卦 : ${birthHexagramResult.number} ${birthHexagramResult.name} ${birthHexagramResult.symbol}`;
+        }
+        if (liYeHexagramResult) {
+        outputText += `\n  立業卦 : ${liYeHexagramResult.number} ${liYeHexagramResult.name} ${liYeHexagramResult.symbol}`;
         }
         if (huaYaoResults && huaYaoResults.nianGan) {
             outputText += `\n\n年干化曜：\n  天元官星: ${huaYaoResults.nianGan.tianYuan}\n  干元星: ${huaYaoResults.nianGan.ganYuan}\n  父母星: ${huaYaoResults.nianGan.fuMu}`;
@@ -2688,6 +2888,9 @@ calculateBtn.addEventListener('click', () => {
     dataForCalculation.daYouResult = calculateDaYou(dataForCalculation.hourJishu);
     const xingNianData = calculateXingNian(dataForCalculation.gender, startAge, endAge); 
     dataForCalculation.huangEnResult = calculateHuangEn(dataForCalculation.dayPillar.charAt(1));
+    dataForCalculation.shouQiResult = calculateShouQi(dataForCalculation.dayPillar, dataForCalculation.hourPillar);
+    dataForCalculation.birthHexagramResult = calculateBirthHexagram(dataForCalculation.yearPillar, dataForCalculation.monthPillar, dataForCalculation.dayPillar, dataForCalculation.hourPillar);
+    dataForCalculation.liYeHexagramResult = calculateLiYeHexagram(dataForCalculation.shouQiResult.palace, dataForCalculation.birthHexagramResult);
     dataForCalculation.yangJiuResult = calculateYangJiu(dataForCalculation.monthPillar.charAt(0), dataForCalculation.gender, currentUserAge)
   
     // ▼▼▼ 修正點3: 將 xingNianData 作為參數傳入 ▼▼▼

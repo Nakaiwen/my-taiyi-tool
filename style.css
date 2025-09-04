@@ -174,7 +174,7 @@
 .input-row {
     display: flex;                  /* 啟用 Flexbox，讓內部的 label 和 input 水平排列 */
     align-items: center;            /* 讓 label 和 input 在垂直方向上置中對齊 */
-    margin-bottom: 5px;            /* 每一行之間的垂直間距 */
+    margin-bottom: 4px;            /* 每一行之間的垂直間距 */
 }
 
 /* 4. 控制「每一行的文字標籤」(如 "西元生日：") 的寬度與對齊 */
@@ -236,8 +236,7 @@
     font-weight: bold;
     font-size: 20px;
     color: #000000;
-    border-bottom: 1px solid #ccc;
-    height: 30px;          /* 【可調整】直接設定標題區塊的總高度 */
+    height: 20px;          /* 【可調整】直接設定標題區塊的總高度 */
     display: flex;         /* 啟用 Flexbox，這是讓垂直置中生效的前提 */
     align-items: center;   /* 讓標題文字在固定的高度內垂直置中 */
 }
@@ -245,9 +244,10 @@
 /* 3. 控制「四柱垂直顯示」的區塊 */
 #bazi-pillars-container {
     display: flex;
-    align-items: center;
-    height: 40px;         /* 【可調整】直接設定四柱區塊的總高度 */
+    text-align: center;   /* 讓干支在其空間內置中 */
+    /*height: 40px;         /* 【可調整】直接設定四柱區塊的總高度 */
     gap: 30px;            /* 【可調整】這就是間距參數，控制每一個柱之間的固定距離 */
+    margin-right: 2px;   /* 改用右邊距來創造間隔 */
     padding: 0px 0;
 }
 
@@ -275,8 +275,8 @@
 
 /* 控制「計算結果摘要」的區塊 */
 #calculation-summary {
-    padding-top: 10px;
-    margin-top: 10px;
+    padding-top: 2px;
+    margin-top: 2px;
     border-top: 1px solid #ccc;
 }
 
