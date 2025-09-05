@@ -214,7 +214,7 @@
     color: white;
     border: none; /* 移除非必要的邊框顏色設定 */
     border-radius: 4px;
-    margin-left: 60px; /* 【新增】讓按鈕自動推到最右邊，更美觀 */
+    margin-right: 30px; /* 【新增】讓按鈕自動推到最右邊，更美觀 */
     padding: 6px 15px;
 }
 
