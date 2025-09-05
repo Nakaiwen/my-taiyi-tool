@@ -2892,7 +2892,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         }
         if (huaYaoResults && huaYaoResults.riGan) {
             // 定義一個紅色星星的 HTML 圖片標籤
-            const redStarImg = '<img src="img/star.svg" class="red-star-icon" alt="星">';
+            const redStarImg = '<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0ic3RhciIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA1Ni42OSA1Ni42OSI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI5LjcuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDgpICAtLT4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnN0MCB7CiAgICAgICAgZmlsbDogI2U3MWYxOTsKICAgICAgICBmaWxsLXJ1bGU6IGV2ZW5vZGQ7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yOC4yOCwxLjg5bDYuOTEsMTkuNiwyMC43NC41My0xNi40NywxMi42NCw1LjksMTkuOTMtMTcuMDktMTEuNzgtMTcuMDksMTEuNzgsNS45MS0xOS45M0wuNjIsMjIuMDFsMjAuNzQtLjUzTDI4LjI4LDEuODlaIi8+Cjwvc3ZnPg==" class="red-star-icon" alt="星">';
             outputText += `\n\n日干化曜：\n  天元祿主: ${huaYaoResults.riGan.luZhu}\n  偏祿: ${huaYaoResults.riGan.pianLu}\n  官星: ${huaYaoResults.riGan.guanXing}\n  妻財: ${huaYaoResults.riGan.qiCai}\n  ${redStarImg}忌星: ${huaYaoResults.riGan.jiXing}\n  ${redStarImg}鬼星: ${huaYaoResults.riGan.guiXing}`;
         }
         if (huaYaoResults && huaYaoResults.riZhi) {
@@ -2977,4 +2977,76 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     setTimeout(() => {
         calculateBtn.click();
     }, 10);
+    
+// ▼▼▼ 儲存為 PDF 的功能 (最終版：分開擷取 + 確保字體載入) ▼▼▼
+    const savePdfBtn = document.getElementById('save-pdf-btn');
+    async function saveAsPDF() {
+        // 檢查關鍵函式庫
+        if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+            alert('錯誤：PDF 相關函式庫沒有載入成功！');
+            return;
+        }
+
+        // 1. 找到我們要分別擷取的兩個目標
+        const outputArea = document.getElementById('output-area');
+        const plateColumn = document.querySelector('.plate-column');
+
+        if (!outputArea || !plateColumn) {
+            alert('錯誤：找不到必要的頁面元素，無法產生PDF。');
+            return;
+        }
+        
+        // 顯示等待的滑鼠游標
+        document.body.style.cursor = 'wait';
+
+        try {
+            // ▼▼▼ 唯一的修改點：在拍照前，等待字體載入完成 ▼▼▼
+            await document.fonts.ready;
+
+            // 2. 使用 Promise.all 同時「拍攝」兩張照片
+            const [outputCanvas, plateCanvas] = await Promise.all([
+                html2canvas(outputArea, { scale: 2.5, useCORS: true, backgroundColor: '#f0f0f0' }),
+                html2canvas(plateColumn, { scale: 2.5, useCORS: true, backgroundColor: null }) // 圓盤背景設為透明
+            ]);
+
+            // 3. 建立一張 A4 橫向的 PDF
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+            const pdfWidth = 297;
+            const pdfHeight = 210;
+            const margin = 10; // PDF 的頁邊距
+
+            // 4. 計算並繪製左邊的「計算結果」圖片
+            const outputImgData = outputCanvas.toDataURL('image/png');
+            const outputAspectRatio = outputCanvas.width / outputCanvas.height;
+            let outputImgWidth = 85; // 給左側結果區一個固定的寬度 (mm)
+            let outputImgHeight = outputImgWidth / outputAspectRatio;
+            
+            if (outputImgHeight > pdfHeight - (margin * 2)) {
+                outputImgHeight = pdfHeight - (margin * 2);
+                outputImgWidth = outputImgHeight * outputAspectRatio;
+            }
+            pdf.addImage(outputImgData, 'PNG', margin, margin, outputImgWidth, outputImgHeight);
+
+            // 5. 計算並繪製右邊的「圓盤」圖片
+            const plateImgData = plateCanvas.toDataURL('image/png');
+            const plateAspectRatio = plateCanvas.width / plateCanvas.height;
+            const plateImgHeight = pdfHeight - (margin * 2); // 讓圓盤高度佔滿可用空間
+            const plateImgWidth = plateImgHeight * plateAspectRatio;
+            const plateXOffset = pdfWidth - plateImgWidth - margin; // 將圓盤靠右對齊
+            pdf.addImage(plateImgData, 'PNG', plateXOffset, margin, plateImgWidth, plateImgHeight);
+
+            // 6. 儲存 PDF
+            pdf.save('太乙人道命法排盤.pdf');
+
+        } catch (error) {
+            console.error("產生 PDF 失敗:", error);
+            alert("產生 PDF 失敗，詳細錯誤請見主控台。");
+        } finally {
+            // 7. 恢復滑鼠游標
+            document.body.style.cursor = 'default';
+        }
+    }
+    savePdfBtn.addEventListener('click', saveAsPDF);
+
 });

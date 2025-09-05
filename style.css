@@ -6,10 +6,10 @@
     }
 
     body {
-    font-family: 'BiauKaiWeb', sans-serif;
+    font-family: 'BiauKaiWeb';
     display: flex;
     padding: 0px;
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     }
 
 
@@ -22,7 +22,7 @@
     }
     /* 為動態加入的文字設定基本樣式 */
     .dynamic-text {
-        font-family: 'BiauKaiWeb', sans-serif;
+        font-family: 'BiauKaiWeb';
         fill: #000000;
         writing-mode: vertical-rl;
         glyph-orientation-vertical: 0;
@@ -214,8 +214,8 @@
     color: white;
     border: none; /* 移除非必要的邊框顏色設定 */
     border-radius: 4px;
-    margin-left: auto; /* 【新增】讓按鈕自動推到最右邊，更美觀 */
-    padding: 8px 15px;
+    margin-left: 60px; /* 【新增】讓按鈕自動推到最右邊，更美觀 */
+    padding: 6px 15px;
 }
 
 .input-row button:hover {
@@ -319,4 +319,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* 用於生成 PDF 時，暫時隱藏不需要的元素 */
+.hide-for-pdf {
+    display: none !important;
 }
