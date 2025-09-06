@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         center: { x: 395.5, y: 418.5 },
         angles: { pYou:0, pXu:22.5, pQian:45, pHai:66.5, pZi:90, pChou:113.5, pGen:135, pYin:157.5, pMao:180, pChen:202.5, pXun:225, pSi:246.5, pWu:270, pWei:293.5, pKun:315, pShen:337.5 },
         angleOffset: 6,
+        bottomPalaceRadiusOffset: 20, // 控制巳午未宮位文字要再離圓心多遠
         radii: {
             lineLeft:   { fieldA: 135, fieldB: 175, fieldG: 215 },
             lineCenter: { fieldC: 135, fieldD: 165, fieldC2: 195, fieldD2: 225 },
@@ -219,58 +220,90 @@ document.addEventListener('DOMContentLoaded', () => {
     '癸酉': 33, '癸未': 33, '癸巳': 23, '癸卯': 31, '癸丑': 33, '癸亥': 21
     };
 
-    // ▼▼▼ 易經六十四卦資料庫 ▼▼▼
+    // ▼▼▼ 易經六十四卦資料庫 (已新增卦象簡釋) ▼▼▼
     const I_CHING_HEXAGRAMS = [
-    { number: 1,  name: '乾為天',    symbol: '䷀' }, { number: 2,  name: '坤為地',    symbol: '䷁' },
-    { number: 3,  name: '水雷屯',    symbol: '䷂' }, { number: 4,  name: '山水蒙',    symbol: '䷃' },
-    { number: 5,  name: '水天需',    symbol: '䷄' }, { number: 6,  name: '天水訟',    symbol: '䷅' },
-    { number: 7,  name: '地水師',    symbol: '䷆' }, { number: 8,  name: '水地比',    symbol: '䷇' },
-    { number: 9,  name: '風天小畜',  symbol: '䷈' }, { number: 10, name: '天澤履',    symbol: '䷉' },
-    { number: 11, name: '地天泰',    symbol: '䷊' }, { number: 12, name: '天地否',    symbol: '䷋' },
-    { number: 13, name: '天火同人',  symbol: '䷌' }, { number: 14, name: '火天大有',  symbol: '䷍' },
-    { number: 15, name: '地山謙',    symbol: '䷎' }, { number: 16, name: '雷地豫',    symbol: '䷏' },
-    { number: 17, name: '澤雷隨',    symbol: '䷐' }, { number: 18, name: '山風蠱',    symbol: '䷑' },
-    { number: 19, name: '地澤臨',    symbol: '䷒' }, { number: 20, name: '風地觀',    symbol: '䷓' },
-    { number: 21, name: '火雷噬嗑',  symbol: '䷔' }, { number: 22, name: '山火賁',    symbol: '䷕' },
-    { number: 23, name: '山地剝',    symbol: '䷖' }, { number: 24, name: '地雷復',    symbol: '䷗' },
-    { number: 25, name: '天雷无妄',  symbol: '䷘' }, { number: 26, name: '山天大畜',  symbol: '䷙' },
-    { number: 27, name: '山雷頤',    symbol: '䷚' }, { number: 28, name: '澤風大過',  symbol: '䷛' },
-    { number: 29, name: '坎為水',    symbol: '䷜' }, { number: 30, name: '離為火',    symbol: '䷝' },
-    { number: 31, name: '澤山咸',    symbol: '䷞' }, { number: 32, name: '雷風恆',    symbol: '䷟' },
-    { number: 33, name: '天山遯',    symbol: '䷠' }, { number: 34, name: '雷天大壯',  symbol: '䷡' },
-    { number: 35, name: '火地晉',    symbol: '䷢' }, { number: 36, name: '地火明夷',  symbol: '䷣' },
-    { number: 37, name: '風火家人',  symbol: '䷤' }, { number: 38, name: '火澤睽',    symbol: '䷥' },
-    { number: 39, name: '水山蹇',    symbol: '䷦' }, { number: 40, name: '雷水解',    symbol: '䷧' },
-    { number: 41, name: '山澤損',    symbol: '䷨' }, { number: 42, name: '風雷益',    symbol: '䷩' },
-    { number: 43, name: '澤天夬',    symbol: '䷪' }, { number: 44, name: '天風姤',    symbol: '䷫' },
-    { number: 45, name: '澤地萃',    symbol: '䷬' }, { number: 46, name: '地風升',    symbol: '䷭' },
-    { number: 47, name: '澤水困',    symbol: '䷮' }, { number: 48, name: '水風井',    symbol: '䷯' },
-    { number: 49, name: '澤火革',    symbol: '䷰' }, { number: 50, name: '火風鼎',    symbol: '䷱' },
-    { number: 51, name: '震為雷',    symbol: '䷲' }, { number: 52, name: '艮為山',    symbol: '䷳' },
-    { number: 53, name: '風山漸',    symbol: '䷴' }, { number: 54, name: '雷澤歸妹',  symbol: '䷵' },
-    { number: 55, name: '雷火豐',    symbol: '䷶' }, { number: 56, name: '火山旅',    symbol: '䷷' },
-    { number: 57, name: '巽為風',    symbol: '䷸' }, { number: 58, name: '兌為澤',    symbol: '䷹' },
-    { number: 59, name: '風水渙',    symbol: '䷺' }, { number: 60, name: '水澤節',    symbol: '䷻' },
-    { number: 61, name: '風澤中孚',  symbol: '䷼' }, { number: 62, name: '雷山小過',  symbol: '䷽' },
-    { number: 63, name: '水火既濟',  symbol: '䷾' }, { number: 64, name: '火水未濟',  symbol: '䷿' }
+    { number: 1,  name: '乾為天',    symbol: '䷀', description: '創造與進取，剛健自強' },
+    { number: 2,  name: '坤為地',    symbol: '䷁', description: '包容承載，順應萬物' },
+    { number: 3,  name: '水雷屯',    symbol: '䷂', description: '萬事起頭難，困境中成長' },
+    { number: 4,  name: '山水蒙',    symbol: '䷃', description: '蒙昧未明，需啟蒙學習' },
+    { number: 5,  name: '水天需',    symbol: '䷄', description: '蓄勢待時，耐心等待' },
+    { number: 6,  name: '天水訟',    symbol: '䷅', description: '爭訟不利，慎防爭端' },
+    { number: 7,  name: '地水師',    symbol: '䷆', description: '師眾齊心，領導用兵' },
+    { number: 8,  name: '水地比',    symbol: '䷇', description: '親比合群，團隊合作' },
+    { number: 9,  name: '風天小畜',  symbol: '䷈', description: '小有積蓄，漸進不躁' },
+    { number: 10, name: '天澤履',    symbol: '䷉', description: '謹慎前行，腳踏實地' },
+    { number: 11, name: '地天泰',    symbol: '䷊', description: '天地交泰，和諧亨通' },
+    { number: 12, name: '天地否',    symbol: '䷋', description: '陰陽不交，閉塞不通' },
+    { number: 13, name: '天火同人',  symbol: '䷌', description: '志同道合，共同合作' },
+    { number: 14, name: '火天大有',  symbol: '䷍', description: '富有充實，光明順遂' },
+    { number: 15, name: '地山謙',    symbol: '䷎', description: '謙遜處世，以退為進' },
+    { number: 16, name: '雷地豫',    symbol: '䷏', description: '喜樂和順，居安思危' },
+    { number: 17, name: '澤雷隨',    symbol: '䷐', description: '隨順時勢，靈活應變' },
+    { number: 18, name: '山風蠱',    symbol: '䷑', description: '整頓腐敗，革故鼎新' },
+    { number: 19, name: '地澤臨',    symbol: '䷒', description: '君子臨下，教化眾人' },
+    { number: 20, name: '風地觀',    symbol: '䷓', description: '觀察省思，以德感人' },
+    { number: 21, name: '火雷噬嗑',  symbol: '䷔', description: '以剛破險，懲惡揚善' },
+    { number: 22, name: '山火賁',    symbol: '䷕', description: '文飾外表，內守真實' },
+    { number: 23, name: '山地剝',    symbol: '䷖', description: '否極泰來，萬物剝落' },
+    { number: 24, name: '地雷復',    symbol: '䷗', description: '失而復得，循環更新' },
+    { number: 25, name: '天雷无妄',  symbol: '䷘', description: '順應自然，真誠無妄' },
+    { number: 26, name: '山天大畜',  symbol: '䷙', description: '積蓄能量，以待時機' },
+    { number: 27, name: '山雷頤',    symbol: '䷚', description: '養生之道，修身養性' },
+    { number: 28, name: '澤風大過',  symbol: '䷛', description: '陰陽失衡，承重過大' },
+    { number: 29, name: '坎為水',    symbol: '䷜', description: '重險之境，反覆考驗' },
+    { number: 30, name: '離為火',    symbol: '䷝', description: '光明照耀，文明進取' },
+    { number: 31, name: '澤山咸',    symbol: '䷞', description: '以感化人，兩情相悅' },
+    { number: 32, name: '雷風恆',    symbol: '䷟', description: '恆久不變，堅守正道' },
+    { number: 33, name: '天山遯',    symbol: '䷠', description: '避險退隱，明哲保身' },
+    { number: 34, name: '雷天大壯',  symbol: '䷡', description: '剛健壯盛，須防妄動' },
+    { number: 35, name: '火地晉',    symbol: '䷢', description: '進取向上，光明前途' },
+    { number: 36, name: '地火明夷',  symbol: '䷣', description: '智者避世，光明受傷' },
+    { number: 37, name: '風火家人',  symbol: '䷤', description: '齊家之道，內外有序' },
+    { number: 38, name: '火澤睽',    symbol: '䷥', description: '分歧矛盾，異中求同' },
+    { number: 39, name: '水山蹇',    symbol: '䷦', description: '艱難困阻，需謹慎前行' },
+    { number: 40, name: '雷水解',    symbol: '䷧', description: '困境化解，解難得助' },
+    { number: 41, name: '山澤損',    symbol: '䷨', description: '減損有益，損中有得' },
+    { number: 42, name: '風雷益',    symbol: '䷩', description: '損上益下，積善得福' },
+    { number: 43, name: '澤天夬',    symbol: '䷪', description: '果決斷行，剛健能和' },
+    { number: 44, name: '天風姤',    symbol: '䷫', description: '陽遇陰，偶然相逢' },
+    { number: 45, name: '澤地萃',    symbol: '䷬', description: '萃聚人心，群體團結' },
+    { number: 46, name: '地風升',    symbol: '䷭', description: '節節高升，漸進發展' },
+    { number: 47, name: '澤水困',    symbol: '䷮', description: '陷入困境，內心堅忍' },
+    { number: 48, name: '水風井',    symbol: '䷯', description: '取之不竭，資源共享' },
+    { number: 49, name: '澤火革',    symbol: '䷰', description: '革新變革，順應時代' },
+    { number: 50, name: '火風鼎',    symbol: '䷱', description: '鼎新立業，革故鼎新' },
+    { number: 51, name: '震為雷',    symbol: '䷲', description: '動盪驚雷，警醒人心' },
+    { number: 52, name: '艮為山',    symbol: '䷳', description: '靜止止步，內心安定' },
+    { number: 53, name: '風山漸',    symbol: '䷴', description: '漸進之道，循序漸進' },
+    { number: 54, name: '雷澤歸妹',  symbol: '䷵', description: '婚姻成家，社會秩序' },
+    { number: 55, name: '雷火豐',    symbol: '䷶', description: '豐盛繁榮，需防盈滿' },
+    { number: 56, name: '火山旅',    symbol: '䷷', description: '遊歷漂泊，異地發展' },
+    { number: 57, name: '巽為風',    symbol: '䷸', description: '謙遜入微，柔順滲透' },
+    { number: 58, name: '兌為澤',    symbol: '䷹', description: '喜悅交流，柔中帶剛' },
+    { number: 59, name: '風水渙',    symbol: '䷺', description: '分散化解，團結一心' },
+    { number: 60, name: '水澤節',    symbol: '䷻', description: '節制有度，分寸得宜' },
+    { number: 61, name: '風澤中孚',  symbol: '䷼', description: '誠信中正，內外相應' },
+    { number: 62, name: '雷山小過',  symbol: '䷽', description: '謹慎行事，小心謙遜' },
+    { number: 63, name: '水火既濟',  symbol: '䷾', description: '事事圓滿，盛極須防' },
+    { number: 64, name: '火水未濟',  symbol: '䷿', description: '未竟之業，臨終待成' }
     ];
 
     // ▼▼▼ 易經六十四卦數位化資料庫 爻的順序由下到上 (初爻 -> 上爻)，1為陽爻，0為陰爻 ▼▼▼// 
     const HEXAGRAM_DATA = {
     '䷀': "111111", '䷁': "000000", '䷂': "100010", '䷃': "010001", '䷄': "111010",
-    '䷅': "010111", '䷆': "000010", '䷇': "010000", '䷈': "111011", '䷉': "110111",
-    '䷊': "111000", '䷋': "000111", '䷌': "101111", '䷍': "111101", '䷎': "000100",
-    '䷏': "001000", '䷐': "100110", '䷑': "011001", '䷒': "110000", '䷓': "000011",
-    '䷔': "101001", '䷕': "100101", '䷖': "000001", '䷗': "100000", '䷘': "111001",
-    '䷙': "100111", '䷚': "100001", '䷛': "011110", '䷜': "010010", '䷝': "101101",
-    '䷞': "001110", '䷟': "011100", '䷠': "111100", '䷡': "001111", '䷢': "000101",
-    '䷣': "101000", '䷤': "101011", '䷥': "110101", '䷦': "010001", '䷧': "001010",
-    '䷨': "110001", '䷩': "100110", '䷪': "111110", '䷫': "011111", '䷬': "000110",
+    '䷅': "010111", '䷆': "010000", '䷇': "000010", '䷈': "111011", '䷉': "110111",
+    '䷊': "111000", '䷋': "000111", '䷌': "101111", '䷍': "111101", '䷎': "001000",
+    '䷏': "000100", '䷐': "100110", '䷑': "011001", '䷒': "110000", '䷓': "000011",
+    '䷔': "100101", '䷕': "101001", '䷖': "000001", '䷗': "100000", '䷘': "100111",
+    '䷙': "111001", '䷚': "100001", '䷛': "011110", '䷜': "010010", '䷝': "101101",
+    '䷞': "001110", '䷟': "011100", '䷠': "001111", '䷡': "111100", '䷢': "000101",
+    '䷣': "101000", '䷤': "101011", '䷥': "110101", '䷦': "001010", '䷧': "010100",
+    '䷨': "110001", '䷩': "100011", '䷪': "111110", '䷫': "011111", '䷬': "000110",
     '䷭': "011000", '䷮': "010110", '䷯': "011010", '䷰': "101110", '䷱': "011101",
-    '䷲': "100100", '䷳': "001001", '䷴': "110011", '䷵': "110100", '䷶': "101100",
+    '䷲': "100100", '䷳': "001001", '䷴': "001011", '䷵': "110100", '䷶': "101100",
     '䷷': "001101", '䷸': "011011", '䷹': "110110", '䷺': "010011", '䷻': "110010",
     '䷼': "110011", '䷽': "001100", '䷾': "101010", '䷿': "010101"
-    };
+    };  
 
     // ▼▼▼ 太歲合神計神的判斷式 ▼▼▼
     const DEITY_RULES_DATA = [
@@ -491,6 +524,10 @@ document.addEventListener('DOMContentLoaded', () => {
     '己': '酉', '庚': '申', '辛': '未', '壬': '午', '癸': '巳'
     };
 
+    // ▼▼▼ 陽性陰性地支列表 ▼▼▼
+    const YANG_BRANCHES = ['子', '寅', '辰', '午', '申', '戌'];
+    const YIN_BRANCHES = ['丑', '卯', '巳', '未', '酉', '亥'];
+
 
 
 
@@ -505,26 +542,68 @@ if (svgPlate) { svgPlate.appendChild(dynamicGroup); }
 let pathCounter = 0;
 
 // --- 所有的繪圖「工具函式」都集中在這裡 ---
-function addRadialText(angle, startRadius, text, className) {
-    pathCounter++;
-    const pathId = `radial-path-${pathCounter}`;
-    const angleRad = angle * (Math.PI / 180);
-    const endX = RADIAL_LAYOUT.center.x + 600 * Math.cos(angleRad);
-    const endY = RADIAL_LAYOUT.center.y + 600 * Math.sin(angleRad);
-    const path = document.createElementNS(SVG_NS, 'path');
-    path.setAttribute('id', pathId);
-    path.setAttribute('d', `M ${RADIAL_LAYOUT.center.x},${RADIAL_LAYOUT.center.y} L ${endX},${endY}`);
-    path.setAttribute('fill', 'none');
-    path.setAttribute('stroke', 'none');
-    dynamicGroup.appendChild(path);
-    const textElement = document.createElementNS(SVG_NS, 'text');
-    textElement.setAttribute('class', 'dynamic-text ' + className);
-    const textPath = document.createElementNS(SVG_NS, 'textPath');
-    textPath.setAttribute('href', '#' + pathId);
-    textPath.setAttribute('startOffset', startRadius);
-    textPath.textContent = text;
-    textElement.appendChild(textPath);
-    dynamicGroup.appendChild(textElement);
+// ▼▼▼ 繪製放射狀文字的工具函式 (可翻轉版) ▼▼▼
+// ▼▼▼ 繪製放射狀文字的工具函式 (可針對特定宮位翻轉) ▼▼▼
+// ▼▼▼ 繪製放射狀文字的工具函式 (可翻轉、可調整距離版) ▼▼▼
+function addRadialText(palaceId, angle, startRadius, text, className) {
+    
+    const targetPalacesForFlip = ['pSi', 'pWu', 'pWei'];
+    
+    // 預設使用傳入的原始半徑
+    let effectiveRadius = startRadius;
+
+    // 檢查是否是需要特殊處理的宮位
+    if (targetPalacesForFlip.includes(palaceId)) {
+        // 如果是，就從設定檔讀取額外的距離並加上去
+        const offset = RADIAL_LAYOUT.bottomPalaceRadiusOffset || 0;
+        effectiveRadius = startRadius + offset;
+    }
+
+    // --- 以下為繪圖邏輯 ---
+    if (targetPalacesForFlip.includes(palaceId)) {
+        const angleRad = angle * (Math.PI / 180);
+        const x = RADIAL_LAYOUT.center.x + effectiveRadius * Math.cos(angleRad);
+        const y = RADIAL_LAYOUT.center.y + effectiveRadius * Math.sin(angleRad);
+        
+        // 採用您驗證可行的旋轉角度
+        let rotation = angle - 90 + 180;
+
+        const textElement = document.createElementNS(SVG_NS, 'text');
+        textElement.setAttribute('x', x);
+        textElement.setAttribute('y', y);
+        textElement.setAttribute('transform', `rotate(${rotation}, ${x}, ${y})`);
+        textElement.setAttribute('class', 'dynamic-text ' + className);
+        textElement.setAttribute('dominant-baseline', 'central');
+        textElement.setAttribute('text-anchor', 'middle');
+        textElement.textContent = text;
+        dynamicGroup.appendChild(textElement);
+
+    } else {
+        // 其他宮位，維持原本的 <textPath> 方法
+        pathCounter++;
+        const pathId = `radial-path-${pathCounter}`;
+        const angleRad = angle * (Math.PI / 180);
+        const endX = RADIAL_LAYOUT.center.x + 600 * Math.cos(angleRad);
+        const endY = RADIAL_LAYOUT.center.y + 600 * Math.sin(angleRad);
+        
+        const path = document.createElementNS(SVG_NS, 'path');
+        path.setAttribute('id', pathId);
+        path.setAttribute('d', `M ${RADIAL_LAYOUT.center.x},${RADIAL_LAYOUT.center.y} L ${endX},${endY}`);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', 'none');
+        dynamicGroup.appendChild(path);
+        
+        const textElement = document.createElementNS(SVG_NS, 'text');
+        textElement.setAttribute('class', 'dynamic-text ' + className);
+        
+        const textPath = document.createElementNS(SVG_NS, 'textPath');
+        textPath.setAttribute('href', '#' + pathId);
+        textPath.setAttribute('startOffset', startRadius); // 注意：這裡仍然使用原始的 startRadius
+        textPath.textContent = text;
+        
+        textElement.appendChild(textPath);
+        dynamicGroup.appendChild(textElement);
+    }
 }
 function addSingleCharRing(data, ringConfig) {
     for (let i = 0; i < data.length; i++) {
@@ -684,29 +763,29 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
                     if (starName === '定目') return 'ding-mu-style';
                     return 'main-info-style';
                 };
-                if (pData.lineLeft.fieldA) addRadialText(angleLeft, RADIAL_LAYOUT.radii.lineLeft.fieldA, pData.lineLeft.fieldA, getLineLeftClass(pData.lineLeft.fieldA));
-                if (pData.lineLeft.fieldB) addRadialText(angleLeft, RADIAL_LAYOUT.radii.lineLeft.fieldB, pData.lineLeft.fieldB, getLineLeftClass(pData.lineLeft.fieldB));
-                if (pData.lineLeft.fieldG) addRadialText(angleLeft, RADIAL_LAYOUT.radii.lineLeft.fieldG, pData.lineLeft.fieldG, getLineLeftClass(pData.lineLeft.fieldG));
+                if (pData.lineLeft.fieldA) addRadialText(palaceKey, angleLeft, RADIAL_LAYOUT.radii.lineLeft.fieldA, pData.lineLeft.fieldA, getLineLeftClass(pData.lineLeft.fieldA));
+                if (pData.lineLeft.fieldB) addRadialText(palaceKey, angleLeft, RADIAL_LAYOUT.radii.lineLeft.fieldB, pData.lineLeft.fieldB, getLineLeftClass(pData.lineLeft.fieldB));
+                if (pData.lineLeft.fieldG) addRadialText(palaceKey, angleLeft, RADIAL_LAYOUT.radii.lineLeft.fieldG, pData.lineLeft.fieldG, getLineLeftClass(pData.lineLeft.fieldG));
             }
             if (pData.lineCenter) {
                 const getLineCenterClass = (starName) => {
                     if (['君基', '臣基', '民基'].includes(starName)) return 'ji-star-style';
                     return 'sub-info-style';
                 };
-                if (pData.lineCenter.fieldC) addRadialText(angleCenter, RADIAL_LAYOUT.radii.lineCenter.fieldC, pData.lineCenter.fieldC, getLineCenterClass(pData.lineCenter.fieldC));
-                if (pData.lineCenter.fieldD) addRadialText(angleCenter, RADIAL_LAYOUT.radii.lineCenter.fieldD, pData.lineCenter.fieldD, getLineCenterClass(pData.lineCenter.fieldD));
-                if (pData.lineCenter.fieldC2) addRadialText(angleCenter, RADIAL_LAYOUT.radii.lineCenter.fieldC2, pData.lineCenter.fieldC2, getLineCenterClass(pData.lineCenter.fieldC2));
-                if (pData.lineCenter.fieldD2) addRadialText(angleCenter, RADIAL_LAYOUT.radii.lineCenter.fieldD2, pData.lineCenter.fieldD2, getLineCenterClass(pData.lineCenter.fieldD2));
+                if (pData.lineCenter.fieldC) addRadialText(palaceKey, angleCenter, RADIAL_LAYOUT.radii.lineCenter.fieldC, pData.lineCenter.fieldC, getLineCenterClass(pData.lineCenter.fieldC));
+                if (pData.lineCenter.fieldD) addRadialText(palaceKey, angleCenter, RADIAL_LAYOUT.radii.lineCenter.fieldD, pData.lineCenter.fieldD, getLineCenterClass(pData.lineCenter.fieldD));
+                if (pData.lineCenter.fieldC2) addRadialText(palaceKey, angleCenter, RADIAL_LAYOUT.radii.lineCenter.fieldC2, pData.lineCenter.fieldC2, getLineCenterClass(pData.lineCenter.fieldC2));
+                if (pData.lineCenter.fieldD2) addRadialText(palaceKey, angleCenter, RADIAL_LAYOUT.radii.lineCenter.fieldD2, pData.lineCenter.fieldD2, getLineCenterClass(pData.lineCenter.fieldD2));
             }
             if (pData.lineRight) {
                 const getLineRightClass = (starName) => {
                     if (['天乙', '地乙', '四神', '飛符'].includes(starName)) return 'celestial-messenger-style';
                     if (starName === '皇恩星') return 'huang-en-style'; return 'deity-style';
                 }; 
-                if (pData.lineRight.fieldE) addRadialText(angleRight, RADIAL_LAYOUT.radii.lineRight.fieldE, pData.lineRight.fieldE, getLineRightClass(pData.lineRight.fieldE));
-                if (pData.lineRight.fieldF) addRadialText(angleRight, RADIAL_LAYOUT.radii.lineRight.fieldF, pData.lineRight.fieldF, getLineRightClass(pData.lineRight.fieldF));
-                if (pData.lineRight.fieldE2) addRadialText(angleRight, RADIAL_LAYOUT.radii.lineRight.fieldE2, pData.lineRight.fieldE2, getLineRightClass(pData.lineRight.fieldE2));
-                if (pData.lineRight.fieldF2) addRadialText(angleRight, RADIAL_LAYOUT.radii.lineRight.fieldF2, pData.lineRight.fieldF2, getLineRightClass(pData.lineRight.fieldF2));
+                if (pData.lineRight.fieldE) addRadialText(palaceKey, angleRight, RADIAL_LAYOUT.radii.lineRight.fieldE, pData.lineRight.fieldE, getLineRightClass(pData.lineRight.fieldE));
+                if (pData.lineRight.fieldF) addRadialText(palaceKey, angleRight, RADIAL_LAYOUT.radii.lineRight.fieldF, pData.lineRight.fieldF, getLineRightClass(pData.lineRight.fieldF));
+                if (pData.lineRight.fieldE2) addRadialText(palaceKey, angleRight, RADIAL_LAYOUT.radii.lineRight.fieldE2, pData.lineRight.fieldE2, getLineRightClass(pData.lineRight.fieldE2));
+                if (pData.lineRight.fieldF2) addRadialText(palaceKey, angleRight, RADIAL_LAYOUT.radii.lineRight.fieldF2, pData.lineRight.fieldF2, getLineRightClass(pData.lineRight.fieldF2));
             }
             
         }
@@ -1995,6 +2074,90 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
 
     return annualHexagram || { name: '計算錯誤', symbol: '' };
     }
+    // ▼▼▼ 計算「立業之期」歲數的函式 ▼▼▼
+    function calculateLiYeStartAge(birthHexagram) {
+    // 安全檢查，如果沒有傳入出生卦資料，則返回 null
+    if (!birthHexagram || !birthHexagram.symbol) {
+        return null;
+    }
+    
+    // 1. 從數位化資料庫中，找到出生卦的爻象字串 (例如 "100010")
+    const yaoString = HEXAGRAM_DATA[birthHexagram.symbol];
+    if (!yaoString || yaoString.length !== 6) {
+        return null; // 如果資料錯誤或不完整，也返回 null
+    }
+
+    // 2. 遍歷爻象字串，計算總年數 (陽爻為9年，陰爻為6年)
+    let totalYears = 0;
+    for (const yao of yaoString) {
+        if (yao === '1') { // '1' 代表陽爻
+            totalYears += 9;
+        } else { // '0' 代表陰爻
+            totalYears += 6;
+        }
+    }
+
+    // 3. 根據規則，最終年紀是總年數 + 1
+    return totalYears + 1;
+    }
+    // ▼▼▼ 計算「流年變卦」的函式 (已修正) ▼▼▼
+    function calculateAnnualChangingHexagram(annualHexagram, baiLiuLimitResult, currentUserAge) {
+    if (!annualHexagram || !baiLiuLimitResult || !currentUserAge) return null;
+
+    // ▼▼▼ 唯一的修改點在這裡 ▼▼▼
+    // 我們不再需要 .find()，因為傳入的 baiLiuLimitResult 本身就是我們要的當前大限資料
+    const currentLimit = baiLiuLimitResult;
+    
+    // 簡單檢查一下物件是否有效
+    if (!currentLimit.palaceId) return null;
+
+    const currentPalaceId = currentLimit.palaceId;
+    const currentBranch = PALACE_ID_TO_BRANCH[currentPalaceId];
+    
+    // 2. 判斷宮位地支的陰陽
+    const isYangBranch = YANG_BRANCHES.includes(currentBranch);
+    
+    // 3. 獲取流年卦的爻象 ("110011")
+    const originalYaoStr = HEXAGRAM_DATA[annualHexagram.symbol];
+    if (!originalYaoStr) return { name: '卦象資料錯誤', symbol: '' };
+
+    // 4. 根據陰陽，找出所有可變的爻
+    const targetYaoType = isYangBranch ? '1' : '0';
+    let targetYaoIndices = [];
+    for (let i = 0; i < originalYaoStr.length; i++) {
+        if (originalYaoStr[i] === targetYaoType) {
+            targetYaoIndices.push(i);
+        }
+    }
+
+    // 如果沒有可變的爻，則流年變卦與流年卦相同
+    if (targetYaoIndices.length === 0) {
+        return annualHexagram;
+    }
+
+    // 如果是陰支，數爻的順序要「由上往下」
+    if (!isYangBranch) {
+        targetYaoIndices.reverse();
+    }
+
+    // 5. 計算從「子」到目標地支的步數
+    const steps = (EARTHLY_BRANCHES.indexOf(currentBranch) - EARTHLY_BRANCHES.indexOf('子') + 12) % 12 + 1;
+
+    // 6. 循環計數，找到要變的那個爻的索引
+    const stopIndexInTargets = (steps - 1) % targetYaoIndices.length;
+    const yaoToChangeIndex = targetYaoIndices[stopIndexInTargets];
+
+    // 7. 執行爻變
+    let yaoArray = originalYaoStr.split('');
+    yaoArray[yaoToChangeIndex] = (yaoArray[yaoToChangeIndex] === '1') ? '0' : '1';
+    const newYaoStr = yaoArray.join('');
+
+    // 8. 根據新的爻象，反向查找對應的卦
+    const newSymbol = Object.keys(HEXAGRAM_DATA).find(key => HEXAGRAM_DATA[key] === newYaoStr);
+    const changingHexagram = I_CHING_HEXAGRAMS.find(h => h.symbol === newSymbol);
+
+    return changingHexagram || { name: '查無此卦', symbol: '' };
+    }
 
     // ▼▼▼ 每次增加星都要更新的函式 ▼▼▼
     function generateMainChartData(lookupResult, deitiesResult, suanStarsResult, shiWuFuResult, xiaoYouResult, junJiResult, chenJiResult, minJiResult, tianYiResult, diYiResult, siShenResult, feiFuResult, daYouResult, yueJiangData, guiRenData, huangEnResult) {
@@ -2318,6 +2481,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         const birthHexagramResult = dataForCalculation.birthHexagramResult;
         const liYeHexagramResult = dataForCalculation.liYeHexagramResult;
         const annualHexagramResult = dataForCalculation.annualHexagramResult;
+        
     
         
         // 2. 按照您想要的順序，重新組合 outputText 字串
@@ -2342,12 +2506,21 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         outputText += `\n  出生卦 : ${birthHexagramResult.number} ${birthHexagramResult.name} ${birthHexagramResult.symbol}`;
         }
         if (liYeHexagramResult) {
-        outputText += `\n  立業卦 : ${liYeHexagramResult.number} ${liYeHexagramResult.name} ${liYeHexagramResult.symbol}`;
+        const liYeStartAge = dataForCalculation.liYeStartAge;
+        // 如果有計算出歲數，就組合進字串裡，否則留空
+        const ageText = liYeStartAge ? ` (${liYeStartAge}歲開始)` : '';
+        outputText += `\n  立業卦 : ${liYeHexagramResult.number} ${liYeHexagramResult.name} ${liYeHexagramResult.symbol}${ageText}`;
         }
         if (annualHexagramResult) {
         const currentYear = new Date().getFullYear();
         outputText += `\n  流年卦 : ${annualHexagramResult.number} ${annualHexagramResult.name} ${annualHexagramResult.symbol} (${currentYear}年${dataForCalculation.currentUserAge}歲)`;
+        outputText += `\n  <span class="hexagram-description-style">↳ ${annualHexagramResult.description}</span>`;
         } 
+        const annualChangingHexagramResult = dataForCalculation.annualChangingHexagramResult;
+        if (annualChangingHexagramResult) {
+        outputText += `\n  流年變卦 : ${annualChangingHexagramResult.number} ${annualChangingHexagramResult.name} ${annualChangingHexagramResult.symbol}`;
+        outputText += `\n  <span class="hexagram-description-style">↳ ${annualChangingHexagramResult.description}</span>`;
+        }
         if (huaYaoResults && huaYaoResults.nianGan) {
             outputText += `\n\n年干化曜：\n  天元官星: ${huaYaoResults.nianGan.tianYuan}\n  干元星: ${huaYaoResults.nianGan.ganYuan}\n  父母星: ${huaYaoResults.nianGan.fuMu}`;
         }
@@ -2442,7 +2615,9 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     dataForCalculation.feiMaDaXianResult = calculateFeiMaDaXian(dataForCalculation.yearPillar.charAt(0), dataForCalculation.currentUserAge);
     dataForCalculation.feiLuLiuNianResult = calculateFeiLuLiuNian(dataForCalculation.yearPillar.charAt(0), dataForCalculation.dayPillar.charAt(0), dataForCalculation.gender, dataForCalculation.currentUserAge, arrangedLifePalaces);
     dataForCalculation.feiMaLiuNianResult = calculateFeiMaLiuNian(dataForCalculation.hourPillar.charAt(0), dataForCalculation.dayPillar.charAt(0), dataForCalculation.gender, dataForCalculation.currentUserAge, dataForCalculation.arrangedLifePalaces);
-    dataForCalculation.heiFuResult = calculateHeiFu(dataForCalculation.hourPillar.charAt(0), dataForCalculation.currentUserAge)
+    dataForCalculation.heiFuResult = calculateHeiFu(dataForCalculation.hourPillar.charAt(0), dataForCalculation.currentUserAge);
+    dataForCalculation.liYeStartAge = calculateLiYeStartAge(dataForCalculation.birthHexagramResult);
+    dataForCalculation.annualChangingHexagramResult = calculateAnnualChangingHexagram(dataForCalculation.annualHexagramResult, dataForCalculation.baiLiuResult, dataForCalculation.currentUserAge)
 
     // ▼▼▼ 修正點3: 將 xingNianData 作為參數傳入 ▼▼▼
     runCalculation(dataForCalculation, hour, xingNianData); 

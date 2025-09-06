@@ -196,6 +196,13 @@
     font-family: sans-serif; 
     }
 
+    /* 「卦象簡釋」的專屬樣式 */
+    .hexagram-description-style {
+    font-size: 14px;          /* 字體可以稍微小一點 */
+    color: #1268ba;             /* 使用柔和的灰色，不搶主資訊風采 */
+    font-weight: normal;      /* 使用標準體重 */
+    }
+
     /* 用於凸顯星曜的圓圈樣式 */
     .highlight-circle {
     fill: none;           /* 圓圈內部透明 */
@@ -327,8 +334,9 @@
 
 /* 控制「計算結果摘要」的區塊 */
 #calculation-summary {
-    padding-top: 2px;
-    margin-top: 2px;
+    font-size: 15px; /* 【可調整】您可以修改這個數字來控制主要結果的字體大小 */
+    padding-top: 10px;
+    margin-top: 10px;
     border-top: 1px solid #ccc;
 }
 
