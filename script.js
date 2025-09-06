@@ -10,32 +10,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const VALID_PALACES_CLOCKWISE = [ 'pZi', 'pChou', 'pYin', 'pMao', 'pChen', 'pSi', 'pWu', 'pWei', 'pShen', 'pYou', 'pXu', 'pHai' ];
     const LIFE_PALACE_NAMES = [ '命', '兄', '妻', '孫', '財', '田', '官', '奴', '疾', '福', '貌', '父' ];
     const AGE_LIMIT_DATA = [ '1-15', '16-20', '21-31', '32-35.5', '35.6-40', '41-45', '46-60', '61-64.5', '64.6-71.5', '71.6-82.5', '82.6-96.5', '96.6-106' ];
+    const ANNUAL_LIMIT_DISPLAY_YEARS = 8; // 顯示當前歲數。您可以隨意修改這個數字 (例如改成 7 或 15)
 
     // ▼▼▼ 盤面的位置設定 ▼▼▼ 
     const RADIAL_LAYOUT = {
-        center: { x: 381, y: 403 },
+        center: { x: 395.5, y: 418.5 },
         angles: { pYou:0, pXu:22.5, pQian:45, pHai:66.5, pZi:90, pChou:113.5, pGen:135, pYin:157.5, pMao:180, pChen:202.5, pXun:225, pSi:246.5, pWu:270, pWei:293.5, pKun:315, pShen:337.5 },
         angleOffset: 6,
         radii: {
-            lineLeft:   { fieldA: 144, fieldB: 185, fieldG: 226 },
-            lineCenter: { fieldC: 144, fieldD: 174, fieldC2: 200, fieldD2: 230 },
-            lineRight:  { fieldE: 144, fieldF: 174, fieldE2: 200, fieldF2: 230 }
+            lineLeft:   { fieldA: 135, fieldB: 175, fieldG: 215 },
+            lineCenter: { fieldC: 135, fieldD: 165, fieldC2: 195, fieldD2: 225 },
+            lineRight:  { fieldE: 135, fieldF: 165, fieldE2: 195, fieldF2: 225 }
         },
         // ▼▼▼ 定義圓心 4 個欄位的座標 ▼▼▼
         centerFields: {
-            field1: { x: 381, y: 392 }, field2: { x: 381, y: 423 },
-            field3: { x: 368, y: 408 }, field4: { x: 398, y: 408 }
+            field1: { x: 397, y: 408 }, field2: { x: 397, y: 438 },
+            field3: { x: 381, y: 420 }, field4: { x: 413, y: 420 }
         },
         
         lifePalacesRing: { radius: 100, palaces: ['pZi','pChou','pYin','pMao','pChen','pSi','pWu','pWei','pShen','pYou','pXu','pHai'], color: '#792e13ff' },
-        ageLimitRing: { radius: 125, palaces: ['pZi','pChou','pYin','pMao','pChen','pSi','pWu','pWei','pShen','pYou','pXu','pHai'], flipPalaces: ['pZi','pHai','pSi','pXu','pYou','pShen'], color: '#626363', className: 'age-limit-style' },
+        ageLimitRing: { radius: 122, palaces: ['pZi','pChou','pYin','pMao','pChen','pSi','pWu','pWei','pShen','pYou','pXu','pHai'], flipPalaces: ['pZi','pHai','pSi','pXu','pYou','pShen'], color: '#626363', className: 'age-limit-style' },
         sdrRing: { radius: 110, hOffset: 6.5, palaces: ['pZi','pChou','pYin','pMao','pChen','pSi','pWu','pWei','pShen','pYou','pXu','pHai'] },
-        yueJiangRing: { radius: 293, rotationOffset: 5, palaces: ['pZi','pHai','pXu','pYou','pShen','pWei','pWu','pSi','pChen','pMao','pYin','pChou'], flipPalaces: ['pHai','pSi','pXu','pYou','pShen'], color: '#501dd3' },
-        guiRenRing: { radius: 293, rotationOffset: -5, palaces: ['pZi','pChou','pYin','pMao','pChen','pSi','pWu','pWei','pShen','pYou','pXu','pHai'], flipPalaces: ['pZi','pHai','pSi','pXu','pYou','pWu','pShen'], color: '#ae00ff' },
-        outerRing: { radius: 250, palaces: ['pZi', 'pGen', 'pMao', 'pXun', 'pWu', 'pKun', 'pYou', 'pQian']},
-        xingNianRing: { radius: 270, flipPalaces: ['pZi', 'pHai', 'pXu', 'pYou', 'pShen', 'pSi']},
-        yangJiuRing: { radius: 314, rotationOffset: 6, className: 'yang-jiu-style', flipPalaces: ['pHai','pSi','pXu','pYou','pShen'] },
-        baiLiuRing: { radius: 314, rotationOffset: -6, className: 'bai-liu-style', flipPalaces: ['pZi', 'pHai', 'pXu', 'pYou', 'pShen', 'pSi'] } 
+        yueJiangRing: { radius: 288, rotationOffset: 6, palaces: ['pZi','pHai','pXu','pYou','pShen','pWei','pWu','pSi','pChen','pMao','pYin','pChou'], flipPalaces: ['pHai','pSi','pXu','pYou','pShen'], color: '#501dd3' },
+        guiRenRing: { radius: 288, rotationOffset: -5, palaces: ['pZi','pChou','pYin','pMao','pChen','pSi','pWu','pWei','pShen','pYou','pXu','pHai'], flipPalaces: ['pZi','pHai','pSi','pXu','pYou','pWu','pShen'], color: '#ae00ff' },
+        outerRing: { radius: 257, palaces: ['pZi', 'pGen', 'pMao', 'pXun', 'pWu', 'pKun', 'pYou', 'pQian']},
+        xingNianRing: { radius: 303, flipPalaces: ['pZi', 'pHai', 'pXu', 'pYou', 'pShen', 'pSi']},
+        yangJiuRing: { radius: 331, rotationOffset: 5, className: 'yang-jiu-style', flipPalaces: ['pHai','pSi','pXu','pYou','pShen'] },
+        baiLiuRing: { radius: 331, rotationOffset: -5.5, className: 'bai-liu-style', flipPalaces: ['pZi', 'pHai', 'pWu', 'pXu', 'pYou', 'pShen', 'pSi'] }, 
+        baiLiuXiaoXianRing: { radius: 317, rotationOffset: -5.5, className: 'bai-liu-style', flipPalaces: ['pZi', 'pHai', 'pWu', 'pXu', 'pYou', 'pShen', 'pSi'] },
+        daYouZhenXianRing: { radius: 317, rotationOffset: 5, className: 'da-you-zhen-xian-style', flipPalaces: ['pHai','pSi','pXu','pYou','pShen'] },
+        feiLuDaXianRing: { radius: 344, rotationOffset: 5, className: 'fei-lu-da-xian-style', flipPalaces: ['pHai','pSi','pXu','pYou','pShen'] },
+        feiMaDaXianRing: { radius: 344, rotationOffset: -5.5, className: 'fei-ma-da-xian-style', flipPalaces: ['pZi', 'pHai', 'pWu', 'pXu', 'pYou', 'pShen', 'pSi'] },
+        feiLuLiuNianRing: { radius: 272, rotationOffset: 7, className: 'fei-lu-liu-nian-style', flipPalaces: ['pHai','pSi','pXu','pYou','pShen'] },
+        feiMaLiuNianRing: { radius: 272, rotationOffset: -6, className: 'fei-ma-da-xian-style', flipPalaces: ['pZi', 'pHai', 'pWu', 'pXu', 'pYou', 'pShen', 'pSi'] },
+        heiFuRing: { radius: 272, rotationOffset: 0, className: 'hei-fu-style', flipPalaces: ['pZi', 'pHai', 'pXu', 'pYou', 'pShen', 'pSi'] }
+        
     };
 
     // ▼▼▼ 144局的完整資料庫 ▼▼▼
@@ -1588,6 +1597,53 @@ document.addEventListener('DOMContentLoaded', () => {
     '戊': { startBranch: '寅', firstAge: 2 }, '癸': { startBranch: '寅', firstAge: 2 }
     };
 
+    // ▼▼▼ 百六小限的規則資料庫 ▼▼▼
+    const BAI_LIU_XIAO_XIAN_RULES = {
+    '甲': { startBranch: '午', startAge: 5 }, '己': { startBranch: '午', startAge: 5 },
+    '乙': { startBranch: '巳', startAge: 4 }, '庚': { startBranch: '巳', startAge: 4 },
+    '丙': { startBranch: '申', startAge: 1 }, '辛': { startBranch: '申', startAge: 1 },
+    '丁': { startBranch: '亥', startAge: 3 }, '壬': { startBranch: '亥', startAge: 3 },
+    '戊': { startBranch: '寅', startAge: 2 }, '癸': { startBranch: '寅', startAge: 2 }
+    };
+
+    // ▼▼▼ 大遊真限規則資料庫 ▼▼▼
+    const ZHI_SIX_HARMONIES = {
+    '子': '丑', '丑': '子', '寅': '亥', '卯': '戌', '辰': '酉', '巳': '申',
+    '午': '未', '未': '午', '申': '巳', '酉': '辰', '戌': '卯', '亥': '寅'
+    };
+    const DA_YOU_SEQUENCE = [
+    '丑', '酉', '午', '亥', '寅', '巳', '子', '卯', '辰', '未', '申', '戌'
+    ];
+    const DA_YOU_DURATIONS = {
+    '丑': 5, '酉': 6, '午': 7, '亥': 7, '寅': 11, '巳': 4,
+    '子': 4, '卯': 13, '辰': 12, '未': 6, '申': 5, '戌': 5
+    };
+
+    // ▼▼▼ 飛祿大限的規則資料庫 ▼▼▼
+    const FEI_LU_LIMIT_RULES = {
+    '甲': { startBranch: '亥', firstAge: 3 }, '乙': { startBranch: '亥', firstAge: 3 },
+    '丙': { startBranch: '寅', firstAge: 2 }, '丁': { startBranch: '寅', firstAge: 2 },
+    '戊': { startBranch: '午', firstAge: 5 }, '己': { startBranch: '午', firstAge: 5 },
+    '庚': { startBranch: '巳', firstAge: 4 }, '辛': { startBranch: '巳', firstAge: 4 },
+    '壬': { startBranch: '申', firstAge: 1 }, '癸': { startBranch: '申', firstAge: 1 }
+    };
+
+    // ▼▼▼ 飛祿流年(小限)的規則資料庫 ▼▼▼
+    const FEI_LU_ANNUAL_RULES = {
+    '甲': { startBranch: '亥', startAge: 1 }, '乙': { startBranch: '亥', startAge: 1 },
+    '丙': { startBranch: '寅', startAge: 1 }, '丁': { startBranch: '寅', startAge: 1 },
+    '戊': { startBranch: '午', startAge: 1 }, '己': { startBranch: '午', startAge: 1 },
+    '庚': { startBranch: '巳', startAge: 1 }, '辛': { startBranch: '巳', startAge: 1 },
+    '壬': { startBranch: '申', startAge: 1 }, '癸': { startBranch: '申', startAge: 1 }
+    };
+
+    // ▼▼▼ 黑符的規則資料庫 ▼▼▼
+    const HEI_FU_RULES = {
+    '甲': '寅', '乙': '卯', '丙': '子', '丁': '亥', '戊': '戌',
+    '己': '酉', '庚': '申', '辛': '未', '壬': '午', '癸': '巳'
+    };
+
+
 
 
 // =================================================================
@@ -1712,7 +1768,7 @@ function addEncircledText(text, x, y, rotation, textClassName, circleClassName) 
     const circle = document.createElementNS(SVG_NS, 'circle');
     circle.setAttribute('cx', 0);
     circle.setAttribute('cy', 0);
-    circle.setAttribute('r', 12);
+    circle.setAttribute('r', 9);
     circle.setAttribute('class', circleClassName);
     const textElement = document.createElementNS(SVG_NS, 'text');
     textElement.setAttribute('x', 0);
@@ -1743,8 +1799,8 @@ function addCenterText(text, coords, className) {
 }
 
 // --- 繪圖主函式 (最終整理版) ---
-function renderChart(mainData, palacesData, agesData, sdrData, centerData, outerRingData, xingNianData, yangJiuData, baiLiuData) {
-        clearDynamicData();
+function renderChart(mainData, palacesData, agesData, sdrData, centerData, outerRingData, xingNianData, yangJiuData, baiLiuData, baiLiuXiaoXianData, daYouZhenXianData, feiLuDaXianData, feiMaDaXianData, feiLuLiuNianData, feiMaLiuNianData, heiFuData) {    
+    clearDynamicData();
         if (outerRingData) {
             const ringConfig = RADIAL_LAYOUT.outerRing;
             for (const palaceId in outerRingData) {
@@ -1836,8 +1892,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             // 3. 呼叫正確的繪圖函式
             addRotatedRingText(ageDataForRing, xingNianRingConfig);
     }
-
-    // ▼▼▼ 新增：繪製陽九限 ▼▼▼
+    // ▼▼▼ 繪製陽九限 ▼▼▼
     if (yangJiuData && yangJiuData.palaceId) {
         const config = RADIAL_LAYOUT.yangJiuRing;
         const palaceId = yangJiuData.palaceId;
@@ -1861,8 +1916,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         textElement.textContent = text;
         dynamicGroup.appendChild(textElement);
     }
-
-    // ▼▼▼ 新增：繪製百六限 ▼▼▼
+    // ▼▼▼ 繪製百六限 ▼▼▼
     if (baiLiuData && baiLiuData.palaceId) {
         const config = RADIAL_LAYOUT.baiLiuRing;
         const palaceId = baiLiuData.palaceId; // <-- 已修正
@@ -1885,6 +1939,190 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         textElement.setAttribute('transform', `rotate(${rotation}, ${x}, ${y})`);
         textElement.textContent = text;
         dynamicGroup.appendChild(textElement);
+    }
+    // ▼▼▼ 繪製百六小限 ▼▼▼
+    if (baiLiuXiaoXianData) {
+        // 1. 將計算結果整理成繪圖函式需要的格式 (一個12元素的陣列)
+        const displayData = VALID_PALACES_CLOCKWISE.map(palaceId => {
+            // 如果某個宮位有歲數資料，就把它們用空格連接起來，否則留空
+            return baiLiuXiaoXianData[palaceId] ? baiLiuXiaoXianData[palaceId].join(' ') : "";
+        });
+
+        // 2. 準備設定檔，告訴繪圖函式使用哪個環圈設定、以及資料要對應到哪個宮位
+        const ringConfig = { 
+            ...RADIAL_LAYOUT.baiLiuXiaoXianRing, // 複製我們在第一區的設定
+            palaces: VALID_PALACES_CLOCKWISE     // 告訴它要按照「子丑寅卯...」的順序來畫
+        };
+        
+        // 3. 呼叫我們現有的、強大的 addRotatedRingText 工具函式來繪製
+        addRotatedRingText(displayData, ringConfig);
+    }
+    // ▼▼▼ 繪製大遊真限 (最多三個) ▼▼▼
+    if (daYouZhenXianData && daYouZhenXianData.length > 0) {
+        const config = RADIAL_LAYOUT.daYouZhenXianRing;
+
+        daYouZhenXianData.forEach(item => {
+            if (!item || !item.palaceId) return;
+
+            const palaceId = item.palaceId;
+            const text = item.text;
+            
+            const rotationOffset = config.rotationOffset || 0;
+            const angle = RADIAL_LAYOUT.angles[palaceId] + rotationOffset;
+            
+            const angleRad = angle * (Math.PI / 180);
+            const x = RADIAL_LAYOUT.center.x + config.radius * Math.cos(angleRad);
+            const y = RADIAL_LAYOUT.center.y + config.radius * Math.sin(angleRad);
+
+            let rotation = angle + 90;
+            if (angle > 90 && angle < 270) { rotation = angle - 90; }
+            if (config.flipPalaces.includes(palaceId)) { rotation += 180; }
+            
+            const textElement = document.createElementNS(SVG_NS, 'text');
+            textElement.setAttribute('x', x);
+            textElement.setAttribute('y', y);
+            textElement.setAttribute('text-anchor', 'middle');
+            textElement.setAttribute('dominant-baseline', 'central');
+            textElement.setAttribute('class', `dynamic-text ${config.className}`);
+            textElement.setAttribute('style', 'writing-mode: horizontal-tb;');
+            textElement.setAttribute('transform', `rotate(${rotation}, ${x}, ${y})`);
+            textElement.textContent = text;
+            dynamicGroup.appendChild(textElement);
+        });
+    }
+    // ▼▼▼ 繪製飛祿大限 (最多三個) ▼▼▼
+    if (feiLuDaXianData && feiLuDaXianData.length > 0) {
+        const config = RADIAL_LAYOUT.feiLuDaXianRing;
+
+        feiLuDaXianData.forEach(item => {
+            if (!item || !item.palaceId) return;
+            const { palaceId, text } = item;
+            
+            const rotationOffset = config.rotationOffset || 0;
+            const angle = RADIAL_LAYOUT.angles[palaceId] + rotationOffset;
+            
+            const angleRad = angle * (Math.PI / 180);
+            const x = RADIAL_LAYOUT.center.x + config.radius * Math.cos(angleRad);
+            const y = RADIAL_LAYOUT.center.y + config.radius * Math.sin(angleRad);
+
+            let rotation = angle + 90;
+            if (angle > 90 && angle < 270) { rotation = angle - 90; }
+            if (config.flipPalaces.includes(palaceId)) { rotation += 180; }
+            
+            const textElement = document.createElementNS(SVG_NS, 'text');
+            textElement.setAttribute('x', x);
+            textElement.setAttribute('y', y);
+            textElement.setAttribute('text-anchor', 'middle');
+            textElement.setAttribute('dominant-baseline', 'central');
+            textElement.setAttribute('class', `dynamic-text ${config.className}`);
+            textElement.setAttribute('style', 'writing-mode: horizontal-tb;');
+            textElement.setAttribute('transform', `rotate(${rotation}, ${x}, ${y})`);
+            textElement.textContent = text;
+            dynamicGroup.appendChild(textElement);
+        });
+    }
+    // ▼▼▼ 繪製飛馬大限 (最多三個) ▼▼▼
+    if (feiMaDaXianData && feiMaDaXianData.length > 0) {
+        const config = RADIAL_LAYOUT.feiMaDaXianRing;
+
+        feiMaDaXianData.forEach(item => {
+            if (!item || !item.palaceId) return;
+            const { palaceId, text } = item;
+            
+            const rotationOffset = config.rotationOffset || 0;
+            const angle = RADIAL_LAYOUT.angles[palaceId] + rotationOffset;
+            
+            const angleRad = angle * (Math.PI / 180);
+            const x = RADIAL_LAYOUT.center.x + config.radius * Math.cos(angleRad);
+            const y = RADIAL_LAYOUT.center.y + config.radius * Math.sin(angleRad);
+
+            let rotation = angle + 90;
+            if (angle > 90 && angle < 270) { rotation = angle - 90; }
+            if (config.flipPalaces.includes(palaceId)) { rotation += 180; }
+            
+            const textElement = document.createElementNS(SVG_NS, 'text');
+            textElement.setAttribute('x', x);
+            textElement.setAttribute('y', y);
+            textElement.setAttribute('text-anchor', 'middle');
+            textElement.setAttribute('dominant-baseline', 'central');
+            textElement.setAttribute('class', `dynamic-text ${config.className}`);
+            textElement.setAttribute('style', 'writing-mode: horizontal-tb;');
+            textElement.setAttribute('transform', `rotate(${rotation}, ${x}, ${y})`);
+            textElement.textContent = text;
+            dynamicGroup.appendChild(textElement);
+        });
+    }
+    // ▼▼▼ 繪製飛祿流年 ▼▼▼
+    if (feiLuLiuNianData && feiLuLiuNianData.length > 0) {
+        const config = RADIAL_LAYOUT.feiLuLiuNianRing;
+        feiLuLiuNianData.forEach(item => {
+            if (!item || !item.palaceId) return;
+            const { palaceId, text } = item;
+            // (以下繪圖邏輯與其他環圈完全相同)
+            const rotationOffset = config.rotationOffset || 0;
+            const angle = RADIAL_LAYOUT.angles[palaceId] + rotationOffset;
+            const angleRad = angle * (Math.PI / 180);
+            const x = RADIAL_LAYOUT.center.x + config.radius * Math.cos(angleRad);
+            const y = RADIAL_LAYOUT.center.y + config.radius * Math.sin(angleRad);
+            let rotation = angle + 90;
+            if (angle > 90 && angle < 270) { rotation = angle - 90; }
+            if (config.flipPalaces.includes(palaceId)) { rotation += 180; }
+            const textElement = document.createElementNS(SVG_NS, 'text');
+            textElement.setAttribute('x', x); textElement.setAttribute('y', y);
+            textElement.setAttribute('text-anchor', 'middle');
+            textElement.setAttribute('dominant-baseline', 'central');
+            textElement.setAttribute('class', `dynamic-text ${config.className}`);
+            textElement.setAttribute('style', 'writing-mode: horizontal-tb;');
+            textElement.setAttribute('transform', `rotate(${rotation}, ${x}, ${y})`);
+            textElement.textContent = text;
+            dynamicGroup.appendChild(textElement);
+        });
+    }
+    // ▼▼▼ 繪製飛馬流年 ▼▼▼
+    if (feiMaLiuNianData && feiMaLiuNianData.length > 0) {
+        const config = RADIAL_LAYOUT.feiMaLiuNianRing;
+        feiMaLiuNianData.forEach(item => {
+            if (!item || !item.palaceId) return;
+            const { palaceId, text } = item;
+            
+            const rotationOffset = config.rotationOffset || 0;
+            const angle = RADIAL_LAYOUT.angles[palaceId] + rotationOffset;
+            
+            // (以下繪圖邏輯與其他環圈完全相同)
+            const angleRad = angle * (Math.PI / 180);
+            const x = RADIAL_LAYOUT.center.x + config.radius * Math.cos(angleRad);
+            const y = RADIAL_LAYOUT.center.y + config.radius * Math.sin(angleRad);
+            let rotation = angle + 90;
+            if (angle > 90 && angle < 270) { rotation = angle - 90; }
+            if (config.flipPalaces.includes(palaceId)) { rotation += 180; }
+            const textElement = document.createElementNS(SVG_NS, 'text');
+            textElement.setAttribute('x', x); textElement.setAttribute('y', y);
+            textElement.setAttribute('text-anchor', 'middle');
+            textElement.setAttribute('dominant-baseline', 'central');
+            textElement.setAttribute('class', `dynamic-text ${config.className}`);
+            textElement.setAttribute('style', 'writing-mode: horizontal-tb;');
+            textElement.setAttribute('transform', `rotate(${rotation}, ${x}, ${y})`);
+            textElement.textContent = text;
+            dynamicGroup.appendChild(textElement);
+        });
+    }
+    // ▼▼▼ 繪製黑符流年 ▼▼▼
+    if (heiFuData) {
+        // 1. 將計算結果整理成繪圖函式需要的格式
+        const displayData = VALID_PALACES_CLOCKWISE.map(palaceId => {
+            const ages = heiFuData[palaceId];
+            // 在數字前面加上前綴「黑」
+            return ages ? ages.map(age => `黑${age}`).join(' ') : "";
+        });
+
+        // 2. 準備設定檔
+        const ringConfig = { 
+            ...RADIAL_LAYOUT.heiFuRing,
+            palaces: VALID_PALACES_CLOCKWISE
+        };
+        
+        // 3. 呼叫工具函式來繪製
+        addRotatedRingText(displayData, ringConfig);
     }
 }
     
@@ -2419,7 +2657,364 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         palaceId: palaceId,
         text: `百六${ageRangeText}`
     };
-    }   
+    }  
+    // ▼▼▼ 計算「百六小限」(24年範圍)的函式 ▼▼▼
+    function calculateBaiLiuXiaoXian(shouQiGong, gender, currentUserAge) {
+    if (!shouQiGong || !shouQiGong.palace || currentUserAge === undefined) {
+        return {};
+    }
+
+    const shouQiStem = shouQiGong.palace.charAt(0);
+    const rule = BAI_LIU_XIAO_XIAN_RULES[shouQiStem];
+    if (!rule) return {};
+
+    const { startBranch, startAge } = rule;
+    // 注意：這裡的方向和陽九/百六「大限」相反
+    const direction = (gender === '男') ? -1 : 1; // 男逆女順
+    const startPalaceIndex = EARTHLY_BRANCHES.indexOf(startBranch);
+
+    const results = {}; // 最終結果，例如：{ pMao: [50, 62], pChen: [51, 63], ... }
+
+    // 根據您的要求，計算從過去5年到未來18年，共24年的資料
+    for (let age = currentUserAge - 5; age <= currentUserAge + 18; age++) {
+        if (age < 1) continue; // 我們只計算1歲以後的資料
+
+        const ageOffset = age - startAge; // 計算與起始歲數的差距
+        // 根據差距和方向，計算出該歲數落在哪個宮位
+        const palaceIndex = (startPalaceIndex + ageOffset * direction + 144) % 12;
+        const palaceId = VALID_PALACES_CLOCKWISE[palaceIndex];
+
+        // 將歲數加入到對應宮位的列表中
+        if (!results[palaceId]) {
+            results[palaceId] = [];
+        }
+        results[palaceId].push(age);
+    }
+    return results;
+    }
+    // ▼▼▼ 計算「大遊真限」(當前及未來兩個)的函式 ▼▼▼
+    function calculateDaYouZhenXian(hourBranch, currentUserAge) {
+    if (!hourBranch || currentUserAge === undefined) return [];
+
+    // 1. 根據時支找到六合的起始宮位
+    const startBranch = ZHI_SIX_HARMONIES[hourBranch];
+    if (!startBranch) return [];
+
+    // 2. 在大遊的特殊順序中，找到起始宮位的索引
+    let currentSequenceIndex = DA_YOU_SEQUENCE.indexOf(startBranch);
+    if (currentSequenceIndex === -1) return [];
+
+    let ageTracker = 1; // 從1歲開始追蹤
+    const results = [];
+
+    // 3. 循環遍歷整個順序，直到找到包含當前歲數的大限
+    for (let i = 0; i < DA_YOU_SEQUENCE.length * 3; i++) { // 넉넉하게 3圈確保能找到
+        const currentBranch = DA_YOU_SEQUENCE[currentSequenceIndex];
+        const duration = DA_YOU_DURATIONS[currentBranch];
+        
+        const ageStart = ageTracker;
+        const ageEnd = ageTracker + duration - 1;
+
+        // 如果當前歲數落在此區間，或在此區間之前
+        if (currentUserAge <= ageEnd) {
+            // 這就是我們要找的第一個大限 (當前大限)
+            // 我們從這裡開始，往後再找兩個
+            for (let j = 0; j < 3; j++) {
+                const finalSequenceIndex = (currentSequenceIndex + j) % 12;
+                const finalBranch = DA_YOU_SEQUENCE[finalSequenceIndex];
+                const finalDuration = DA_YOU_DURATIONS[finalBranch];
+                
+                const finalAgeStart = ageTracker + (j > 0 ? results[j-1].duration : 0);
+                const finalAgeEnd = finalAgeStart + finalDuration - 1;
+
+                results.push({
+                    palaceId: BRANCH_TO_PALACE_ID[finalBranch],
+                    text: `大遊${finalAgeStart}-${finalAgeEnd}`,
+                    duration: finalDuration
+                });
+
+                // 更新 ageTracker 以計算下一個大限的起始歲數
+                ageTracker = finalAgeEnd + 1;
+            }
+            return results; // 找到3個後就結束
+        }
+        
+        // 如果還沒找到，更新歲數追蹤器和順序索引，繼續尋找
+        ageTracker += duration;
+        currentSequenceIndex = (currentSequenceIndex + 1) % 12;
+    }
+
+    return []; // 如果發生意外，返回空陣列
+    }
+    // ▼▼▼ 計算「飛祿大限」(當前及未來兩個)的函式 ▼▼▼
+    function calculateFeiLuDaXian(yearStem, currentUserAge) {
+    if (!yearStem || currentUserAge === undefined) return [];
+
+    const rule = FEI_LU_LIMIT_RULES[yearStem];
+    if (!rule) return [];
+
+    const { startBranch, firstAge } = rule;
+    const startPalaceIndex = EARTHLY_BRANCHES.indexOf(startBranch);
+    if (startPalaceIndex === -1) return [];
+
+    const results = [];
+    let currentPalaceIndex = startPalaceIndex;
+    let currentAgeStart = 1;
+    let currentAgeEnd = firstAge;
+
+    // 1. 先快速定位到包含當前歲數的大限
+    if (currentUserAge > firstAge) {
+        const ageAfterFirst = currentUserAge - firstAge;
+        const steps = Math.floor((ageAfterFirst - 1) / 10);
+        
+        currentPalaceIndex = (startPalaceIndex + steps + 1) % 12;
+        currentAgeStart = firstAge + (steps * 10) + 1;
+        currentAgeEnd = currentAgeStart + 9;
+    }
+
+    // 2. 從當前大限開始，連續產生 3 組資料
+    for (let i = 0; i < 3; i++) {
+        const palaceIndex = (currentPalaceIndex + i) % 12;
+        const palaceId = VALID_PALACES_CLOCKWISE[palaceIndex];
+        
+        results.push({
+            palaceId: palaceId,
+            text: `飛祿${currentAgeStart}-${currentAgeEnd}`
+        });
+
+        // 為下一個大限準備年齡
+        currentAgeStart = currentAgeEnd + 1;
+        currentAgeEnd = currentAgeStart + 9;
+    }
+
+    return results;
+    }
+    // ▼▼▼ 計算「飛馬大限」(當前及未來兩個)的函式 ▼▼▼
+    function calculateFeiMaDaXian(yearStem, currentUserAge) {
+    if (!yearStem || currentUserAge === undefined) return [];
+
+    const rule = FEI_LU_LIMIT_RULES[yearStem]; // 共用「飛祿」的規則表
+    if (!rule) return [];
+
+    const { startBranch, firstAge } = rule;
+    const startPalaceIndex = EARTHLY_BRANCHES.indexOf(startBranch);
+    if (startPalaceIndex === -1) return [];
+
+    const direction = -1; // 唯一的不同：方向永遠是逆時鐘 (-1)
+    const results = [];
+    let currentPalaceIndex = startPalaceIndex;
+    let currentAgeStart = 1;
+    let currentAgeEnd = firstAge;
+
+    // 1. 先快速定位到包含當前歲數的大限
+    if (currentUserAge > firstAge) {
+        const ageAfterFirst = currentUserAge - firstAge;
+        const steps = Math.floor((ageAfterFirst - 1) / 10);
+        
+        currentPalaceIndex = (startPalaceIndex + (steps + 1) * direction + 144) % 12;
+        currentAgeStart = firstAge + (steps * 10) + 1;
+        currentAgeEnd = currentAgeStart + 9;
+    }
+
+    // 2. 從當前大限開始，連續產生 3 組資料
+    for (let i = 0; i < 3; i++) {
+        const palaceIndex = (currentPalaceIndex + i * direction + 144) % 12;
+        const palaceId = VALID_PALACES_CLOCKWISE[palaceIndex];
+        
+        results.push({
+            palaceId: palaceId,
+            text: `飛馬${currentAgeStart}-${currentAgeEnd}` // 前綴文字改為「飛馬」
+        });
+
+        // 為下一個大限準備年齡
+        currentAgeStart = currentAgeEnd + 1;
+        currentAgeEnd = currentAgeStart + 9;
+    }
+
+    return results;
+    }
+    // ▼▼▼ 計算「飛祿流年」(包含官祿宮停留3年邏輯)的函式 ▼▼▼
+    function calculateFeiLuLiuNian(yearStem, dayStem, gender, currentUserAge, arrangedLifePalaces) {
+    if (!yearStem || !dayStem || currentUserAge === undefined || !arrangedLifePalaces) return [];
+
+    // 1. 根據「日柱天干」和性別，判斷順逆方向
+    const yangStems = ['甲', '丙', '戊', '庚', '壬'];
+    const isDayStemYang = yangStems.includes(dayStem);
+    const direction = ((isDayStemYang && gender === '男') || (!isDayStemYang && gender === '女')) ? 1 : -1;
+
+    // 2. 根據「年柱天干」查找起點
+    const rule = FEI_LU_ANNUAL_RULES[yearStem];
+    if (!rule) return [];
+    const { startBranch, startAge } = rule;
+    const startPalaceIndex = EARTHLY_BRANCHES.indexOf(startBranch);
+
+    // 3. 找到官祿宮在十二宮順序中的索引
+    const guanLuPalaceIndex = arrangedLifePalaces.indexOf('官');
+    
+    // 4. 建立從1歲到未來的「歲數 -> 宮位ID」的完整對應地圖
+    const ageToPalaceMap = {};
+    let currentAge = startAge;
+    let currentPalaceIndex = startPalaceIndex;
+    
+    // 迴圈推算約150年，確保涵蓋所有年齡
+    for (let i = 0; i < 150; i++) {
+        const palaceId = VALID_PALACES_CLOCKWISE[currentPalaceIndex];
+        ageToPalaceMap[currentAge] = palaceId;
+        
+        // 檢查當前宮位是否為官祿宮
+        if (currentPalaceIndex === guanLuPalaceIndex) {
+            // 如果是，則接下來的兩年都停留在同一個宮位
+            ageToPalaceMap[currentAge + 1] = palaceId;
+            ageToPalaceMap[currentAge + 2] = palaceId;
+            currentAge += 3; // 歲數直接跳3年
+        } else {
+            currentAge += 1; // 正常情況，歲數+1
+        }
+        // 根據方向，換到下一個宮位
+        currentPalaceIndex = (currentPalaceIndex + direction + 12) % 12;
+    }
+
+    // 5. 根據建好的地圖，找出當前和未來6年的資訊
+    const results = [];
+    let processedAges = {}; // 用來處理官祿宮的重複情況
+
+    for (let i = 0; i < ANNUAL_LIMIT_DISPLAY_YEARS; i++) {
+        const age = currentUserAge + i;
+        if (processedAges[age]) continue; // 如果這個歲數已經處理過，就跳過
+
+        const palaceId = ageToPalaceMap[age];
+        if (!palaceId) continue;
+
+        // 檢查這個宮位是否是官祿宮，以決定顯示格式
+        if (VALID_PALACES_CLOCKWISE.indexOf(palaceId) === guanLuPalaceIndex) {
+            // 如果是官祿宮，找到這個3年區間的起始和結束歲數
+            let rangeStart = age;
+            while(ageToPalaceMap[rangeStart - 1] === palaceId) {
+                rangeStart--;
+            }
+            const rangeEnd = rangeStart + 2;
+            results.push({ palaceId, text: `祿${rangeStart}-${rangeEnd}` });
+            
+            // 標記這三年都已經處理完畢
+            processedAges[rangeStart] = true;
+            processedAges[rangeStart + 1] = true;
+            processedAges[rangeStart + 2] = true;
+
+        } else {
+            results.push({ palaceId, text: `祿${age}` });
+            processedAges[age] = true;
+        }
+    }
+    
+    return results;
+    }
+    // ▼▼▼ 計算「飛馬流年」(包含疾厄宮停留3年邏輯)的函式 ▼▼▼
+    function calculateFeiMaLiuNian(hourStem, dayStem, gender, currentUserAge, arrangedLifePalaces) {
+    // 檢查傳入的參數是否完整，若不完整則返回空陣列
+    if (!hourStem || !dayStem || currentUserAge === undefined || !arrangedLifePalaces || arrangedLifePalaces.length === 0) {
+        return [];
+    }
+
+    // 1. 根據「日柱天干」和性別，判斷順逆方向 (與飛祿流年規則相反)
+    const yangStems = ['甲', '丙', '戊', '庚', '壬'];
+    const isDayStemYang = yangStems.includes(dayStem);
+    const direction = ((isDayStemYang && gender === '男') || (!isDayStemYang && gender === '女')) ? -1 : 1;
+
+    // 2. 根據「時柱天干」查找起點
+    const rule = FEI_LU_ANNUAL_RULES[hourStem];
+    if (!rule) {
+        return []; // 如果找不到規則，返回空陣列
+    }
+    const { startBranch, startAge } = rule;
+    const startPalaceIndex = EARTHLY_BRANCHES.indexOf(startBranch);
+
+    // 3. 找到「疾厄宮」的位置
+    const jiEPalaceIndex = arrangedLifePalaces.indexOf('疾');
+    if (jiEPalaceIndex === -1) {
+        return []; // 如果找不到疾厄宮，返回空陣列
+    }
+    
+    // 4. 建立從1歲到未來的「歲數 -> 宮位ID」的完整對應地圖
+    const ageToPalaceMap = {};
+    let currentAge = startAge;
+    let currentPalaceIndex = startPalaceIndex;
+    
+    for (let i = 0; i < 150; i++) {
+        const palaceId = VALID_PALACES_CLOCKWISE[currentPalaceIndex];
+        ageToPalaceMap[currentAge] = palaceId;
+        
+        // 檢查當前宮位是否為疾厄宮
+        if (currentPalaceIndex === jiEPalaceIndex) {
+            ageToPalaceMap[currentAge + 1] = palaceId;
+            ageToPalaceMap[currentAge + 2] = palaceId;
+            currentAge += 3;
+        } else {
+            currentAge += 1;
+        }
+        currentPalaceIndex = (currentPalaceIndex + direction + 12) % 12;
+    }
+
+    // 5. 根據地圖，找出當前和未來6年的資訊
+    const results = [];
+    let processedAges = {};
+
+    for (let i = 0; i < ANNUAL_LIMIT_DISPLAY_YEARS; i++) {
+        const age = currentUserAge + i;
+        if (processedAges[age]) continue;
+
+        const palaceId = ageToPalaceMap[age];
+        if (!palaceId) continue;
+
+        if (VALID_PALACES_CLOCKWISE.indexOf(palaceId) === jiEPalaceIndex) {
+            let rangeStart = age;
+            while(ageToPalaceMap[rangeStart - 1] === palaceId) {
+                rangeStart--;
+            }
+            const rangeEnd = rangeStart + 2;
+            results.push({ palaceId, text: `馬${rangeStart}-${rangeEnd}` });
+            processedAges[rangeStart] = true;
+            processedAges[rangeStart + 1] = true;
+            processedAges[rangeStart + 2] = true;
+        } else {
+            results.push({ palaceId, text: `馬${age}` });
+            processedAges[age] = true;
+        }
+    }
+    
+    return results;
+    }
+    // ▼▼▼ 計算「黑符」流年的函式 ▼▼▼
+    function calculateHeiFu(hourStem, currentUserAge) {
+    if (!hourStem || currentUserAge === undefined) return {};
+
+    // 1. 根據「時柱天干」查找起始宮位地支
+    const startBranch = HEI_FU_RULES[hourStem];
+    if (!startBranch) return {};
+
+    const startAge = 1; // 起始歲數固定為1歲
+    const direction = 1; // 方向固定為順時鐘
+    const startPalaceIndex = EARTHLY_BRANCHES.indexOf(startBranch);
+
+    const results = {}; // 最終結果，例如：{ pChen: [50], pSi: [51], ... }
+
+    // 2. 根據 ANNUAL_LIMIT_DISPLAY_YEARS 的設定，計算對應年份的資料
+    for (let i = 0; i < ANNUAL_LIMIT_DISPLAY_YEARS; i++) {
+        const age = currentUserAge + i;
+        if (age < 1) continue;
+
+        const ageOffset = age - startAge; // 計算與起始歲數的差距
+        // 根據差距和方向，計算出該歲數落在哪個宮位
+        const palaceIndex = (startPalaceIndex + ageOffset * direction + 12) % 12;
+        const palaceId = VALID_PALACES_CLOCKWISE[palaceIndex];
+
+        // 將歲數加入到對應宮位的列表中
+        if (!results[palaceId]) {
+            results[palaceId] = [];
+        }
+        results[palaceId].push(age);
+    }
+    return results;
+    }
     // ▼▼▼ 計算「受氣之數」與「受氣之宮」的函式 ▼▼▼
     function calculateShouQi(dayPillar, hourPillar) {
     // 1. 從資料庫查找日柱和時柱的天地生成數
@@ -2744,7 +3339,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             }
     }
 
-    // ▼▼▼ 新增：處理「皇恩星」 (已修正筆誤) ▼▼▼
+    // ▼▼▼ 處理「皇恩星」 ▼▼▼
     if (huangEnResult) {
         const palaceId = BRANCH_TO_PALACE_ID[huangEnResult];
         if (palaceId && chartData[palaceId]) { // <-- 修正點：移除多餘的 .palaces
@@ -2813,12 +3408,11 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         hourJishuInput.value = '136978272';
     }
 
-    function runCalculation(dataForCalculation, hour, xingNianData) { // <-- 修正點1: 接收 xingNianData
+    function runCalculation(dataForCalculation, hour, xingNianData) { 
         const bureauResult = calculateBureau(dataForCalculation.birthDate, dataForCalculation.hourJishu);
         const lookupResult = lookupBureauData(bureauResult);
         const yearStem = dataForCalculation.yearPillar.charAt(0);
         const direction = determineDirection(yearStem, dataForCalculation.gender);
-        
         const lifePalaceId = findPalaceByCounting(dataForCalculation.yearPillar.charAt(1), dataForCalculation.monthPillar.charAt(1), dataForCalculation.hourPillar.charAt(1), direction);
         const newLifePalacesData = lifePalaceId ? arrangeLifePalaces(lifePalaceId, direction) : [];
         const newSdrData = calculateSdrPalaces(dataForCalculation, direction);
@@ -2848,7 +3442,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
              field4: dataForCalculation.suanStarsResult.centerStars[3] || ''
         };
 
-        renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData, dataForCalculation.yangJiuResult, dataForCalculation.baiLiuResult); 
+        renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData, dataForCalculation.yangJiuResult, dataForCalculation.baiLiuResult, dataForCalculation.baiLiuXiaoXianResult, dataForCalculation.daYouZhenXianResult, dataForCalculation.feiLuDaXianResult, dataForCalculation.feiMaDaXianResult, dataForCalculation.feiLuLiuNianResult, dataForCalculation.feiMaLiuNianResult, dataForCalculation.heiFuResult); 
 
         const shenPalaceId = Object.keys(newSdrData).find(k => newSdrData[k].includes('身'));
         const shenPalaceBranch = shenPalaceId ? PALACE_ID_TO_BRANCH[shenPalaceId] : '計算失敗';
@@ -2930,6 +3524,13 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     const currentUserAge = today.getFullYear() - year + 1;
     const startAge = currentUserAge - 20;
     const endAge = currentUserAge + 40;
+    // ▼▼▼ 在這裡新增 宮職 的計算 ▼▼▼
+    const yearStemForDirection = lunarDate.getYearInGanZhi().charAt(0);
+    const genderForDirection = document.querySelector('input[name="gender"]:checked').value === 'male' ? '男' : '女';
+    const direction = determineDirection(yearStemForDirection, genderForDirection);
+    const lifePalaceId = findPalaceByCounting(lunarDate.getYearInGanZhi().charAt(1), lunarDate.getMonthInGanZhi().charAt(1), lunarDate.getTimeInGanZhi().charAt(1), direction);
+    const arrangedLifePalaces = lifePalaceId ? arrangeLifePalaces(lifePalaceId, direction) : [];
+
 
     // (您把工具都放進了這個工具箱, 然後您把整個工具箱(dataForCalculation)交給了 runCalculation 工人)
     const dataForCalculation = {
@@ -2941,7 +3542,8 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         hourPillar: lunarDate.getTimeInGanZhi(),
         dayJishu: dayJishuInput.value.trim(),
         hourJishu: hourJishuInput.value.trim(),
-        currentUserAge: currentUserAge
+        currentUserAge: currentUserAge,
+        arrangedLifePalaces: arrangedLifePalaces
     };
 
     const bureauResult = calculateBureau(dataForCalculation.birthDate, dataForCalculation.hourJishu);
@@ -2966,8 +3568,15 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     dataForCalculation.liYeHexagramResult = calculateLiYeHexagram(dataForCalculation.shouQiResult.palace, dataForCalculation.birthHexagramResult);
     dataForCalculation.annualHexagramResult = calculateAnnualHexagram(dataForCalculation.birthHexagramResult, dataForCalculation.currentUserAge);
     dataForCalculation.yangJiuResult = calculateYangJiu(dataForCalculation.monthPillar.charAt(0), dataForCalculation.gender, dataForCalculation.currentUserAge);
-    dataForCalculation.baiLiuResult = calculateBaiLiuLimit(dataForCalculation.shouQiResult, dataForCalculation.gender, dataForCalculation.currentUserAge)
-  
+    dataForCalculation.baiLiuResult = calculateBaiLiuLimit(dataForCalculation.shouQiResult, dataForCalculation.gender, dataForCalculation.currentUserAge);
+    dataForCalculation.baiLiuXiaoXianResult = calculateBaiLiuXiaoXian(dataForCalculation.shouQiResult, dataForCalculation.gender, dataForCalculation.currentUserAge);
+    dataForCalculation.daYouZhenXianResult = calculateDaYouZhenXian(dataForCalculation.hourPillar.charAt(1), dataForCalculation.currentUserAge);
+    dataForCalculation.feiLuDaXianResult = calculateFeiLuDaXian(dataForCalculation.yearPillar.charAt(0), dataForCalculation.currentUserAge);
+    dataForCalculation.feiMaDaXianResult = calculateFeiMaDaXian(dataForCalculation.yearPillar.charAt(0), dataForCalculation.currentUserAge);
+    dataForCalculation.feiLuLiuNianResult = calculateFeiLuLiuNian(dataForCalculation.yearPillar.charAt(0), dataForCalculation.dayPillar.charAt(0), dataForCalculation.gender, dataForCalculation.currentUserAge, arrangedLifePalaces);
+    dataForCalculation.feiMaLiuNianResult = calculateFeiMaLiuNian(dataForCalculation.hourPillar.charAt(0), dataForCalculation.dayPillar.charAt(0), dataForCalculation.gender, dataForCalculation.currentUserAge, dataForCalculation.arrangedLifePalaces);
+    dataForCalculation.heiFuResult = calculateHeiFu(dataForCalculation.hourPillar.charAt(0), dataForCalculation.currentUserAge)
+
     // ▼▼▼ 修正點3: 將 xingNianData 作為參數傳入 ▼▼▼
     runCalculation(dataForCalculation, hour, xingNianData); 
 });

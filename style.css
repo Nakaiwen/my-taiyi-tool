@@ -123,16 +123,53 @@
 
     /* 「陽九限」的專屬樣式 */
     .yang-jiu-style {
-    font-size: 11px;      /* 字體大小 */
+    font-size: 10px;      /* 字體大小 */
     fill: #006ddbff;      /* 字體顏色 (範例為藍色，可自行修改) */
     font-weight: bold;
     }
 
     /* 「百六限」的專屬樣式 */
     .bai-liu-style {
-    font-size: 11px;      /* 字體大小 */
+    font-size: 10px;      /* 字體大小 */
     fill: #bf00b8ff;      /* 字體顏色 (範例為紫色，可自行修改) */
     font-weight: bold;
+    }
+
+    /* 「大遊真限」的專屬樣式 */
+    .da-you-zhen-xian-style {
+    font-size: 10px;      /* 字體大小 */
+    fill: #501dd3;      /* 字體顏色 (範例為深紅色，可自行修改) */
+    font-weight: bold;
+    }
+
+    /* 「飛馬大限」的專屬樣式 */
+    .fei-ma-da-xian-style {
+    font-size: 10px;      /* 字體大小 */
+    fill: #008a8a;        /* 字體顏色 (範例為藍綠色，可自行修改) */
+    font-weight: bold;
+    }
+
+    /* 「飛祿大限」、「飛祿流年」的共用樣式 */
+   .fei-lu-da-xian-style,
+   .fei-lu-liu-nian-style { /* <-- 在這裡加上一行 */
+    font-size: 10px;
+    fill: #008a00; 
+    font-weight: bold;
+    }
+
+    /* 「飛馬大限」與「飛馬流年」的共用樣式 */
+    .fei-ma-da-xian-style,
+    .fei-ma-liu-nian-style {
+    font-size: 10px;     
+    fill: #008a8a;       
+    font-weight: bold;
+    }
+
+    /* 「黑符」的專屬樣式 */
+    .hei-fu-style {
+    font-size: 10px;      
+    fill: #2d2d2d;     
+    font-weight: bold;  
     }
 
 
@@ -146,15 +183,15 @@
 
     /* 主客定算屬性文字樣式 */
     .suan-attribute-style {
-    color: #6c757d; /* 設定一個中性的灰色，您可以改成任何您喜歡的顏色 */
-    font-size: 11px; /* 讓屬性文字比數字稍小一些，以示區別 */
-    font-family: sans-serif; /* 建議使用一般黑體，讓註解文字更清晰 */
+    color: #6c757d; 
+    font-size: 11px; 
+    font-family: sans-serif; 
     }
 
     /* 用於凸顯星曜的圓圈樣式 */
     .highlight-circle {
     fill: none;           /* 圓圈內部透明 */
-    stroke: #fe7700;      /* 圓圈邊框顏色 (您圖片中的橘紅色) */
+    stroke: #fe1500;      /* 圓圈邊框顏色 (您圖片中的橘紅色) */
     stroke-width: 1px;    /* 圓圈邊框粗細 */
     }
     
