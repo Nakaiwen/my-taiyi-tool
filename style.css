@@ -79,6 +79,14 @@
         fill: #680000;  
         font-weight: bold;
     }
+
+    /* 「定目」的專屬樣式 */
+    .ding-mu-style {
+    font-size: 14px;      /* 字體大小 */
+    fill: #814fb4;        /* 字體顏色 (範例為紫色，可自行修改) */
+    font-weight: bold;
+    }
+
     /* 太歲、合神、計神 的專屬樣式 */
     .deity-style {
         font-size: 14px; 
@@ -89,14 +97,14 @@
     /* 「小遊」的專屬樣式 */
     .xiaoyou-style {
         font-size: 14px;
-        fill: #d16a03;
+        fill: #89b700;
         font-weight: bold;
     }
 
     /* 「大遊」的專屬樣式 */
     .dayou-style {
     font-size: 14px;
-    fill: #d16a03;
+    fill: #89b700;
     font-weight: bold;
     }
 
