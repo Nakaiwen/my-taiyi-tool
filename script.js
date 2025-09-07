@@ -531,6 +531,26 @@ document.addEventListener('DOMContentLoaded', () => {
         '卯': { fuXing: ['臣基', '始擊'] }, '未': { fuXing: ['臣基', '始擊'] }, '亥': { fuXing: ['臣基', '始擊'] }
     };
 
+    // ▼▼▼ 星曜強旺程度資料庫 (使用者校對版) ▼▼▼
+    const STAR_STRENGTH_DATA = {
+    '小遊':   { '寅': '侍 祿庫', '卯': '入廟', '未': '祿庫', '亥': '科名' },
+    '文昌':   { '子': '入侍', '丑': '入廟', '辰': '祿庫', '申': '科名', '亥': '廟 科名' },
+    '始擊':   { '寅': '科名', '午': '入廟', '戌': '入侍' },
+    '君基':   { '子': '貴人', '辰': '祿庫', '巳': '貴人', '申': '科名 貴人', '戌': '入廟', '亥': '貴人' },
+    '臣基':   { '子': '入侍', '辰': '祿庫', '未': '貴人', '申': '科名 貴人', '戌': '入廟', '亥': '貴人' },
+    '民基':   { '子': '入侍', '辰': '入廟', '申': '科名' },
+    '時五福': { '丑': '祿庫', '辰': '入廟', '申': '科名' },
+    '計神':   { '申': '科名', '戌': '入廟', '亥': '廟 科名' },
+    '主大':   { '丑': '入侍', '巳': '科名', '申': '廟 科名', '酉': '入廟' },
+    '主參':   { '子': '入廟', '申': '科名' },
+    '客大':   { '子': '入廟', '辰': '入廟', '申': '廟 科名' },
+    '客參':   { '卯': '入廟', '亥': '科名' },
+    '天乙':   { '丑': '入廟', '巳': '科名' },
+    '地乙':   { '辰': '入侍', '申': '科名', '戌': '入廟' },
+    '四神':   { '子': '入廟', '辰': '入侍' },
+    '飛符':   { '寅': '科名', '午': '入廟' }
+    };
+
     // ▼▼▼ 行年歲數的規則資料庫 ▼▼▼
     // 1. 男命 1-60 歲的行年干支 (順時鐘)
     const XINGNIAN_GANZHI_MALE = [
@@ -2398,6 +2418,45 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     return changingHexagram || { name: '查無此卦', symbol: '' };
     }
 
+    // ▼▼▼ 格式化星曜強旺資訊的函式 ▼▼▼
+    function formatStarStrengthInfo(chartData) {
+    let html = '';
+    
+    // 按照十二宮的順序來顯示
+    VALID_PALACES_CLOCKWISE.forEach(palaceId => {
+        const branch = PALACE_ID_TO_BRANCH[palaceId];
+        const palaceStars = [];
+        
+        // 從 chartData 中收集落入該宮位的所有星曜
+        const lines = [chartData[palaceId].lineLeft, chartData[palaceId].lineCenter, chartData[palaceId].lineRight];
+        lines.forEach(line => {
+            Object.values(line).forEach(starName => {
+                if (starName) {
+                    palaceStars.push(starName);
+                }
+            });
+        });
+
+        if (palaceStars.length > 0) {
+            let strengthStrings = [];
+            // 為每一顆星查找它的強旺狀態
+            palaceStars.forEach(starName => {
+                // 檢查 STAR_STRENGTH_DATA 中是否有該星、該宮位的資料
+                if (STAR_STRENGTH_DATA[starName] && STAR_STRENGTH_DATA[starName][branch]) {
+                    const strength = STAR_STRENGTH_DATA[starName][branch];
+                    strengthStrings.push(`${starName}(${strength})`);
+                }
+            });
+
+            // 如果這個宮位裡有需要顯示強旺的星，才產生對應的文字
+            if (strengthStrings.length > 0) {
+                html += `<strong>${branch}宮:</strong> ${strengthStrings.join('、')} &nbsp;&nbsp;`;
+            }
+        }
+    });
+    return html || '此盤無星曜強旺資訊。';
+    }
+
     // ▼▼▼ 每次增加星都要更新的函式 ▼▼▼
     function generateMainChartData(lookupResult, deitiesResult, suanStarsResult, shiWuFuResult, xiaoYouResult, junJiResult, chenJiResult, minJiResult, tianYiResult, diYiResult, siShenResult, feiFuResult, daYouResult, yueJiangData, guiRenData, xingNianData, huangEnResult) {
     const chartData = {};
@@ -2765,6 +2824,13 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         
         const summaryP = document.getElementById('calculation-summary');
         summaryP.innerHTML = outputText;
+        // ▼▼▼ 在這裡新增 ▼▼▼
+        const starStrengthInfoDiv = document.getElementById('star-strength-info');
+        if (starStrengthInfoDiv) {
+        starStrengthInfoDiv.innerHTML = formatStarStrengthInfo(newMainChartData);
+        }
+
+
     }
 
     // (這個calculateBtn.addEventListener 函式就是工廠老闆, runCalculation是老師傅)

@@ -374,8 +374,9 @@
 
 
 .plate-column {
-    flex: 1; /* 讓右邊圓盤欄自動填滿所有剩下的空間 */
+    flex: 1;
     display: flex;
+    flex-direction: column; /* <-- 新增這一行，將排列改為垂直 */
     justify-content: center;
     align-items: center;
 }
@@ -461,4 +462,24 @@
         padding: 0 10px;
         height: 100%;
     }
+}
+
+/* 星曜強旺資訊區的樣式 */
+.info-box {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 13px;
+    line-height: 1.7;
+    font-family: sans-serif;
+    box-sizing: border-box;
+    max-height: 150px; /* 如果內容太多，會出現滾動條 */
+    overflow-y: auto;
+}
+#star-strength-info strong {
+    color: #0056b3;
+    margin-right: 5px;
 }
