@@ -1482,34 +1482,29 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
 
         return result;
     }
-    // ▼▼▼ 根據生日自動計算日積數、日柱、日局數的函式 ▼▼▼
+    // ▼▼▼ 根據生日自動計算日積數、日柱、日局數的函式 (最終修正版) ▼▼▼
     function calculateDailyValues(birthDate) {
     const year = birthDate.getFullYear();
     const birthTime = birthDate.getTime();
 
-    // 1. 查找基準點資料
     const yearData = SOLSTICE_DATA[year];
     const prevYearData = SOLSTICE_DATA[year - 1];
-    if (!yearData) return null; // 超出資料庫範圍
+    if (!yearData) return null;
 
     let referencePoint;
+    let isCrossYear = false;
 
-    // 2. 判斷生日在哪個節氣區間，以決定用哪個基準點
     if (birthTime >= yearData.winter.date.getTime()) {
-        // 在當年冬至之後
         referencePoint = yearData.winter;
     } else if (birthTime >= yearData.summer.date.getTime()) {
-        // 在當年夏至之後、冬至之前
         referencePoint = yearData.summer;
     } else if (prevYearData) {
-        // 在當年夏至之前 (表示基準點是前一年的冬至)
         referencePoint = prevYearData.winter;
+        isCrossYear = true;
     } else {
-        return null; // 找不到基準點
+        return null;
     }
 
-    // 3. 計算生日與基準點之間的天數差
-    // 為了精確計算「天」數，我們將時間部分都歸零
     const birthDayOnly = new Date(birthDate);
     birthDayOnly.setHours(0, 0, 0, 0);
     const referenceDayOnly = new Date(referencePoint.date);
@@ -1517,25 +1512,29 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     
     const dayDifference = Math.round((birthDayOnly - referenceDayOnly) / (1000 * 60 * 60 * 24));
 
-    // 4. 根據天數差，推算各項數值
-    // A. 計算日積數
-    const dayJishu = referencePoint.dayJishu + dayDifference;
+    // ▼▼▼ 核心修正點 ▼▼▼
 
-    // B. 計算日柱
+    // 1. 為了「日柱」，我們使用未經校正的、純粹的實際天數差
     const startPillarIndex = JIAZI_CYCLE_ORDER.indexOf(referencePoint.dayPillar);
-    if (startPillarIndex === -1) return null; // 資料庫中的日柱有誤
+    if (startPillarIndex === -1) return null;
     const newPillarIndex = (startPillarIndex + dayDifference) % 60;
     const dayPillar = JIAZI_CYCLE_ORDER[newPillarIndex];
 
-    // C. 計算日局數 (陽1-72局循環)
+    // 2. 為了「積數」和「局數」，我們計算需要經過立春校正的天數差
+    let jishuDayDifference = dayDifference;
+    const lichunTime = solarLunar.getTerm(year, 3); // 3 代表節氣中的「立春」
+    if (isCrossYear && birthTime < lichunTime) {
+        jishuDayDifference -= 1; // 只有積數的計算需要減 1
+    }
+
+    const dayJishu = referencePoint.dayJishu + jishuDayDifference;
     const startBureau = referencePoint.dayBureau;
-    // 將 1-72 轉為 0-71 來計算，再轉回去
-    const newBureauNum = ((startBureau - 1 + dayDifference) % 72 + 72) % 72 + 1;
+    const newBureauNum = ((startBureau - 1 + jishuDayDifference) % 72 + 72) % 72 + 1;
     const dayBureau = `陽${newBureauNum}局`;
 
     return {
         dayJishu: dayJishu,
-        dayPillar: dayPillar,
+        dayPillar: dayPillar, // 這是用未校正天數算出的
         dayBureau: dayBureau
     };
     }
