@@ -355,72 +355,72 @@ document.addEventListener('DOMContentLoaded', () => {
     '癸酉': 33, '癸未': 33, '癸巳': 23, '癸卯': 31, '癸丑': 33, '癸亥': 21
     };
 
-    // ▼▼▼ 易經六十四卦資料庫 (已新增卦象簡釋) ▼▼▼
+    // ▼▼▼ 易經六十四卦資料庫 (已升級卦象描述) ▼▼▼
     const I_CHING_HEXAGRAMS = [
-    { number: 1,  name: '乾為天',    symbol: '䷀', description: '創造與進取，剛健自強' },
-    { number: 2,  name: '坤為地',    symbol: '䷁', description: '包容承載，順應萬物' },
-    { number: 3,  name: '水雷屯',    symbol: '䷂', description: '萬事起頭難，困境中成長' },
-    { number: 4,  name: '山水蒙',    symbol: '䷃', description: '蒙昧未明，需啟蒙學習' },
-    { number: 5,  name: '水天需',    symbol: '䷄', description: '蓄勢待時，耐心等待' },
-    { number: 6,  name: '天水訟',    symbol: '䷅', description: '爭訟不利，慎防爭端' },
-    { number: 7,  name: '地水師',    symbol: '䷆', description: '師眾齊心，領導用兵' },
-    { number: 8,  name: '水地比',    symbol: '䷇', description: '親比合群，團隊合作' },
-    { number: 9,  name: '風天小畜',  symbol: '䷈', description: '小有積蓄，漸進不躁' },
-    { number: 10, name: '天澤履',    symbol: '䷉', description: '謹慎前行，腳踏實地' },
-    { number: 11, name: '地天泰',    symbol: '䷊', description: '天地交泰，和諧亨通' },
-    { number: 12, name: '天地否',    symbol: '䷋', description: '陰陽不交，閉塞不通' },
-    { number: 13, name: '天火同人',  symbol: '䷌', description: '志同道合，共同合作' },
-    { number: 14, name: '火天大有',  symbol: '䷍', description: '富有充實，光明順遂' },
-    { number: 15, name: '地山謙',    symbol: '䷎', description: '謙遜處世，以退為進' },
-    { number: 16, name: '雷地豫',    symbol: '䷏', description: '喜樂和順，居安思危' },
-    { number: 17, name: '澤雷隨',    symbol: '䷐', description: '隨順時勢，靈活應變' },
-    { number: 18, name: '山風蠱',    symbol: '䷑', description: '整頓腐敗，革故鼎新' },
-    { number: 19, name: '地澤臨',    symbol: '䷒', description: '君子臨下，教化眾人' },
-    { number: 20, name: '風地觀',    symbol: '䷓', description: '觀察省思，以德感人' },
-    { number: 21, name: '火雷噬嗑',  symbol: '䷔', description: '以剛破險，懲惡揚善' },
-    { number: 22, name: '山火賁',    symbol: '䷕', description: '文飾外表，內守真實' },
-    { number: 23, name: '山地剝',    symbol: '䷖', description: '否極泰來，萬物剝落' },
-    { number: 24, name: '地雷復',    symbol: '䷗', description: '失而復得，循環更新' },
-    { number: 25, name: '天雷无妄',  symbol: '䷘', description: '順應自然，真誠無妄' },
-    { number: 26, name: '山天大畜',  symbol: '䷙', description: '積蓄能量，以待時機' },
-    { number: 27, name: '山雷頤',    symbol: '䷚', description: '養生之道，修身養性' },
-    { number: 28, name: '澤風大過',  symbol: '䷛', description: '陰陽失衡，承重過大' },
-    { number: 29, name: '坎為水',    symbol: '䷜', description: '重險之境，反覆考驗' },
-    { number: 30, name: '離為火',    symbol: '䷝', description: '光明照耀，文明進取' },
-    { number: 31, name: '澤山咸',    symbol: '䷞', description: '以感化人，兩情相悅' },
-    { number: 32, name: '雷風恆',    symbol: '䷟', description: '恆久不變，堅守正道' },
-    { number: 33, name: '天山遯',    symbol: '䷠', description: '避險退隱，明哲保身' },
-    { number: 34, name: '雷天大壯',  symbol: '䷡', description: '剛健壯盛，須防妄動' },
-    { number: 35, name: '火地晉',    symbol: '䷢', description: '進取向上，光明前途' },
-    { number: 36, name: '地火明夷',  symbol: '䷣', description: '智者避世，光明受傷' },
-    { number: 37, name: '風火家人',  symbol: '䷤', description: '齊家之道，內外有序' },
-    { number: 38, name: '火澤睽',    symbol: '䷥', description: '分歧矛盾，異中求同' },
-    { number: 39, name: '水山蹇',    symbol: '䷦', description: '艱難困阻，需謹慎前行' },
-    { number: 40, name: '雷水解',    symbol: '䷧', description: '困境化解，解難得助' },
-    { number: 41, name: '山澤損',    symbol: '䷨', description: '減損有益，損中有得' },
-    { number: 42, name: '風雷益',    symbol: '䷩', description: '損上益下，積善得福' },
-    { number: 43, name: '澤天夬',    symbol: '䷪', description: '果決斷行，剛健能和' },
-    { number: 44, name: '天風姤',    symbol: '䷫', description: '陽遇陰，偶然相逢' },
-    { number: 45, name: '澤地萃',    symbol: '䷬', description: '萃聚人心，群體團結' },
-    { number: 46, name: '地風升',    symbol: '䷭', description: '節節高升，漸進發展' },
-    { number: 47, name: '澤水困',    symbol: '䷮', description: '陷入困境，內心堅忍' },
-    { number: 48, name: '水風井',    symbol: '䷯', description: '取之不竭，資源共享' },
-    { number: 49, name: '澤火革',    symbol: '䷰', description: '革新變革，順應時代' },
-    { number: 50, name: '火風鼎',    symbol: '䷱', description: '鼎新立業，革故鼎新' },
-    { number: 51, name: '震為雷',    symbol: '䷲', description: '動盪驚雷，警醒人心' },
-    { number: 52, name: '艮為山',    symbol: '䷳', description: '靜止止步，內心安定' },
-    { number: 53, name: '風山漸',    symbol: '䷴', description: '漸進之道，循序漸進' },
-    { number: 54, name: '雷澤歸妹',  symbol: '䷵', description: '婚姻成家，社會秩序' },
-    { number: 55, name: '雷火豐',    symbol: '䷶', description: '豐盛繁榮，需防盈滿' },
-    { number: 56, name: '火山旅',    symbol: '䷷', description: '遊歷漂泊，異地發展' },
-    { number: 57, name: '巽為風',    symbol: '䷸', description: '謙遜入微，柔順滲透' },
-    { number: 58, name: '兌為澤',    symbol: '䷹', description: '喜悅交流，柔中帶剛' },
-    { number: 59, name: '風水渙',    symbol: '䷺', description: '分散化解，團結一心' },
-    { number: 60, name: '水澤節',    symbol: '䷻', description: '節制有度，分寸得宜' },
-    { number: 61, name: '風澤中孚',  symbol: '䷼', description: '誠信中正，內外相應' },
-    { number: 62, name: '雷山小過',  symbol: '䷽', description: '謹慎行事，小心謙遜' },
-    { number: 63, name: '水火既濟',  symbol: '䷾', description: '事事圓滿，盛極須防' },
-    { number: 64, name: '火水未濟',  symbol: '䷿', description: '未竟之業，臨終待成' }
+    { number: 1,  name: '乾為天',    symbol: '䷀', description: '創造與進取，剛健自強。廣大包容之象' },
+    { number: 2,  name: '坤為地',    symbol: '䷁', description: '包容承載，順應萬物。君倡臣和之象' },
+    { number: 3,  name: '水雷屯',    symbol: '䷂', description: '萬事起頭難，困境中成長。萬物如生之象' },
+    { number: 4,  name: '山水蒙',    symbol: '䷃', description: '蒙昧未明，需啟蒙學習。萬物發生之象' },
+    { number: 5,  name: '水天需',    symbol: '䷄', description: '蓄勢待時，耐心等待。密雲不雨之象' },
+    { number: 6,  name: '天水訟',    symbol: '䷅', description: '爭訟不利，慎防爭端。天水相違之象' },
+    { number: 7,  name: '地水師',    symbol: '䷆', description: '師眾齊心，領導用兵。以寡服眾之象' },
+    { number: 8,  name: '水地比',    symbol: '䷇', description: '親比合群，團隊合作。水行地上之象' },
+    { number: 9,  name: '風天小畜',  symbol: '䷈', description: '小有積蓄，漸進不躁。密雲不雨之象' },
+    { number: 10, name: '天澤履',    symbol: '䷉', description: '謹慎前行，腳踏實地。安中防危之象' },
+    { number: 11, name: '地天泰',    symbol: '䷊', description: '天地交泰，和諧亨通。小往大來之象' },
+    { number: 12, name: '天地否',    symbol: '䷋', description: '陰陽不交，閉塞不通。人口不實之象' },
+    { number: 13, name: '天火同人',  symbol: '䷌', description: '志同道合，共同合作。二人分金之象' },
+    { number: 14, name: '火天大有',  symbol: '䷍', description: '富有充實，光明順遂。日麗中天之象' },
+    { number: 15, name: '地山謙',    symbol: '䷎', description: '謙遜處世，以退為進。仰高就下之象' },
+    { number: 16, name: '雷地豫',    symbol: '䷏', description: '喜樂和順，居安思危。萬物發生之象' },
+    { number: 17, name: '澤雷隨',    symbol: '䷐', description: '隨順時勢，靈活應變。如水推車之象' },
+    { number: 18, name: '山風蠱',    symbol: '䷑', description: '整頓腐敗，革故鼎新。以惡害義之象' },
+    { number: 19, name: '地澤臨',    symbol: '䷒', description: '君子臨下，教化眾人。以上臨下之象' },
+    { number: 20, name: '風地觀',    symbol: '䷓', description: '觀察省思，以德感人。春花競發之象' },
+    { number: 21, name: '火雷噬嗑',  symbol: '䷔', description: '以剛破險，懲惡揚善。順中有物之象' },
+    { number: 22, name: '山火賁',    symbol: '䷕', description: '文飾外表，內守真實。光明通泰之象' },
+    { number: 23, name: '山地剝',    symbol: '䷖', description: '否極泰來，萬物剝落。去舊生新之象' },
+    { number: 24, name: '地雷復',    symbol: '䷗', description: '失而復得，循環更新。反復往來之象' },
+    { number: 25, name: '天雷无妄',  symbol: '䷘', description: '順應自然，真誠無妄。守舊安常之象' },
+    { number: 26, name: '山天大畜',  symbol: '䷙', description: '積蓄能量，以待時機。積小成大之象' },
+    { number: 27, name: '山雷頤',    symbol: '䷚', description: '養生之道，修身養性。遷善遠惡之象' },
+    { number: 28, name: '澤風大過',  symbol: '䷛', description: '陰陽失衡，承重過大。本末俱弱之象' },
+    { number: 29, name: '坎為水',    symbol: '䷜', description: '重險之境，反覆考驗。外虛中實之象' },
+    { number: 30, name: '離為火',    symbol: '䷝', description: '光明照耀，文明進取。大明當天之象' },
+    { number: 31, name: '澤山咸',    symbol: '䷞', description: '以感化人，兩情相悅。至誠感神之象' },
+    { number: 32, name: '雷風恆',    symbol: '䷟', description: '恆久不變，堅守正道。四時不沒之象' },
+    { number: 33, name: '天山遯',    symbol: '䷠', description: '避險退隱，明哲保身。守道去惡之象' },
+    { number: 34, name: '雷天大壯',  symbol: '䷡', description: '剛健壯盛，須防妄動。先曲後順之象' },
+    { number: 35, name: '火地晉',    symbol: '䷢', description: '進取向上，光明前途。以臣遇君之象' },
+    { number: 36, name: '地火明夷',  symbol: '䷣', description: '智者避世，光明受傷。出明入暗之象' },
+    { number: 37, name: '風火家人',  symbol: '䷤', description: '齊家之道，內外有序。開花結子之象' },
+    { number: 38, name: '火澤睽',    symbol: '䷥', description: '分歧矛盾，異中求同。猛虎陷阱之象' },
+    { number: 39, name: '水山蹇',    symbol: '䷦', description: '艱難困阻，謹慎前行。背明向暗之象' },
+    { number: 40, name: '雷水解',    symbol: '䷧', description: '困境化解，解難得助。患難解散之象' },
+    { number: 41, name: '山澤損',    symbol: '䷨', description: '減損有益，損中有得。鑿石見玉之象' },
+    { number: 42, name: '風雷益',    symbol: '䷩', description: '損上益下，積善得福。河水溢出之象' },
+    { number: 43, name: '澤天夬',    symbol: '䷪', description: '果決斷行，剛健能和。先損後益之象' },
+    { number: 44, name: '天風姤',    symbol: '䷫', description: '陽遇陰，偶然相逢。或聚或散之象' },
+    { number: 45, name: '澤地萃',    symbol: '䷬', description: '萃聚人心，群體團結。魚龍會聚之象' },
+    { number: 46, name: '地風升',    symbol: '䷭', description: '節節高升，漸進發展。積小成大之象' },
+    { number: 47, name: '澤水困',    symbol: '䷮', description: '陷入困境，內心堅忍。守己待時之象' },
+    { number: 48, name: '水風井',    symbol: '䷯', description: '取之不竭，資源共享。守靜安常之象' },
+    { number: 49, name: '澤火革',    symbol: '䷰', description: '革新變革，順應時代。改舊從新之象' },
+    { number: 50, name: '火風鼎',    symbol: '䷱', description: '鼎新立業，革故鼎新。去故取新之象' },
+    { number: 51, name: '震為雷',    symbol: '䷲', description: '動盪驚雷，警醒人心。震驚百里之象' },
+    { number: 52, name: '艮為山',    symbol: '䷳', description: '靜止止步，內心安定。積小成高之象' },
+    { number: 53, name: '風山漸',    symbol: '䷴', description: '漸進之道，循序漸進。積小成大之象' },
+    { number: 54, name: '雷澤歸妹',  symbol: '䷵', description: '婚姻成家，社會秩序。陰陽不交之象' },
+    { number: 55, name: '雷火豐',    symbol: '䷶', description: '豐盛繁榮，需防盈滿。藏暗向明之象' },
+    { number: 56, name: '火山旅',    symbol: '䷷', description: '遊歷漂泊，異地發展。歡極哀生之象' },
+    { number: 57, name: '巽為風',    symbol: '䷸', description: '謙遜入微，柔順滲透。上行下放之象' },
+    { number: 58, name: '兌為澤',    symbol: '䷹', description: '喜悅交流，柔中帶剛。天峰雨澤之象' },
+    { number: 59, name: '風水渙',    symbol: '䷺', description: '分散化解，團結一心。大風吹物之象' },
+    { number: 60, name: '水澤節',    symbol: '䷻', description: '節制有度，分寸得宜。寒暑有節之象' },
+    { number: 61, name: '風澤中孚',  symbol: '䷼', description: '誠信中正，內外相應。事有定期之象' },
+    { number: 62, name: '雷山小過',  symbol: '䷽', description: '謹慎行事，小心謙遜。上逆下順之象' },
+    { number: 63, name: '水火既濟',  symbol: '䷾', description: '事事圓滿，盛極須防。陰陽配合之象' },
+    { number: 64, name: '火水未濟',  symbol: '䷿', description: '未竟之業，臨終待成。憂中望喜之象' }
     ];
 
     // ▼▼▼ 易經六十四卦數位化資料庫 爻的順序由下到上 (初爻 -> 上爻)，1為陽爻，0為陰爻 ▼▼▼// 
@@ -2892,75 +2892,10 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         calculateBtn.click();
     }, 10);
     
-// ▼▼▼ 儲存為 PDF 的功能 (最終版：分開擷取 + 確保字體載入) ▼▼▼
-    const savePdfBtn = document.getElementById('save-pdf-btn');
-    async function saveAsPDF() {
-        // 檢查關鍵函式庫
-        if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
-            alert('錯誤：PDF 相關函式庫沒有載入成功！');
-            return;
-        }
-
-        // 1. 找到我們要分別擷取的兩個目標
-        const outputArea = document.getElementById('output-area');
-        const plateColumn = document.querySelector('.plate-column');
-
-        if (!outputArea || !plateColumn) {
-            alert('錯誤：找不到必要的頁面元素，無法產生PDF。');
-            return;
-        }
-        
-        // 顯示等待的滑鼠游標
-        document.body.style.cursor = 'wait';
-
-        try {
-            // ▼▼▼ 唯一的修改點：在拍照前，等待字體載入完成 ▼▼▼
-            await document.fonts.ready;
-
-            // 2. 使用 Promise.all 同時「拍攝」兩張照片
-            const [outputCanvas, plateCanvas] = await Promise.all([
-                html2canvas(outputArea, { scale: 2.5, useCORS: true, backgroundColor: '#f0f0f0' }),
-                html2canvas(plateColumn, { scale: 2.5, useCORS: true, backgroundColor: null }) // 圓盤背景設為透明
-            ]);
-
-            // 3. 建立一張 A4 橫向的 PDF
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
-            const pdfWidth = 297;
-            const pdfHeight = 210;
-            const margin = 10; // PDF 的頁邊距
-
-            // 4. 計算並繪製左邊的「計算結果」圖片
-            const outputImgData = outputCanvas.toDataURL('image/png');
-            const outputAspectRatio = outputCanvas.width / outputCanvas.height;
-            let outputImgWidth = 85; // 給左側結果區一個固定的寬度 (mm)
-            let outputImgHeight = outputImgWidth / outputAspectRatio;
-            
-            if (outputImgHeight > pdfHeight - (margin * 2)) {
-                outputImgHeight = pdfHeight - (margin * 2);
-                outputImgWidth = outputImgHeight * outputAspectRatio;
-            }
-            pdf.addImage(outputImgData, 'PNG', margin, margin, outputImgWidth, outputImgHeight);
-
-            // 5. 計算並繪製右邊的「圓盤」圖片
-            const plateImgData = plateCanvas.toDataURL('image/png');
-            const plateAspectRatio = plateCanvas.width / plateCanvas.height;
-            const plateImgHeight = pdfHeight - (margin * 2); // 讓圓盤高度佔滿可用空間
-            const plateImgWidth = plateImgHeight * plateAspectRatio;
-            const plateXOffset = pdfWidth - plateImgWidth - margin; // 將圓盤靠右對齊
-            pdf.addImage(plateImgData, 'PNG', plateXOffset, margin, plateImgWidth, plateImgHeight);
-
-            // 6. 儲存 PDF
-            pdf.save('太乙人道命法排盤.pdf');
-
-        } catch (error) {
-            console.error("產生 PDF 失敗:", error);
-            alert("產生 PDF 失敗，詳細錯誤請見主控台。");
-        } finally {
-            // 7. 恢復滑鼠游標
-            document.body.style.cursor = 'default';
-        }
-    }
-    savePdfBtn.addEventListener('click', saveAsPDF);
+// ▼▼▼ 觸發瀏覽器列印功能 ▼▼▼
+const savePdfBtn = document.getElementById('save-pdf-btn');
+savePdfBtn.addEventListener('click', () => {
+    window.print(); // 指令只有這一行
+});
 
 });
