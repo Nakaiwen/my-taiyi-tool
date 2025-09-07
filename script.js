@@ -2160,7 +2160,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     }
 
     // ▼▼▼ 每次增加星都要更新的函式 ▼▼▼
-    function generateMainChartData(lookupResult, deitiesResult, suanStarsResult, shiWuFuResult, xiaoYouResult, junJiResult, chenJiResult, minJiResult, tianYiResult, diYiResult, siShenResult, feiFuResult, daYouResult, yueJiangData, guiRenData, huangEnResult) {
+    function generateMainChartData(lookupResult, deitiesResult, suanStarsResult, shiWuFuResult, xiaoYouResult, junJiResult, chenJiResult, minJiResult, tianYiResult, diYiResult, siShenResult, feiFuResult, daYouResult, yueJiangData, guiRenData, xingNianData, huangEnResult) {
     const chartData = {};
     const allPalaceKeys = Object.keys(RADIAL_LAYOUT.angles);
     allPalaceKeys.forEach(key => {
