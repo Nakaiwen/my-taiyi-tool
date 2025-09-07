@@ -891,8 +891,6 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             const angleRight = centerAngle + RADIAL_LAYOUT.angleOffset;
             if (pData.lineLeft) {
                 const getLineLeftClass = (starName) => {
-                    if (starName === '小遊') return 'xiaoyou-style';
-                    if (starName === '大遊') return 'dayou-style';
                     if (starName === '定目') return 'ding-mu-style';
                     return 'main-info-style';
                 };
@@ -912,6 +910,8 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             }
             if (pData.lineRight) {
                 const getLineRightClass = (starName) => {
+                    if (starName === '小遊') return 'xiaoyou-style'; 
+                    if (starName === '大遊') return 'dayou-style';
                     if (['天乙', '地乙', '四神', '飛符'].includes(starName)) return 'celestial-messenger-style';
                     if (starName === '皇恩星') return 'huang-en-style'; return 'deity-style';
                 }; 
@@ -2527,19 +2527,16 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
 
     // 處理「小遊」
     if (xiaoYouResult) {
-            const palaceId = BRANCH_TO_PALACE_ID[xiaoYouResult];
-            if (palaceId && chartData[palaceId]) {
-                // 尋找 lineLeft 中第一個空的欄位來放入
-                if (!chartData[palaceId].lineLeft.fieldA) {
-                    chartData[palaceId].lineLeft.fieldA = '小遊';
-                } else if (!chartData[palaceId].lineLeft.fieldB) {
-                    chartData[palaceId].lineLeft.fieldB = '小遊';
-                } else if (!chartData[palaceId].lineLeft.fieldG) {
-                    chartData[palaceId].lineLeft.fieldG = '小遊';
-                }
-            }
+    const palaceId = BRANCH_TO_PALACE_ID[xiaoYouResult];
+    if (palaceId && chartData[palaceId]) {
+        const lineRight = chartData[palaceId].lineRight;
+        if (!lineRight.fieldE) { lineRight.fieldE = '小遊'; }
+        else if (!lineRight.fieldF) { lineRight.fieldF = '小遊'; }
+        else if (!lineRight.fieldE2) { lineRight.fieldE2 = '小遊'; }
+        else if (!lineRight.fieldF2) { lineRight.fieldF2 = '小遊'; }
     }
-    
+    }
+
     // 處理「君基、臣基、民基」
     const jiStars = {
             '君基': junJiResult,
@@ -2624,17 +2621,14 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         
     // 處理「大遊」
     if (daYouResult) {
-            const palaceId = BRANCH_TO_PALACE_ID[daYouResult];
-            if (palaceId && chartData[palaceId]) {
-                // 尋找 lineLeft 中第一個空的欄位來放入
-                if (!chartData[palaceId].lineLeft.fieldA) {
-                    chartData[palaceId].lineLeft.fieldA = '大遊';
-                } else if (!chartData[palaceId].lineLeft.fieldB) {
-                    chartData[palaceId].lineLeft.fieldB = '大遊';
-                } else if (!chartData[palaceId].lineLeft.fieldG) {
-                    chartData[palaceId].lineLeft.fieldG = '大遊';
-                }
-            }
+    const palaceId = BRANCH_TO_PALACE_ID[daYouResult];
+    if (palaceId && chartData[palaceId]) {
+        const lineRight = chartData[palaceId].lineRight;
+        if (!lineRight.fieldE) { lineRight.fieldE = '大遊'; }
+        else if (!lineRight.fieldF) { lineRight.fieldF = '大遊'; }
+        else if (!lineRight.fieldE2) { lineRight.fieldE2 = '大遊'; }
+        else if (!lineRight.fieldF2) { lineRight.fieldF2 = '大遊'; }
+    }
     }
 
     // 將月將資料附加到 chartData 物件上 ▼▼▼
@@ -2717,8 +2711,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         const shouQiResult = dataForCalculation.shouQiResult;
         const birthHexagramResult = dataForCalculation.birthHexagramResult;
         const liYeHexagramResult = dataForCalculation.liYeHexagramResult;
-        const annualHexagramResult = dataForCalculation.annualHexagramResult;
-        
+        const annualHexagramResult = dataForCalculation.annualHexagramResult;    
     
         
         // 2. 按照您想要的順序，重新組合 outputText 字串
