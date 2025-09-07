@@ -32,13 +32,11 @@
                     <input type="radio" id="gender-female" name="gender" value="female">
                     <label for="gender-female" class="radio-label">女</label>
                 </div>
-                <div class="input-row">
-                    <label for="day-jishu">日積數：</label>
-                    <input type="number" id="day-jishu" placeholder="例如: 11414856">
-                </div>
-                <div class="input-row">
-                    <label for="hour-jishu">時積數：</label>
-                    <input type="number" id="hour-jishu" placeholder="例如: 136978272">
+                <div class="output-row" id="jishu-display">
+                    <label>日積數：</label>
+                    <span id="day-jishu-display"></span>
+                    <label style="margin-left: 20px;">時積數：</label>
+                    <span id="hour-jishu-display"></span>
                 </div>
                 <div class="input-row">
 					<button id="save-pdf-btn" style="margin-left: 20px;">儲存為PDF</button>

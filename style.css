@@ -378,3 +378,22 @@
 .hide-for-pdf {
     display: none !important;
 }
+
+/* 積數顯示區塊的樣式 */
+.output-row {
+    margin-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+    font-family: sans-serif; /* 讓標籤使用一般字體 */
+}
+.output-row label {
+    margin-right: 8px;
+    font-size: 14px;
+}
+#day-jishu-display, #hour-jishu-display {
+    font-family: monospace;
+    font-weight: bold;
+    color: #0056b3;     /* 使用與四柱相同的顏色 */
+    font-size: 14px;
+}
