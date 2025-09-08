@@ -222,8 +222,8 @@
 /* 2. 控制「資訊容器」的整體外觀 */
 .input-container {
     padding: 10px;                  /* 容器的內部留白 */
-    background-color: #f9f9f9;      /* 容器的背景顏色 */
-    border: 1px solid #ddd;         /* 容器的邊框 */
+    background-color: #ffffff;      /* 容器的背景顏色 */
+    border: 1px solid #ffffff;         /* 容器的邊框 */
     border-radius: 18px;            /* 容器的圓角 */
     width: 100%;                    /* 讓容器寬度充滿整個 .controls-column */
     box-sizing: border-box;         /* 確保 padding 和 border 不會增加額外寬度 */
@@ -282,7 +282,7 @@
 #output-area {
     margin-top: 15px;               /* 結果區塊與上方按鈕的距離 */
     padding: 5px;             /* 結果區塊的內部留白 */
-    background-color: #e9ecef;
+    background-color: #f3f3f3;
     border-radius: 4px;
     font-size: 16px;                /* 結果區的基礎字體大小 */
     font-family: 'BiauKaiWeb', sans-serif;
@@ -467,13 +467,13 @@
 /* 星曜強旺資訊區的樣式 */
 .info-box {
     width: 100%;
-    margin-top: 15px;
-    padding: 12px 15px;
-    border: 1px solid #ddd;
+    margin-top: 5px;
+    padding: 5px 10px;
+    border: 1px solid #ffffff;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     font-size: 13px;
-    line-height: 1.7;
+    line-height: 1.5;
     font-family: sans-serif;
     box-sizing: border-box;
     max-height: 150px; /* 如果內容太多，會出現滾動條 */
@@ -482,4 +482,11 @@
 #star-strength-info strong {
     color: #0056b3;
     margin-right: 5px;
+}
+
+/* 格局名稱的專屬樣式 */
+.pattern-style {
+    color: #d9534f; /* 範例為紅色，可自行修改 */
+    font-weight: bold;
+    margin: 0 5px; /* 讓格局名稱和星曜之間有點間距 */
 }
