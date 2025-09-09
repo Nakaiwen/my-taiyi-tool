@@ -530,6 +530,15 @@ document.addEventListener('DOMContentLoaded', () => {
         '寅': { fuXing: ['君基', '文昌'] }, '午': { fuXing: ['君基', '文昌'] }, '戌': { fuXing: ['君基', '文昌'] },
         '卯': { fuXing: ['臣基', '始擊'] }, '未': { fuXing: ['臣基', '始擊'] }, '亥': { fuXing: ['臣基', '始擊'] }
     };
+    // ▼▼▼ 中英文化曜名稱) ▼▼▼
+    const HUA_YAO_ROLE_MAP = {
+    // 年干
+    tianYuan: '天元官星', ganYuan: '干元星', fuMu: '父母星',
+    // 日干
+    luZhu: '天元祿主', pianLu: '偏祿', guanXing: '官星', qiCai: '妻財', jiXing: '忌星', guiXing: '鬼星',
+    // 日支
+    fuXing: '地元福星'
+    };
 
     // ▼▼▼ 星曜強旺程度資料庫 (使用者校對版) ▼▼▼
     const STAR_STRENGTH_DATA = {
@@ -1594,6 +1603,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     const hourPillarIndex = (hourJishu - 1 + 60) % 60; 
     const validatedHourPillar = JIAZI_CYCLE_ORDER[hourPillarIndex];
 
+
     // 步驟 4: 根據時積數和冬至/夏至，決定陰陽局數
     const year = birthDate.getFullYear();
     const yearData = SOLSTICE_DATA[year];
@@ -2425,135 +2435,120 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
 
     return changingHexagram || { name: '查無此卦', symbol: '' };
     }
-    // ▼▼▼ 格式化星曜強旺資訊的函式 ▼▼▼
-    function formatStarStrengthInfo(chartData, arrangedLifePalaces) { 
-    let html = '';
-    const palaceFullNameMap = { '命':'命宮', '兄':'兄弟宮', '妻':'夫妻宮', '孫':'子孫宮', '財':'財帛宮', '田':'田宅宮', '官':'官祿宮', '奴':'奴僕宮', '疾':'疾厄宮', '福':'福德宮', '貌':'相貌宮', '父':'父母宮' };
     
-    // 按照十二宮的順序來顯示
-    VALID_PALACES_CLOCKWISE.forEach((palaceId, index) => { 
-        const branch = PALACE_ID_TO_BRANCH[palaceId];
-        const palaceStars = [];
-        
-        // 從 chartData 中收集落入該宮位的所有星曜
-        const lines = [chartData[palaceId].lineLeft, chartData[palaceId].lineCenter, chartData[palaceId].lineRight];
-        lines.forEach(line => {
-            Object.values(line).forEach(starName => {
-                if (starName) {
-                    palaceStars.push(starName);
-                }
-            });
-        });
-
-        if (palaceStars.length > 0) {
-            let strengthStrings = [];
-            // 為每一顆星查找它的強旺狀態
-            palaceStars.forEach(starName => {
-                // 檢查 STAR_STRENGTH_DATA 中是否有該星、該宮位的資料
-                if (STAR_STRENGTH_DATA[starName] && STAR_STRENGTH_DATA[starName][branch]) {
-                    const strength = STAR_STRENGTH_DATA[starName][branch];
-                    strengthStrings.push(`${starName}(${strength})`);
-                }
-            });
-
-            // 如果這個宮位裡有需要顯示強旺的星，才產生對應的文字
-            if (strengthStrings.length > 0) {
-                // ▼▼▼ 步驟 3: 使用宮位名稱，而不是地支 ▼▼▼
-                const palaceShortName = arrangedLifePalaces[index];
-                const palaceFullName = palaceFullNameMap[palaceShortName] || palaceShortName;
-                html += `<strong>${palaceFullName}:</strong> ${strengthStrings.join('、')} &nbsp;&nbsp;`;
-            }
-        }
+    // ▼▼▼ 建立包含所有論斷資訊的「圖表模型」函式 (最終整合版) ▼▼▼
+    function buildChartModel(data) {
+    let model = {};
+    Object.values(BRANCH_TO_PALACE_ID).forEach(pId => {
+        model[pId] = { stars: {}, patterns: [] };
     });
-    return html || '此盤無星曜強旺資訊。';
-    }
-    // ▼▼▼ 分析所有格局的函式 (完整版) ▼▼▼
-    function analyzeChartPatterns(data) {
-    let palaceModel = {};
-    VALID_PALACES_CLOCKWISE.forEach(pId => {
-        palaceModel[pId] = { stars: [], patterns: [] };
-    });
+    model['pCenter'] = { stars: {}, patterns: [] };
 
     const allStars = {
-        '太乙': data.lookupResult?.太乙, '文昌': data.lookupResult?.文昌, '始擊': data.lookupResult?.始擊,
-        '定目': data.lookupResult?.定目, '小遊': data.xiaoYouResult, '大遊': data.daYouResult,
-        '時五福': data.shiWuFuResult, '計神': data.deitiesResult?.計神,
-        '主大': data.suanStarsResult?.chartStars['主大'], '主參': data.suanStarsResult?.chartStars['主參'],
-        '客大': data.suanStarsResult?.chartStars['客大'], '客參': data.suanStarsResult?.chartStars['客參']
+        '太乙': data.lookupResult?.太乙, '文昌': data.lookupResult?.文昌, '始擊': data.lookupResult?.始擊, '定目': data.lookupResult?.定目,
+        '小遊': data.xiaoYouResult, '大遊': data.daYouResult, '時五福': data.shiWuFuResult, '計神': data.deitiesResult?.計神,
+        '主大': data.suanStarsResult?.chartStars['主大'], '主參': data.suanStarsResult?.chartStars['主參'], '客大': data.suanStarsResult?.chartStars['客大'], '客參': data.suanStarsResult?.chartStars['客參'],
+        '天乙': data.tianYiResult, '地乙': data.diYiResult, '四神': data.siShenResult, '飛符': data.feiFuResult,
+        '皇恩星': data.huangEnResult, '君基': data.junJiResult, '臣基': data.chenJiResult, '民基': data.minJiResult
     };
 
     for (const starName in allStars) {
         const branch = allStars[starName];
         if (branch) {
             const palaceId = BRANCH_TO_PALACE_ID[branch];
-            if (palaceId && palaceModel[palaceId] && !palaceModel[palaceId].stars.includes(starName)) {
-                palaceModel[palaceId].stars.push(starName);
+            if (palaceId && model[palaceId]) {
+                if (!model[palaceId].stars[starName]) {
+                    model[palaceId].stars[starName] = { name: starName, strength: '', huaYao: [] };
+                }
             }
         }
     }
+    
+    if (data.suanStarsResult?.centerStars) {
+        data.suanStarsResult.centerStars.forEach(starName => {
+            if (!model['pCenter'].stars[starName]) {
+                model['pCenter'].stars[starName] = { name: starName, strength: '', huaYao: [] };
+            }
+        });
+    }
 
-    const xiaoYouPalace = BRANCH_TO_PALACE_ID[allStars['小遊']];
-    if (xiaoYouPalace) {
+    const huaYaoResults = calculateAllHuaYao(data.yearPillar.charAt(0), data.dayPillar.charAt(0), data.dayPillar.charAt(1));
+
+    const starToHuaYaoMap = {};
+    if (huaYaoResults) {
+        Object.keys(huaYaoResults).forEach(sourceType => {
+            const roles = huaYaoResults[sourceType];
+            Object.keys(roles).forEach(roleName => {
+                const starNames = roles[roleName].split(' ').filter(Boolean);
+                starNames.forEach(starName => {
+                    if (!starToHuaYaoMap[starName]) starToHuaYaoMap[starName] = [];
+                    const chineseRoleName = HUA_YAO_ROLE_MAP[roleName];
+                    if (chineseRoleName && !starToHuaYaoMap[starName].includes(chineseRoleName)) {
+                        starToHuaYaoMap[starName].push(chineseRoleName);
+                    }
+                });
+            });
+        });
+    }
+
+    Object.keys(model).forEach(palaceId => {
+        const branch = PALACE_ID_TO_BRANCH[palaceId];
+        Object.keys(model[palaceId].stars).forEach(starName => {
+            if (STAR_STRENGTH_DATA[starName] && STAR_STRENGTH_DATA[starName][branch]) {
+                model[palaceId].stars[starName].strength = STAR_STRENGTH_DATA[starName][branch];
+            }
+            if (starToHuaYaoMap[starName]) {
+                model[palaceId].stars[starName].huaYao = starToHuaYaoMap[starName];
+            }
+        });
+    });
+
+    // 5. 在模型基礎上，分析格局
+    const xiaoYouPalaceId = BRANCH_TO_PALACE_ID[allStars['小遊']];
+    if (xiaoYouPalaceId && model[xiaoYouPalaceId]) {
         const xiaoYouIndex = EARTHLY_BRANCHES.indexOf(allStars['小遊']);
         const wenChangIndex = EARTHLY_BRANCHES.indexOf(allStars['文昌']);
         const shiJiIndex = EARTHLY_BRANCHES.indexOf(allStars['始擊']);
-
-        if (palaceModel[xiaoYouPalace].stars.includes('始擊')) palaceModel[xiaoYouPalace].patterns.push({ type: '掩', primary: '小遊', secondary: '始擊' });
-        
+        if (model[xiaoYouPalaceId].stars['始擊']) model[xiaoYouPalaceId].patterns.push({ type: '掩', primary: '小遊', secondary: '始擊' });
         const qiuStars = ['文昌', '主大', '主參', '客大', '客參'];
-        const qiuTrigger = qiuStars.find(s => palaceModel[xiaoYouPalace].stars.includes(s));
-        if (qiuTrigger) palaceModel[xiaoYouPalace].patterns.push({ type: '囚', primary: '小遊', secondary: qiuTrigger });
-
+        const qiuTrigger = qiuStars.find(s => model[xiaoYouPalaceId].stars[s]);
+        if (qiuTrigger) model[xiaoYouPalaceId].patterns.push({ type: '囚', primary: '小遊', secondary: qiuTrigger });
         if (wenChangIndex !== -1) {
-            if (wenChangIndex === (xiaoYouIndex + 1) % 12 || wenChangIndex === (xiaoYouIndex - 1 + 12) % 12) palaceModel[xiaoYouPalace].patterns.push({ type: '迫', primary: '小遊', secondary: '文昌' });
-            if (wenChangIndex === (xiaoYouIndex + 6) % 12) palaceModel[xiaoYouPalace].patterns.push({ type: '對', primary: '小遊', secondary: '文昌' });
+            if (wenChangIndex === (xiaoYouIndex + 1) % 12 || wenChangIndex === (xiaoYouIndex - 1 + 12) % 12) model[xiaoYouPalaceId].patterns.push({ type: '迫', primary: '小遊', secondary: '文昌' });
+            if (wenChangIndex === (xiaoYouIndex + 6) % 12) model[xiaoYouPalaceId].patterns.push({ type: '對', primary: '小遊', secondary: '文昌' });
         }
         if (shiJiIndex !== -1) {
-            if (shiJiIndex === (xiaoYouIndex + 1) % 12 || shiJiIndex === (xiaoYouIndex - 1 + 12) % 12) palaceModel[xiaoYouPalace].patterns.push({ type: '擊', primary: '小遊', secondary: '始擊' });
-            if (shiJiIndex === (xiaoYouIndex + 6) % 12) palaceModel[xiaoYouPalace].patterns.push({ type: '格', primary: '小遊', secondary: '始擊' });
+            if (shiJiIndex === (xiaoYouIndex + 1) % 12 || shiJiIndex === (xiaoYouIndex - 1 + 12) % 12) model[xiaoYouPalaceId].patterns.push({ type: '擊', primary: '小遊', secondary: '始擊' });
+            if (shiJiIndex === (xiaoYouIndex + 6) % 12) model[xiaoYouPalaceId].patterns.push({ type: '格', primary: '小遊', secondary: '始擊' });
         }
     }
-
-    // --- 「關」格局的判斷邏輯 ---
-    let palaceStarMap = {};
-    Object.keys(allStars).forEach(star => {
-        const branch = allStars[star];
-        if (branch) {
-            if (!palaceStarMap[branch]) palaceStarMap[branch] = [];
-            palaceStarMap[branch].push(star);
-        }
-    });
-
-    Object.keys(palaceStarMap).forEach(branch => {
-        const starsInPalace = palaceStarMap[branch];
-        const palaceId = BRANCH_TO_PALACE_ID[branch];
-        if (!palaceId) return;
-
+    Object.keys(model).forEach(palaceId => {
+        const starsInPalace = Object.keys(model[palaceId].stars);
         const suanStarsInPalace = starsInPalace.filter(s => ['主大', '主參', '客大', '客參'].includes(s));
-
         if (starsInPalace.includes('文昌') && (starsInPalace.includes('客大') || starsInPalace.includes('客參'))) {
-            palaceModel[palaceId].patterns.push({ type: '關', primary: '文昌', secondary: starsInPalace.find(s => s === '客大' || s === '客參') });
+            model[palaceId].patterns.push({ type: '關', primary: '文昌', secondary: starsInPalace.find(s => s === '客大' || s === '客參') });
         }
         if (starsInPalace.includes('始擊') && (starsInPalace.includes('主大') || starsInPalace.includes('主參'))) {
-            palaceModel[palaceId].patterns.push({ type: '關', primary: '始擊', secondary: starsInPalace.find(s => s === '主大' || s === '主參') });
+            model[palaceId].patterns.push({ type: '關', primary: '始擊', secondary: starsInPalace.find(s => s === '主大' || s === '主參') });
         }
         if (suanStarsInPalace.length >= 2) {
-            palaceModel[palaceId].patterns.push({ type: '關', primary: suanStarsInPalace[0], secondary: suanStarsInPalace[1] });
+            model[palaceId].patterns.push({ type: '關', primary: suanStarsInPalace[0], secondary: suanStarsInPalace[1] });
         }
     });
 
-    return palaceModel;
+    return model;
     }
-    // ▼▼▼ 格式化「格局」資訊的專屬函式 ▼▼▼
+    // ▼▼▼ 格式化「格局」資訊的專屬函式 (用於左側摘要區) ▼▼▼
     function formatPatternInfo(palaceModel, arrangedLifePalaces) {
     let outputLines = [];
     const palaceFullNameMap = { '命':'命宮', '兄':'兄弟宮', '妻':'夫妻宮', '孫':'子孫宮', '財':'財帛宮', '田':'田宅宮', '官':'官祿宮', '奴':'奴僕宮', '疾':'疾厄宮', '福':'福德宮', '貌':'相貌宮', '父':'父母宮' };
 
-    // 收集所有被觸發的格局
     Object.keys(palaceModel).forEach(palaceId => {
         const palaceData = palaceModel[palaceId];
         if (palaceData.patterns.length > 0) {
             const palaceIndex = VALID_PALACES_CLOCKWISE.indexOf(palaceId);
+            if (palaceIndex === -1) return;
+            
             const palaceShortName = arrangedLifePalaces[palaceIndex];
             const palaceFullName = palaceFullNameMap[palaceShortName] || palaceShortName;
 
@@ -2564,10 +2559,86 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     });
 
     if (outputLines.length > 0) {
-        // 使用 <br> 換行，讓每個格局都獨立成行
-        return `<strong>格局：</strong><br>` + outputLines.join('<br>');
+        return `\n  格局 : ${outputLines.join('、 ')}`;
     }
-    return '<strong>格局：</strong> 無掩迫關囚擊格對'; // 如果沒有格局，就回傳空字串，區塊會保持空白
+    return `\n  格局 : 無掩迫關囚擊格對`;
+    }
+    // ▼▼▼ 格式化「下方資訊區」(強旺+化曜)的函式 (已支援角落宮位) ▼▼▼
+    function formatStarDetailInfoBox(chartModel, arrangedLifePalaces) {
+    let html = '';
+    const palaceFullNameMap = { '命':'命宮', '兄':'兄弟宮', '妻':'夫妻宮', '孫':'子孫宮', '財':'財帛宮', '田':'田宅宮', '官':'官祿宮', '奴':'奴僕宮', '疾':'疾厄宮', '福':'福德宮', '貌':'相貌宮', '父':'父母宮' };
+
+    // --- 步驟 1: 處理原本的十二宮 (這部分不變) ---
+    for (let i = 0; i < arrangedLifePalaces.length; i++) {
+        const palaceShortName = arrangedLifePalaces[i];
+        if (!palaceShortName) continue;
+        const palaceId = VALID_PALACES_CLOCKWISE[i];
+        const palaceData = chartModel[palaceId];
+        const palaceFullName = palaceFullNameMap[palaceShortName] || palaceShortName;
+        let starStrings = [];
+        Object.values(palaceData.stars).forEach(star => {
+            let details = [];
+            if (star.strength) details.push(star.strength);
+            if (star.huaYao.length > 0) details.push(star.huaYao.join(', '));
+            if (details.length > 0) {
+                starStrings.push(`${star.name}(<span class="star-details">${details.join(' / ')}</span>)`);
+            }
+        });
+        if (starStrings.length > 0) {
+            html += `<strong>${palaceFullName}:</strong> ${starStrings.join('、')} &nbsp;&nbsp;`;
+        }
+    }
+
+    // --- 步驟 2: 新增 - 額外處理並顯示四個角落宮位的星曜 ---
+    const cornerPalaces = { '乾': 'pQian', '艮': 'pGen', '巽': 'pXun', '坤': 'pKun' };
+    let cornerHtmlParts = [];
+
+    Object.keys(cornerPalaces).forEach(branchName => {
+        const palaceId = cornerPalaces[branchName];
+        const palaceData = chartModel[palaceId];
+        if (palaceData && Object.keys(palaceData.stars).length > 0) {
+            let starStrings = [];
+            Object.values(palaceData.stars).forEach(star => {
+                let details = [];
+                if (star.strength) details.push(star.strength);
+                if (star.huaYao.length > 0) details.push(star.huaYao.join(', '));
+                
+                if (details.length > 0) {
+                    starStrings.push(`${star.name}(<span class="star-details">${details.join(' / ')}</span>)`);
+                } else {
+                    starStrings.push(star.name); 
+                }
+            });
+            if (starStrings.length > 0) {
+                cornerHtmlParts.push(`<strong>${branchName}宮:</strong> ${starStrings.join('、')}`);
+            }
+        }
+    });
+
+    if (cornerHtmlParts.length > 0) {
+        html += cornerHtmlParts.join(' &nbsp;&nbsp; ');
+    }
+
+    // --- 步驟 3: 處理中宮的星曜 (這部分不變) ---
+    const centerPalaceData = chartModel['pCenter'];
+    if (centerPalaceData && Object.keys(centerPalaceData.stars).length > 0) {
+        let centerStarStrings = [];
+        Object.values(centerPalaceData.stars).forEach(star => {
+            let details = [];
+            if (star.strength) details.push(star.strength);
+            if (star.huaYao.length > 0) details.push(star.huaYao.join(', '));
+            if (details.length > 0) {
+                centerStarStrings.push(`${star.name}(<span class="star-details">${details.join(' / ')}</span>)`);
+            } else {
+                centerStarStrings.push(star.name);
+            }
+        });
+        if (centerStarStrings.length > 0) {
+            html += `<strong>中宮:</strong> ${centerStarStrings.join('、')} &nbsp;&nbsp;`;
+        }
+    }
+    
+    return html || '此盤無特別的星曜強旺或化曜資訊。';
     }
 
     // ▼▼▼ 每次增加星都要更新的函式 ▼▼▼
@@ -2814,7 +2885,6 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     }
     
 
-
     // =================================================================
     //  SECTION 4: UI 互動與主流程 (最終整理版)
     // =================================================================
@@ -2889,6 +2959,8 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         // 2. 按照您想要的順序，重新組合 outputText 字串
         let outputText = ''; // 先建立一個空字串
         outputText += `  局數 : ${bureauResult}\n  命宮 : ${lifePalaceId ? PALACE_ID_TO_BRANCH[lifePalaceId] + '宮' : '計算失敗'}\n  身宮 : ${shenPalaceBranch}宮`;
+        
+
         if (lookupResult) {
             // 從資料庫中查找每個算數對應的屬性文字
             const zhuSuanAttr = SUAN_ATTRIBUTE_DATA[lookupResult.主算] || '';
@@ -2900,6 +2972,11 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             outputText += `\n  客算 : ${lookupResult.客算} <span class="suan-attribute-style">(${keSuanAttr})</span>`;
             outputText += `\n  定算 : ${lookupResult.定算} <span class="suan-attribute-style">(${dingSuanAttr})</span>`;
         }
+
+        // 2. 呼叫新的函式，產生格局資訊，並加到上方
+        outputText += formatPatternInfo(dataForCalculation.chartModel, newLifePalacesData);
+
+
         // 第一行：受氣之宮 (視覺上會在四柱下方)
         if (shouQiResult) {
         outputText += `\n\n  受氣之宮 : ${shouQiResult.palace}${shouQiResult.number}`;
@@ -2923,31 +3000,14 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         outputText += `\n  流年變卦 : ${annualChangingHexagramResult.number} ${annualChangingHexagramResult.name} ${annualChangingHexagramResult.symbol}`;
         outputText += `\n  <span class="hexagram-description-style">↳ ${annualChangingHexagramResult.description}</span>`;
         }
-        if (huaYaoResults && huaYaoResults.nianGan) {
-            outputText += `\n\n年干化曜：\n  天元官星: ${huaYaoResults.nianGan.tianYuan}\n  干元星: ${huaYaoResults.nianGan.ganYuan}\n  父母星: ${huaYaoResults.nianGan.fuMu}`;
-        }
-        if (huaYaoResults && huaYaoResults.riGan) {
-            // 定義一個紅色星星的 HTML 圖片標籤
-            const redStarImg = '<img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0ic3RhciIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCA1Ni42OSA1Ni42OSI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI5LjcuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDgpICAtLT4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnN0MCB7CiAgICAgICAgZmlsbDogI2U3MWYxOTsKICAgICAgICBmaWxsLXJ1bGU6IGV2ZW5vZGQ7CiAgICAgIH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgogIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik0yOC4yOCwxLjg5bDYuOTEsMTkuNiwyMC43NC41My0xNi40NywxMi42NCw1LjksMTkuOTMtMTcuMDktMTEuNzgtMTcuMDksMTEuNzgsNS45MS0xOS45M0wuNjIsMjIuMDFsMjAuNzQtLjUzTDI4LjI4LDEuODlaIi8+Cjwvc3ZnPg==" class="red-star-icon" alt="星">';
-            outputText += `\n\n日干化曜：\n  天元祿主: ${huaYaoResults.riGan.luZhu}\n  偏祿: ${huaYaoResults.riGan.pianLu}\n  官星: ${huaYaoResults.riGan.guanXing}\n  妻財: ${huaYaoResults.riGan.qiCai}\n  ${redStarImg}忌星: ${huaYaoResults.riGan.jiXing}\n  ${redStarImg}鬼星: ${huaYaoResults.riGan.guiXing}`;
-        }
-        if (huaYaoResults && huaYaoResults.riZhi) {
-            outputText += `\n\n日支化曜：\n  地元福星: ${huaYaoResults.riZhi.fuXing}`;
-        }
         
         const summaryP = document.getElementById('calculation-summary');
         summaryP.innerHTML = outputText;
         
-        // ▼▼▼ 在這裡新增 ▼▼▼
+        // --- 更新下方資訊區，現在只顯示星曜強旺和化曜 ---
         const starStrengthInfoDiv = document.getElementById('star-strength-info');
         if (starStrengthInfoDiv) {
-        starStrengthInfoDiv.innerHTML = formatStarStrengthInfo(newMainChartData, newLifePalacesData);
-        }
-
-        // ▼▼▼ 新增：更新格局資訊區塊 ▼▼▼
-        const patternInfoDiv = document.getElementById('pattern-info');
-        if (patternInfoDiv) {
-        patternInfoDiv.innerHTML = formatPatternInfo(dataForCalculation.palaceModel, newLifePalacesData);
+        starStrengthInfoDiv.innerHTML = formatStarDetailInfoBox(dataForCalculation.chartModel, newLifePalacesData);
         }
 
     }
@@ -3036,6 +3096,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
 
     const bureauResult = calculateBureau(dataForCalculation.birthDate, dataForCalculation.hourJishu);
     const lookupResult = lookupBureauData(bureauResult);
+    dataForCalculation.lookupResult = lookupResult;
     
     dataForCalculation.deitiesResult = calculateDeities(bureauResult, dataForCalculation.hourPillar.charAt(1));
     dataForCalculation.suanStarsResult = calculateSuanStars(lookupResult);
@@ -3066,7 +3127,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     dataForCalculation.heiFuResult = calculateHeiFu(dataForCalculation.hourPillar.charAt(0), dataForCalculation.currentUserAge);
     dataForCalculation.liYeStartAge = calculateLiYeStartAge(dataForCalculation.birthHexagramResult);
     dataForCalculation.annualChangingHexagramResult = calculateAnnualChangingHexagram(dataForCalculation.annualHexagramResult, dataForCalculation.baiLiuResult, dataForCalculation.currentUserAge);
-    dataForCalculation.palaceModel = analyzeChartPatterns(dataForCalculation)
+    dataForCalculation.chartModel = buildChartModel(dataForCalculation)
 
     // ▼▼▼ 修正點3: 將 xingNianData 作為參數傳入 ▼▼▼
     runCalculation(dataForCalculation, hour, xingNianData); 

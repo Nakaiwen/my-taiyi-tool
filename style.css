@@ -483,6 +483,11 @@
     color: #0056b3;
     margin-right: 5px;
 }
+/* 星曜的詳細資訊 (強旺/化曜) 樣式 */
+.star-details {
+    color: #666; /* 使用較柔和的顏色 */
+}
+
 
 /* 格局名稱的專屬樣式 */
 .pattern-style {
