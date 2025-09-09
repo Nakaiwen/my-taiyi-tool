@@ -1280,19 +1280,6 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         });
         return newAgeLimits;
     }
-    function calculateBureau(birthDateString, hourJishu) {
-        const parts = birthDateString.split('/');
-        if (parts.length < 3) return "生日格式錯誤";
-        const month = parseInt(parts[1], 10);
-        const day = parseInt(parts[2], 10);
-        let bureauType = '陽';
-        if ((month === 6 && day >= 21) || (month > 6 && month < 12) || (month === 12 && day < 21)) {
-            bureauType = '陰';
-        }
-        const remainder = Number(hourJishu) % 72;
-        const bureauNumber = (remainder === 0) ? 72 : remainder;
-        return `${bureauType}${bureauNumber}局`;
-    }
     function lookupBureauData(bureau) {
         return BUREAU_DATA.find(item => item.局 === bureau) || null;
     }
@@ -2912,7 +2899,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     }
 
     function runCalculation(dataForCalculation, hour, xingNianData) { 
-        const bureauResult = calculateBureau(dataForCalculation.birthDate, dataForCalculation.hourJishu);
+        const bureauResult = dataForCalculation.bureauResult;
         const lookupResult = lookupBureauData(bureauResult);
         const yearStem = dataForCalculation.yearPillar.charAt(0);
         const direction = determineDirection(yearStem, dataForCalculation.gender);
@@ -3094,10 +3081,10 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         arrangedLifePalaces: arrangedLifePalaces
     };
 
-    const bureauResult = calculateBureau(dataForCalculation.birthDate, dataForCalculation.hourJishu);
+    const bureauResult = precisionResult ? precisionResult.calculatedBureau : '計算失敗';
     const lookupResult = lookupBureauData(bureauResult);
     dataForCalculation.lookupResult = lookupResult;
-    
+    dataForCalculation.bureauResult = bureauResult; 
     dataForCalculation.deitiesResult = calculateDeities(bureauResult, dataForCalculation.hourPillar.charAt(1));
     dataForCalculation.suanStarsResult = calculateSuanStars(lookupResult);
     dataForCalculation.shiWuFuResult = calculateShiWuFu(dataForCalculation.hourJishu);
