@@ -495,3 +495,10 @@
     font-weight: bold;
     margin: 0 5px; /* 讓格局名稱和星曜之間有點間距 */
 }
+
+/* 專門設定「人生運勢趨勢圖」容器的高度 */
+#fortune-chart-container {
+    height: 350px;      /* 【可調整】您可以自由設定想要的高度，例如 350px */
+    max-height: none;   /* 取消繼承自 .info-box 的 150px 最大高度限制 */
+    padding: 20px;      /* 建議為圖表增加一些內部留白，讓它看起來不會太擁擠 */
+}

@@ -539,7 +539,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 日支
     fuXing: '地元福星'
     };
-
     // ▼▼▼ 星曜強旺程度資料庫 (使用者校對版) ▼▼▼
     const STAR_STRENGTH_DATA = {
     '小遊':   { '寅': '侍 祿庫', '卯': '入廟', '未': '祿庫', '亥': '科名' },
@@ -689,6 +688,63 @@ document.addEventListener('DOMContentLoaded', () => {
     // ▼▼▼ 陽性陰性地支列表 ▼▼▼
     const YANG_BRANCHES = ['子', '寅', '辰', '午', '申', '戌'];
     const YIN_BRANCHES = ['丑', '卯', '巳', '未', '酉', '亥'];
+
+    // ▼▼▼ 星曜上中下等級資料庫 ▼▼▼
+    const STAR_RATING_DATA = {
+    '小遊':   { '子': '中', '丑': '下', '寅': '上', '卯': '上', '辰': '中', '巳': '下', '午': '中', '未': '上', '申': '下', '酉': '下', '戌': '中', '亥': '上' },
+    '計神':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '上', '申': '中', '酉': '中', '戌': '上', '亥': '中' },
+    '文昌':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '中', '申': '上', '酉': '下', '戌': '中', '亥': '上' },
+    '始擊':   { '子': '下', '丑': '中', '寅': '上', '卯': '中', '辰': '下', '巳': '上', '午': '上', '未': '下', '申': '下', '酉': '下', '戌': '上', '亥': '下' },
+    '時五福': { '子': '平', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '平', '未': '平', '申': '上', '酉': '平', '戌': '中', '亥': '上' },
+    '君基':   { '子': '上', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '平', '未': '上', '申': '中', '酉': '平', '戌': '上', '亥': '上' },
+    '臣基':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '下', '午': '中', '未': '上', '申': '中', '酉': '下', '戌': '上', '亥': '中' },
+    '民基':   { '子': '上', '丑': '中', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '中', '申': '上', '酉': '下', '戌': '中', '亥': '上' },
+    '天乙':   { '子': '中', '丑': '上', '寅': '下', '卯': '中', '辰': '中', '巳': '上', '午': '下', '未': '中', '申': '上', '酉': '上', '戌': '下', '亥': '中' },
+    '地乙':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '上', '申': '中', '酉': '下', '戌': '上', '亥': '中' },
+    '四神':   { '子': '上', '丑': '中', '寅': '下', '卯': '中', '辰': '上', '巳': '下', '午': '中', '未': '中', '申': '上', '酉': '中', '戌': '中', '亥': '上' },
+    '飛符':   { '子': '下', '丑': '中', '寅': '上', '卯': '下', '辰': '中', '巳': '上', '午': '上', '未': '中', '申': '中', '酉': '下', '戌': '上', '亥': '下' },
+    '主大':   { '子': '中', '丑': '上', '寅': '下', '卯': '中', '辰': '中', '巳': '上', '午': '下', '未': '中', '申': '上', '酉': '上', '戌': '下', '亥': '中' },
+    '主參':   { '子': '上', '丑': '下', '寅': '中', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '下', '申': '上', '酉': '中', '戌': '下', '亥': '上' },
+    '客大':   { '子': '上', '丑': '中', '寅': '中', '卯': '下', '辰': '上', '巳': '下', '午': '下', '未': '中', '申': '上', '酉': '中', '戌': '下', '亥': '上' },
+    '客參':   { '子': '中', '丑': '中', '寅': '上', '卯': '上', '辰': '中', '巳': '下', '午': '下', '未': '上', '申': '下', '酉': '下', '戌': '中', '亥': '上' }
+    };
+
+    // ▼▼▼ 星曜屬性資料庫 (五行/吉凶/描述) ▼▼▼
+    const STAR_PROPERTIES = {
+    '小遊':   { element: '陽木', luck: '吉星', description: '歲星之精，正直之星' },
+    '計神':   { element: '陰土', luck: '吉星', description: '財庫天機星' },
+    '文昌':   { element: '陽土', luck: '吉星', description: '文才之星' },
+    '始擊':   { element: '陽火', luck: '凶星', description: '酒色星' },
+    '時五福': { element: '陽土', luck: '吉星', description: '天上賜福之神' },
+    '君基':   { element: '陽土', luck: '吉星', description: '科甲貴人星' },
+    '臣基':   { element: '陽土', luck: '吉星', description: '招搖吉星' },
+    '民基':   { element: '陰土', luck: '吉星', description: '財富星，食祿之神' },
+    '天乙':   { element: '陰金', luck: '凶星', description: '孤獨之星' },
+    '地乙':   { element: '陰土', luck: '凶星', description: '孤寡之星' },
+    '四神':   { element: '陰水', luck: '凶星', description: '聚散之星，又號孤星' },
+    '飛符':   { element: '陰火', luck: '凶星', description: '兇暴之星' },
+    '主大':   { element: '陽金', luck: '吉星', description: '魁鉞之星' },
+    '主參':   { element: '陰水', luck: '吉星', description: '副帥之星' },
+    '客大':   { element: '陽水', luck: '吉星', description: '邊疆顯達，巨商大賈' },
+    '客參':   { element: '陰木', luck: '吉星', description: '副將之星，旅星孤星' }
+    };
+
+    // ▼▼▼ 寄宮規則資料庫 ▼▼▼
+    const JI_GONG_MAP = {
+    'pQian': 'pHai', // 乾寄亥
+    'pGen':  'pYin', // 艮寄寅
+    'pXun':  'pSi',  // 巽寄巳
+    'pKun':  'pShen' // 坤寄申
+    };
+
+    // ▼▼▼ 十二宮對宮關係資料庫 ▼▼▼
+    const OPPOSITE_PALACE_MAP = {
+    'pZi': 'pWu', 'pChou': 'pWei', 'pYin': 'pShen', 'pMao': 'pYou', 'pChen': 'pXu', 'pSi': 'pHai',
+    'pWu': 'pZi', 'pWei': 'pChou', 'pShen': 'pYin', 'pYou': 'pMao', 'pXu': 'pChen', 'pHai': 'pSi'
+    };
+
+    // ▼▼▼ 星曜等級對應分數 ▼▼▼
+    const RATING_SCORES = { '上': 20, '中': 10, '平': 0, '下': -10 };
 
 
 
@@ -1214,6 +1270,39 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         // 3. 呼叫工具函式來繪製
         addRotatedRingText(displayData, ringConfig);
     }
+}
+
+// ▼▼▼ 繪製運勢趨勢圖的函式 ▼▼▼
+let fortuneChartInstance = null; // 用來存放圖表實例
+function renderFortuneChart(ageLabels, scoreData) {
+    const ctx = document.getElementById('fortune-chart').getContext('2d');
+
+    if (fortuneChartInstance) {
+        fortuneChartInstance.destroy();
+    }
+
+    fortuneChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ageLabels,
+            datasets: [{
+                label: '人生運勢趨勢',
+                data: scoreData,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
 }
     
 
@@ -2422,8 +2511,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
 
     return changingHexagram || { name: '查無此卦', symbol: '' };
     }
-    
-    // ▼▼▼ 建立包含所有論斷資訊的「圖表模型」函式 (最終整合版) ▼▼▼
+    // ▼▼▼ 建立包含所有論斷資訊的「圖表模型」函式 (已修正星曜對應) ▼▼▼
     function buildChartModel(data) {
     let model = {};
     Object.values(BRANCH_TO_PALACE_ID).forEach(pId => {
@@ -2431,14 +2519,17 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     });
     model['pCenter'] = { stars: {}, patterns: [] };
 
+    // ▼▼▼ 唯一的修改點：確保所有星曜都對應到正確的計算結果變數 ▼▼▼
     const allStars = {
         '太乙': data.lookupResult?.太乙, '文昌': data.lookupResult?.文昌, '始擊': data.lookupResult?.始擊, '定目': data.lookupResult?.定目,
         '小遊': data.xiaoYouResult, '大遊': data.daYouResult, '時五福': data.shiWuFuResult, '計神': data.deitiesResult?.計神,
         '主大': data.suanStarsResult?.chartStars['主大'], '主參': data.suanStarsResult?.chartStars['主參'], '客大': data.suanStarsResult?.chartStars['客大'], '客參': data.suanStarsResult?.chartStars['客參'],
+        '定大': data.suanStarsResult?.chartStars['定大'], '定參': data.suanStarsResult?.chartStars['定參'],
         '天乙': data.tianYiResult, '地乙': data.diYiResult, '四神': data.siShenResult, '飛符': data.feiFuResult,
         '皇恩星': data.huangEnResult, '君基': data.junJiResult, '臣基': data.chenJiResult, '民基': data.minJiResult
     };
 
+    // (後續的程式碼完全不變)
     for (const starName in allStars) {
         const branch = allStars[starName];
         if (branch) {
@@ -2450,7 +2541,6 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             }
         }
     }
-    
     if (data.suanStarsResult?.centerStars) {
         data.suanStarsResult.centerStars.forEach(starName => {
             if (!model['pCenter'].stars[starName]) {
@@ -2458,9 +2548,7 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             }
         });
     }
-
     const huaYaoResults = calculateAllHuaYao(data.yearPillar.charAt(0), data.dayPillar.charAt(0), data.dayPillar.charAt(1));
-
     const starToHuaYaoMap = {};
     if (huaYaoResults) {
         Object.keys(huaYaoResults).forEach(sourceType => {
@@ -2477,7 +2565,6 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             });
         });
     }
-
     Object.keys(model).forEach(palaceId => {
         const branch = PALACE_ID_TO_BRANCH[palaceId];
         Object.keys(model[palaceId].stars).forEach(starName => {
@@ -2489,8 +2576,6 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
             }
         });
     });
-
-    // 5. 在模型基礎上，分析格局
     const xiaoYouPalaceId = BRANCH_TO_PALACE_ID[allStars['小遊']];
     if (xiaoYouPalaceId && model[xiaoYouPalaceId]) {
         const xiaoYouIndex = EARTHLY_BRANCHES.indexOf(allStars['小遊']);
@@ -2627,7 +2712,107 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
     
     return html || '此盤無特別的星曜強旺或化曜資訊。';
     }
+    // ▼▼▼ 計算十二宮運勢分數的函式 (最終規則校正版 v5) ▼▼▼
+    function calculateFortuneScores(chartModel, arrangedLifePalaces, ageLimitData, hourPillar) {
+    const scores = [];
+    
+    // --- 規則分數設定 ---
+    const luckScores = { '吉星': 20, '凶星': -10 };
+    const strengthBonus = 50;
+    const huaYaoScore = 30;
+    const specialHuaYaoMultiplier = 1.5;
+    const huangEnMultiplier = 1.5;
+    const patternMultiplier = 0.6;
 
+    // --- 內部輔助函式：專門用來計算任何一個宮位的「基礎分數」---
+    const getBaseScoreForPalace = (palaceId) => {
+        const palaceData = chartModel[palaceId];
+        if (!palaceData) return 0;
+        
+        let score = 0;
+        
+        // 1. 收集本宮及寄宮的所有星曜
+        let allStarsInPalace = [...Object.values(palaceData.stars)];
+        const guestPalaceId = Object.keys(JI_GONG_MAP).find(key => JI_GONG_MAP[key] === palaceId);
+        if (guestPalaceId && chartModel[guestPalaceId]) {
+            allStarsInPalace.push(...Object.values(chartModel[guestPalaceId].stars));
+        }
+
+        // ▼▼▼ 核心修改點：根據您的新規則來判斷是否為「空宮」▼▼▼
+        // 檢查宮位內是否有任何一顆在我們16星列表中的星
+        const hasCoreStars = allStarsInPalace.some(star => STAR_PROPERTIES[star.name]);
+
+        // 2. 步驟 8: 如果是空宮 (沒有任何一顆核心星曜)，則去對宮借星
+        if (!hasCoreStars) {
+            const oppositePalaceId = OPPOSITE_PALACE_MAP[palaceId];
+            if (oppositePalaceId && chartModel[oppositePalaceId]) {
+                allStarsInPalace = [...Object.values(chartModel[oppositePalaceId].stars)];
+                const oppositeGuestPalaceId = Object.keys(JI_GONG_MAP).find(key => JI_GONG_MAP[key] === oppositePalaceId);
+                if (oppositeGuestPalaceId && chartModel[oppositeGuestPalaceId]) {
+                    allStarsInPalace.push(...Object.values(chartModel[oppositeGuestPalaceId].stars));
+                }
+            }
+        }
+
+        // 3. 逐一計算所有星曜(無論是本宮還是借來的)的分數
+        allStarsInPalace.forEach(star => {
+            let starBaseScore = 0;
+            const starName = star.name;
+            const starBranchForRating = PALACE_ID_TO_BRANCH[guestPalaceId] || PALACE_ID_TO_BRANCH[palaceId];
+            
+            // 規則 1, 2 & 吉凶分
+            if (STAR_PROPERTIES[starName]) { starBaseScore += (luckScores[STAR_PROPERTIES[starName].luck] || 0); }
+            if (STAR_RATING_DATA[starName] && STAR_RATING_DATA[starName][starBranchForRating]) { starBaseScore += (RATING_SCORES[STAR_RATING_DATA[starName][starBranchForRating]] || 0); }
+            if (star.strength) { starBaseScore += strengthBonus; }
+
+            // 規則 4: 特殊化曜加權
+            if (star.huaYao && star.huaYao.some(role => ['天元祿主', '天元官星', '地元福星'].includes(role))) {
+                starBaseScore *= specialHuaYaoMultiplier;
+            }
+            score += starBaseScore;
+            
+            // 規則 3: 其他化曜的固定加減分
+            if (star.huaYao && star.huaYao.length > 0) {
+                star.huaYao.forEach(yaoName => {
+                    if (yaoName === '忌星' || yaoName === '鬼星') {
+                        score -= 30;
+                    } else if (!['天元祿主', '天元官星', '地元福星'].includes(yaoName)) {
+                        score += 30;
+                    }
+                });
+            }
+        });
+
+        // 規則 5 & 6: 皇恩星加權與格局折扣
+        if (allStarsInPalace.some(star => star.name === '皇恩星')) { score *= huangEnMultiplier; }
+        if (palaceData.patterns.length > 0) { score *= patternMultiplier; }
+        return score;
+    };
+    // --- 輔助函式結束 ---
+
+    // 步驟 9A: 先單獨計算出「時宮」的基礎分數
+    const hourBranch = hourPillar.charAt(1);
+    const timePalaceId = BRANCH_TO_PALACE_ID[hourBranch];
+    const timePalaceScore = timePalaceId ? getBaseScoreForPalace(timePalaceId) : 0;
+
+    // --- 主迴圈：計算每個大限的最終分數 ---
+    for (let i = 0; i < arrangedLifePalaces.length; i++) {
+        const palaceId = VALID_PALACES_CLOCKWISE[i];
+        let finalPalaceScore = getBaseScoreForPalace(palaceId);
+
+        // 步驟 9B: 檢查是否為 61 歲以後的大限
+        const ageRange = ageLimitData[i];
+        if (ageRange) {
+            const startAge = parseFloat(ageRange.split('-')[0]);
+            if (startAge >= 61) {
+                finalPalaceScore += timePalaceScore;
+            }
+        }
+        scores.push(finalPalaceScore);
+    }
+    return scores;
+    }
+    
     // ▼▼▼ 每次增加星都要更新的函式 ▼▼▼
     function generateMainChartData(lookupResult, deitiesResult, suanStarsResult, shiWuFuResult, xiaoYouResult, junJiResult, chenJiResult, minJiResult, tianYiResult, diYiResult, siShenResult, feiFuResult, daYouResult, yueJiangData, guiRenData, xingNianData, huangEnResult) {
     const chartData = {};
@@ -2996,6 +3181,26 @@ function renderChart(mainData, palacesData, agesData, sdrData, centerData, outer
         if (starStrengthInfoDiv) {
         starStrengthInfoDiv.innerHTML = formatStarDetailInfoBox(dataForCalculation.chartModel, newLifePalacesData);
         }
+
+        // ▼▼▼ 新增：計算並繪製運勢趨勢圖（重新排序圖表資料） ▼▼▼
+        // 1. 計算運勢分數 (變數名稱是 fortuneScores)
+        const fortuneScores = calculateFortuneScores(dataForCalculation.chartModel, newLifePalacesData, newAgeLimitData, dataForCalculation.hourPillar);
+        const ageLabels = newAgeLimitData;
+    
+        // 2. 將宮位、年齡、分數打包在一起
+        let chartDataToSort = ageLabels.map((ageRange, index) => ({
+        ageRange: ageRange,
+        score: fortuneScores[index] // <-- 將 originalFortuneScores 改為 fortuneScores
+        })).filter(item => item.ageRange);
+
+        chartDataToSort.sort((a, b) => {
+        const startAgeA = parseFloat(a.ageRange.split('-')[0]);
+        const startAgeB = parseFloat(b.ageRange.split('-')[0]);
+        return startAgeA - startAgeB;
+        });
+        const sortedAgeLabels = chartDataToSort.map(item => item.ageRange);
+        const sortedScores = chartDataToSort.map(item => item.score);
+        renderFortuneChart(sortedAgeLabels, sortedScores);
 
     }
 
