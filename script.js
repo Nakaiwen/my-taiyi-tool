@@ -1286,7 +1286,7 @@ function renderFortuneChart(ageLabels, scoreData) {
         data: {
             labels: ageLabels,
             datasets: [{
-                label: '人生運勢趨勢',
+                label: '人生能量趨勢',
                 data: scoreData,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
