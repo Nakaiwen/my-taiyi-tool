@@ -486,6 +486,12 @@
     color: #666; /* 使用較柔和的顏色 */
 }
 
+/* 用於標示「身宮」「日宮」「時宮」的紅色字體 */
+.sdr-palace-highlight {
+    color: #d9534f; /* 紅色 */
+    font-weight: bold;
+}
+
 
 /* 格局名稱的專屬樣式 */
 .pattern-style {

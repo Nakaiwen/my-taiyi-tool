@@ -2621,7 +2621,7 @@ function renderFortuneChart(ageLabels, scoreData) {
     return `\n  格局 : 無掩迫關囚擊格對`;
     }
     // ▼▼▼ 格式化下方資訊區 (全新排序與合併邏輯版) ▼▼▼
-    function formatStarDetailInfoBox(chartModel, arrangedLifePalaces, sdrData) {
+    function formatBottomInfoBox(chartModel, arrangedLifePalaces, sdrData) {
     let htmlParts = [];
     const palaceFullNameMap = { '命':'命宮', '兄':'兄弟宮', '妻':'夫妻宮', '孫':'子孫宮', '財':'財帛宮', '田':'田宅宮', '官':'官祿宮', '奴':'奴僕宮', '疾':'疾厄宮', '福':'福德宮', '貌':'相貌宮', '父':'父母宮' };
 
@@ -2629,7 +2629,7 @@ function renderFortuneChart(ageLabels, scoreData) {
     LIFE_PALACE_NAMES.forEach(shortName => {
         const palaceFullName = palaceFullNameMap[shortName] || shortName;
         const palaceIndex = arrangedLifePalaces.indexOf(shortName);
-        if (palaceIndex === -1) return; // 如果盤上沒有這個宮職，則跳過
+        if (palaceIndex === -1) return;
 
         const palaceId = VALID_PALACES_CLOCKWISE[palaceIndex];
         let palaceData = chartModel[palaceId];
@@ -2643,6 +2643,7 @@ function renderFortuneChart(ageLabels, scoreData) {
 
         // 3. 過濾掉被排除的星曜
         let coreStars = allStarsInPalace.filter(star => !EXCLUDED_STARS_FROM_ANALYSIS.includes(star.name));
+
 
         // 4. 如果宮位為空，則去對宮借星
         if (coreStars.length === 0) {
@@ -2661,9 +2662,10 @@ function renderFortuneChart(ageLabels, scoreData) {
 
         // 5. 組合宮位標題 (合併身、日、時宮)
         let titleParts = [palaceFullName];
-        if (sdrData[palaceId]?.includes('身')) titleParts.push('身宮');
-        if (sdrData[palaceId]?.includes('日')) titleParts.push('日宮');
-        if (sdrData[palaceId]?.includes('時')) titleParts.push('時宮');
+        // 檢查並加入帶有紅色樣式的宮職名稱
+        if (sdrData[palaceId]?.includes('身')) titleParts.push('<span class="sdr-palace-highlight">身宮</span>');
+        if (sdrData[palaceId]?.includes('日')) titleParts.push('<span class="sdr-palace-highlight">日宮</span>');
+        if (sdrData[palaceId]?.includes('時')) titleParts.push('<span class="sdr-palace-highlight">時宮</span>');
         const title = `<strong>${titleParts.join('/')}:</strong>`;
 
         // 6. 組合星曜資訊
@@ -2685,12 +2687,30 @@ function renderFortuneChart(ageLabels, scoreData) {
         }
     });
     
-    // (處理中宮的邏輯可以保留，也可以根據您的決定移除)
+    // ▼▼▼ 這裡就是處理中宮的完整程式碼 ▼▼▼
     const centerPalaceData = chartModel['pCenter'];
-    // ...
-    
+    if (centerPalaceData && Object.keys(centerPalaceData.stars).length > 0) {
+        let centerStarStrings = [];
+        const centerStars = Object.values(centerPalaceData.stars).filter(star => !EXCLUDED_STARS_FROM_ANALYSIS.includes(star.name));
+        
+        centerStars.forEach(star => {
+            let details = [];
+            if (star.strength) details.push(star.strength);
+            if (star.huaYao.length > 0) details.push(star.huaYao.join(', '));
+            if (details.length > 0) {
+                centerStarStrings.push(`${star.name}(<span class="star-details">${details.join(' / ')}</span>)`);
+            } else {
+                centerStarStrings.push(star.name);
+            }
+        });
+        
+        if (centerStarStrings.length > 0) {
+            // 我們在十二宮資訊之後，用換行符 <br> 來分隔，並加上中宮的標題
+            htmlParts.push(`<strong>中宮:</strong> ${centerStarStrings.join('、')}`);
+        }
+    }
     // 將每一宮的資訊用換行符 <br> 連接起來
-    return htmlParts.join('<br>') || '此盤無核心星曜資訊。';
+    return htmlParts.join('<br>') || '此盤無核心星曜論斷資訊。';
     } 
     // ▼▼▼ 計算運勢分數的最終中央引擎 v2 ▼▼▼
     function calculateFortuneScores(chartModel, arrangedLifePalaces, ageLimitData, hourPillar, lookupResult) {
@@ -3152,7 +3172,7 @@ function renderFortuneChart(ageLabels, scoreData) {
         // --- 更新下方資訊區，現在只顯示星曜強旺和化曜 ---
         const starStrengthInfoDiv = document.getElementById('star-strength-info');
         if (starStrengthInfoDiv) {
-        starStrengthInfoDiv.innerHTML = formatStarDetailInfoBox(dataForCalculation.chartModel, newLifePalacesData, newSdrData);
+        starStrengthInfoDiv.innerHTML = formatBottomInfoBox(dataForCalculation.chartModel, newLifePalacesData, newSdrData);
         }
 
     // ▼▼▼ 更新：現在這裡只負責觸發預設的圖表更新 ▼▼▼
