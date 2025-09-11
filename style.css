@@ -373,12 +373,12 @@
 }
 
 
+/* (請用此版本替換您舊的 .plate-column) */
 .plate-column {
     flex: 1;
     display: flex;
-    flex-direction: column; /* <-- 新增這一行，將排列改為垂直 */
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    justify-content: flex-start; /* 改為從頭部開始排列，而不是置中 */
 }
 
 /* 積數顯示區塊的樣式 */
@@ -476,8 +476,6 @@
     line-height: 1.5;
     font-family: sans-serif;
     box-sizing: border-box;
-    max-height: 150px; /* 如果內容太多，會出現滾動條 */
-    overflow-y: auto;
 }
 #star-strength-info strong {
     color: #0056b3;
@@ -496,9 +494,24 @@
     margin: 0 5px; /* 讓格局名稱和星曜之間有點間距 */
 }
 
-/* 專門設定「人生運勢趨勢圖」容器的高度 */
+/* 專門設定「人生能量趨勢圖」容器的高度 */
 #fortune-chart-container {
-    height: 350px;      /* 【可調整】您可以自由設定想要的高度，例如 350px */
-    max-height: none;   /* 取消繼承自 .info-box 的 150px 最大高度限制 */
-    padding: 20px;      /* 建議為圖表增加一些內部留白，讓它看起來不會太擁擠 */
+    width: 100%;  /* 【可調整】您可以自由設定想要的高度，例如 350px */
+    height: 350px;      
+    max-height: none;
+    padding: 20px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+/* 圖表切換器的樣式 */
+#chart-controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* 控制選項之間的間距 */
+}
+#chart-controls label {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
 }
