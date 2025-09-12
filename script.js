@@ -48,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
     };
 
+    // ▼▼▼ 中文月份名稱 ▼▼▼
+    const MONTH_NAMES_CHINESE = ['正月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+
     // ▼▼▼ 夏至冬至基準點資料庫 (1900-2030) ▼▼▼
     const SOLSTICE_DATA = {
     1900: { summer: { date: new Date("1900-06-22T05:39:00"), dayPillar: "丙寅", dayBureau: 39, dayJishu: 11386982 }, winter: { date: new Date("1900-12-22T14:41:00"), dayPillar: "己巳", dayBureau: 6, dayJishu: 11387165 } },
@@ -691,17 +694,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ▼▼▼ 星曜上中下等級資料庫 ▼▼▼
     const STAR_RATING_DATA = {
-    '小遊':   { '子': '中', '丑': '下', '寅': '上', '卯': '上', '辰': '中', '巳': '下', '午': '中', '未': '上', '申': '下', '酉': '下', '戌': '中', '亥': '上' },
+    '小遊':   { '子': '中', '丑': '中', '寅': '上', '卯': '上', '辰': '中', '巳': '下', '午': '下', '未': '上', '申': '下', '酉': '下', '戌': '中', '亥': '上' },
     '計神':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '上', '申': '中', '酉': '中', '戌': '上', '亥': '中' },
-    '文昌':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '中', '申': '上', '酉': '下', '戌': '中', '亥': '上' },
-    '始擊':   { '子': '下', '丑': '中', '寅': '上', '卯': '中', '辰': '下', '巳': '上', '午': '上', '未': '下', '申': '下', '酉': '下', '戌': '上', '亥': '下' },
-    '時五福': { '子': '平', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '平', '未': '平', '申': '上', '酉': '平', '戌': '中', '亥': '上' },
-    '君基':   { '子': '上', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '平', '未': '上', '申': '中', '酉': '平', '戌': '上', '亥': '上' },
-    '臣基':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '下', '午': '中', '未': '上', '申': '中', '酉': '下', '戌': '上', '亥': '中' },
+    '文昌':   { '子': '下', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '中', '申': '上', '酉': '中', '戌': '中', '亥': '上' },
+    '始擊':   { '子': '中', '丑': '中', '寅': '上', '卯': '下', '辰': '中', '巳': '上', '午': '上', '未': '中', '申': '下', '酉': '下', '戌': '上', '亥': '下' },
+    '時五福': { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '中', '申': '上', '酉': '中', '戌': '中', '亥': '上' },
+    '君基':   { '子': '上', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '上', '未': '上', '申': '中', '酉': '下', '戌': '上', '亥': '中' },
+    '臣基':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '上', '申': '中', '酉': '下', '戌': '上', '亥': '中' },
     '民基':   { '子': '上', '丑': '中', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '中', '申': '上', '酉': '下', '戌': '中', '亥': '上' },
-    '天乙':   { '子': '中', '丑': '上', '寅': '下', '卯': '中', '辰': '中', '巳': '上', '午': '下', '未': '中', '申': '上', '酉': '上', '戌': '下', '亥': '中' },
-    '地乙':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '上', '申': '中', '酉': '下', '戌': '上', '亥': '中' },
-    '四神':   { '子': '上', '丑': '中', '寅': '下', '卯': '中', '辰': '上', '巳': '下', '午': '中', '未': '中', '申': '上', '酉': '中', '戌': '中', '亥': '上' },
+    '天乙':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '中', '巳': '下', '午': '下', '未': '中', '申': '上', '酉': '上', '戌': '中', '亥': '中' },
+    '地乙':   { '子': '中', '丑': '上', '寅': '下', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '上', '申': '中', '酉': '下', '戌': '上', '亥': '下' },
+    '四神':   { '子': '上', '丑': '中', '寅': '下', '卯': '下', '辰': '上', '巳': '下', '午': '中', '未': '下', '申': '上', '酉': '下', '戌': '中', '亥': '上' },
     '飛符':   { '子': '下', '丑': '中', '寅': '上', '卯': '下', '辰': '中', '巳': '上', '午': '上', '未': '中', '申': '中', '酉': '下', '戌': '上', '亥': '下' },
     '主大':   { '子': '中', '丑': '上', '寅': '下', '卯': '中', '辰': '中', '巳': '上', '午': '下', '未': '中', '申': '上', '酉': '上', '戌': '下', '亥': '中' },
     '主參':   { '子': '上', '丑': '下', '寅': '中', '卯': '下', '辰': '上', '巳': '中', '午': '中', '未': '下', '申': '上', '酉': '中', '戌': '下', '亥': '上' },
@@ -2417,14 +2420,17 @@ function renderFortuneChart(ageLabels, scoreData) {
     }
     // ▼▼▼ 計算「流年變卦」的函式 (已修正) ▼▼▼
     function calculateAnnualChangingHexagram(annualHexagram, baiLiuLimitResult, currentUserAge) {
-    if (!annualHexagram || !baiLiuLimitResult || !currentUserAge) return null;
+    if (!annualHexagram || !Array.isArray(baiLiuLimitResult) || !currentUserAge) return null;
 
-    // ▼▼▼ 唯一的修改點在這裡 ▼▼▼
-    // 我們不再需要 .find()，因為傳入的 baiLiuLimitResult 本身就是我們要的當前大限資料
-    const currentLimit = baiLiuLimitResult;
+    // ▼▼▼ 核心修正點：從傳入的「陣列」中，找出當前歲數所在的大限 ▼▼▼
+    const currentLimit = baiLiuLimitResult.find(limit => {
+        if (!limit.ageRange) return false;
+        const [start, end] = limit.ageRange.split('-').map(Number);
+        return currentUserAge >= start && currentUserAge <= end;
+    });
     
-    // 簡單檢查一下物件是否有效
-    if (!currentLimit.palaceId) return null;
+    // 如果找不到對應的大限 (例如歲數超出範圍)，則中止
+    if (!currentLimit || !currentLimit.palaceId) return null;
 
     const currentPalaceId = currentLimit.palaceId;
     const currentBranch = PALACE_ID_TO_BRANCH[currentPalaceId];
@@ -2472,6 +2478,47 @@ function renderFortuneChart(ageLabels, scoreData) {
     const changingHexagram = I_CHING_HEXAGRAMS.find(h => h.symbol === newSymbol);
 
     return changingHexagram || { name: '查無此卦', symbol: '' };
+    }
+    // ▼▼▼ 計算「流年十二月卦」的函式 ▼▼▼
+    function calculateMonthlyHexagrams(annualHexagramNumber) {
+    if (!annualHexagramNumber) return [];
+    
+    const monthlyHexagrams = [];
+    const baseNumber = annualHexagramNumber + 2;
+
+    for (let i = 1; i <= 12; i++) {
+        const rawNumber = baseNumber + i;
+        let finalNumber = rawNumber;
+        if (rawNumber > 64) {
+            const remainder = rawNumber % 64;
+            finalNumber = (remainder === 0) ? 64 : remainder;
+        }
+        
+        // 從 I_CHING_HEXAGRAMS 陣列中找出對應的卦
+        const hexagram = I_CHING_HEXAGRAMS[finalNumber - 1];
+        if (hexagram) {
+            monthlyHexagrams.push({
+                monthName: MONTH_NAMES_CHINESE[i-1],
+                hexagram: hexagram
+            });
+        }
+    }
+    return monthlyHexagrams;
+    }
+    // ▼▼▼ 格式化「流年十二月卦」顯示文字的函式 (已修正排版) ▼▼▼ 
+    function formatMonthlyHexagrams(monthlyHexagramsResult) {
+    if (!monthlyHexagramsResult || monthlyHexagramsResult.length === 0) return '';
+
+    const currentYear = new Date().getFullYear();
+    let text = '\n\n'; // 在前面加上兩個換行符，與上方內容隔開
+
+    monthlyHexagramsResult.forEach(item => {
+        // 用 \n 換行符和空格縮排，來確保格式與流年卦一致
+        text += `  <strong>${currentYear}年${item.monthName}卦:</strong> `;
+        text += `${item.hexagram.number} ${item.hexagram.name} ${item.hexagram.symbol}\n`;
+        text += `  <span class="hexagram-description-style">↳ ${item.hexagram.description}</span>\n\n`;
+    });
+    return text;
     }
     // ▼▼▼ 建立圖表模型函式 (已整合「中宮寄宮」邏輯) ▼▼▼
     function buildChartModel(data) {
@@ -2804,6 +2851,106 @@ function renderFortuneChart(ageLabels, scoreData) {
     }
     return scores;
     }
+
+    // ▼▼▼ 分析「解厄建議」的函式 (已整合新規則) ▼▼▼
+    function analyzeRemedySuggestions(chartModel, arrangedLifePalaces) {
+    const suggestions = [];
+    const targetStars = ['始擊', '天乙', '地乙', '四神', '飛符'];
+    
+    // 遍歷所有宮位
+    Object.keys(chartModel).forEach(palaceId => {
+        const palaceData = chartModel[palaceId];
+        const branch = PALACE_ID_TO_BRANCH[palaceId];
+        if (!branch) return;
+
+        Object.values(palaceData.stars).forEach(star => {
+            const starName = star.name;
+            
+            // 如果不是我們要找的五顆凶星，就直接跳過
+            if (!targetStars.includes(starName)) {
+                return;
+            }
+
+            // --- ▼▼▼ 核心修改點：更新判斷條件 ▼▼▼ ---
+
+            // 條件 A: 星曜落陷且無吉化
+            const isLowRating = STAR_RATING_DATA[starName] && STAR_RATING_DATA[starName][branch] === '下';
+            const noPositiveInfluence = !star.strength && star.huaYao.length === 0;
+            const conditionA = isLowRating && noPositiveInfluence;
+
+            // 條件 B: 星曜被凶化 (化為忌星或鬼星)
+            const hasBadHuaYao = star.huaYao.includes('忌星') || star.huaYao.includes('鬼星');
+            const conditionB = hasBadHuaYao;
+
+            // --- 只要滿足條件A或條件B，就產生建議 ---
+            if (conditionA || conditionB) {
+                let suggestion = {
+                    palaceId: palaceId,
+                    starName: starName,
+                    goodStems: [],
+                    badStems: [],
+                    goodBranches: []
+                };
+
+                // 反向查找日干和日支的解厄方式 (這部分邏輯不變)
+                Object.keys(RI_GAN_HUA_YAO).forEach(gan => {
+                    const rule = RI_GAN_HUA_YAO[gan];
+                    Object.keys(rule).forEach(role => {
+                        if (rule[role].includes(starName)) {
+                            if (role === 'jiXing' || role === 'guiXing') {
+                                suggestion.badStems.push(`${gan}/${HUA_YAO_ROLE_MAP[role]}`);
+                            } else {
+                                suggestion.goodStems.push(`${gan}/${HUA_YAO_ROLE_MAP[role]}`);
+                            }
+                        }
+                    });
+                });
+                
+                Object.keys(RI_ZHI_HUA_YAO).forEach(zhi => {
+                     if (RI_ZHI_HUA_YAO[zhi].fuXing.includes(starName)) {
+                         suggestion.goodBranches.push(zhi);
+                     }
+                });
+                
+                suggestions.push(suggestion);
+            }
+        });
+    });
+    
+    return suggestions;
+    }
+    // ▼▼▼ 格式化「解厄建議」顯示文字的函式 ▼▼▼
+    function formatRemedyInfo(suggestions, arrangedLifePalaces, sdrData) {
+    if (!suggestions || suggestions.length === 0) return ''; // 如果沒有建議，就顯示空白
+
+    let html = `<strong>解厄建議：</strong><br>`;
+    const palaceFullNameMap = { '命':'命宮', '兄':'兄弟宮', '妻':'夫妻宮', '孫':'子孫宮', '財':'財帛宮', '田':'田宅宮', '官':'官祿宮', '奴':'奴僕宮', '疾':'疾厄宮', '福':'福德宮', '貌':'相貌宮', '父':'父母宮' };
+
+    suggestions.forEach(sugg => {
+        const palaceIndex = VALID_PALACES_CLOCKWISE.indexOf(sugg.palaceId);
+        const palaceShortName = arrangedLifePalaces[palaceIndex];
+        const palaceFullName = palaceFullNameMap[palaceShortName] || palaceShortName;
+
+        let titleParts = [palaceFullName];
+        if (sdrData[sugg.palaceId]?.includes('身')) titleParts.push('身宮');
+        if (sdrData[sugg.palaceId]?.includes('日')) titleParts.push('日宮');
+        if (sdrData[sugg.palaceId]?.includes('時')) titleParts.push('時宮');
+        
+        html += `<div class="remedy-item">${titleParts.join('/')}: ${sugg.starName}`;
+        if (sugg.goodStems.length > 0) {
+            html += `<br><span class="remedy-good">吉日天干：</span>${sugg.goodStems.join('、')}`;
+        }
+        if (sugg.badStems.length > 0) {
+            html += `<br><span class="remedy-bad">凶日天干：</span>${sugg.badStems.join('、')}`;
+        }
+        if (sugg.goodBranches.length > 0) {
+             html += `<br><span class="remedy-good">吉日地支：</span>${sugg.goodBranches.join('、')}`;
+        }
+        html += `</div>`;
+    });
+    
+    return html;
+    }
     
     // ▼▼▼ 每次增加星都要更新的函式 ▼▼▼
     function generateMainChartData(lookupResult, deitiesResult, suanStarsResult, shiWuFuResult, xiaoYouResult, junJiResult, chenJiResult, minJiResult, tianYiResult, diYiResult, siShenResult, feiFuResult, daYouResult, yueJiangData, guiRenData, xingNianData, huangEnResult) {
@@ -3112,6 +3259,8 @@ function renderFortuneChart(ageLabels, scoreData) {
 
         renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData, dataForCalculation.yangJiuResult, dataForCalculation.baiLiuResult, dataForCalculation.baiLiuXiaoXianResult, dataForCalculation.daYouZhenXianResult, dataForCalculation.feiLuDaXianResult, dataForCalculation.feiMaDaXianResult, dataForCalculation.feiLuLiuNianResult, dataForCalculation.feiMaLiuNianResult, dataForCalculation.heiFuResult); 
 
+        
+
         const shenPalaceId = Object.keys(newSdrData).find(k => newSdrData[k].includes('身'));
         const shenPalaceBranch = shenPalaceId ? PALACE_ID_TO_BRANCH[shenPalaceId] : '計算失敗';
         const huaYaoResults = calculateAllHuaYao(dataForCalculation.yearPillar.charAt(0), dataForCalculation.dayPillar.charAt(0), dataForCalculation.dayPillar.charAt(1));
@@ -3160,10 +3309,16 @@ function renderFortuneChart(ageLabels, scoreData) {
         outputText += `\n  流年卦 : ${annualHexagramResult.number} ${annualHexagramResult.name} ${annualHexagramResult.symbol} (${currentYear}年${dataForCalculation.currentUserAge}歲)`;
         outputText += `\n  <span class="hexagram-description-style">↳ ${annualHexagramResult.description}</span>`;
         } 
-        const annualChangingHexagramResult = dataForCalculation.annualChangingHexagramResult;
+        const annualChangingHexagramResult = calculateAnnualChangingHexagram(dataForCalculation.annualHexagramResult, dataForCalculation.baiLiuResult, dataForCalculation.currentUserAge);
         if (annualChangingHexagramResult) {
-        outputText += `\n  流年變卦 : ${annualChangingHexagramResult.number} ${annualChangingHexagramResult.name} ${annualChangingHexagramResult.symbol}`;
+        outputText += `\n  流年變卦: ${annualChangingHexagramResult.number} ${annualChangingHexagramResult.name} ${annualChangingHexagramResult.symbol}`;
         outputText += `\n  <span class="hexagram-description-style">↳ ${annualChangingHexagramResult.description}</span>`;
+        }
+
+        // ▼▼▼ 月卦資訊 ▼▼▼
+        const monthlyHexagramsText = formatMonthlyHexagrams(dataForCalculation.monthlyHexagramsResult);
+        if (monthlyHexagramsText) {
+        outputText += monthlyHexagramsText;
         }
         
         const summaryP = document.getElementById('calculation-summary');
@@ -3174,10 +3329,21 @@ function renderFortuneChart(ageLabels, scoreData) {
         if (starStrengthInfoDiv) {
         starStrengthInfoDiv.innerHTML = formatBottomInfoBox(dataForCalculation.chartModel, newLifePalacesData, newSdrData);
         }
+        const patternInfoDiv = document.getElementById('pattern-info');
+        if (patternInfoDiv) {
+        patternInfoDiv.innerHTML = formatPatternInfo(dataForCalculation.chartModel, newLifePalacesData);
+        }
+        
+        // ▼▼▼ 更新：現在這裡只負責觸發預設的圖表更新 ▼▼▼
+        document.querySelector('input[name="chart-mode"][value="mingGong"]').checked = true; // 預設選中命宮
+        updateChart(); 
+        
+        const remedyInfoDiv = document.getElementById('remedy-info');
+        if (remedyInfoDiv) {
+        remedyInfoDiv.innerHTML = formatRemedyInfo(dataForCalculation.remedySuggestions, newLifePalacesData, newSdrData);
+        }
 
-    // ▼▼▼ 更新：現在這裡只負責觸發預設的圖表更新 ▼▼▼
-    document.querySelector('input[name="chart-mode"][value="mingGong"]').checked = true; // 預設選中命宮
-    updateChart(); // 呼叫新的圖表更新函式來繪製預設圖表
+
     }
     
     // ▼▼▼ 更新趨勢圖的專屬updateChart 函式 (已修正計分邏輯) ▼▼▼
@@ -3347,11 +3513,13 @@ function renderFortuneChart(ageLabels, scoreData) {
     dataForCalculation.heiFuResult = calculateHeiFu(dataForCalculation.hourPillar.charAt(0), dataForCalculation.currentUserAge);
     dataForCalculation.liYeStartAge = calculateLiYeStartAge(dataForCalculation.birthHexagramResult);
     dataForCalculation.annualChangingHexagramResult = calculateAnnualChangingHexagram(dataForCalculation.annualHexagramResult, dataForCalculation.baiLiuResult, dataForCalculation.currentUserAge);
+    dataForCalculation.monthlyHexagramsResult = calculateMonthlyHexagrams(dataForCalculation.annualHexagramResult?.number);
     // ▼▼▼ 更新：一次性計算出所有大限的完整序列 ▼▼▼
     dataForCalculation.yangJiuResult = calculateYangJiu(dataForCalculation.monthPillar.charAt(0), dataForCalculation.gender);
     dataForCalculation.baiLiuResult = calculateBaiLiuLimit(dataForCalculation.shouQiResult, dataForCalculation.gender);
     dataForCalculation.daYouZhenXianResult = calculateDaYouZhenXian(dataForCalculation.hourPillar.charAt(1));
     dataForCalculation.chartModel = buildChartModel(dataForCalculation);
+    dataForCalculation.remedySuggestions = analyzeRemedySuggestions(dataForCalculation.chartModel, dataForCalculation.arrangedLifePalaces);
     currentChartData = dataForCalculation; // 將所有計算結果存到全域變數
 
     runCalculation(dataForCalculation, hour, xingNianData); 

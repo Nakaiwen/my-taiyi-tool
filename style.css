@@ -492,6 +492,19 @@
     font-weight: bold;
 }
 
+/* 解厄建議區塊的樣式 */
+.remedy-item {
+    margin-bottom: 10px; /* 讓每個建議之間有點間距 */
+}
+.remedy-good {
+    color: #008a00; /* 綠色 */
+    font-weight: bold;
+}
+.remedy-bad {
+    color: #d9534f; /* 紅色 */
+    font-weight: bold;
+}
+
 
 /* 格局名稱的專屬樣式 */
 .pattern-style {
@@ -503,21 +516,24 @@
 /* 專門設定「人生能量趨勢圖」容器的高度 */
 #fortune-chart-container {
     width: 100%;  /* 【可調整】您可以自由設定想要的高度，例如 350px */
-    height: 350px;      
+    height: 300px;      
     max-height: none;
     padding: 20px;
     box-sizing: border-box;
+    margin-top: 5px; /* 【可調整】新增此行以縮小與上方選項的距離 (原為 15px) */
     flex-shrink: 0;
 }
 
 /* 圖表切換器的樣式 */
 #chart-controls {
     display: flex;
-    justify-content: center;
-    gap: 20px; /* 控制選項之間的間距 */
+    justify-content: flex-start; 
+    gap: 20px;
+    align-items: center; 
 }
+
 #chart-controls label {
     cursor: pointer;
     display: flex;
-    align-items: center;
+    align-items: center; 
 }
