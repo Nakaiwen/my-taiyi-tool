@@ -1901,7 +1901,58 @@ function renderFortuneChart(ageLabels, scoreData) {
 
         return results;
     }
-    // ▼▼▼ 計算「陽九限」(完整序列)的函式 ▼▼▼
+    // ▼▼▼ 查找「當前」陽九限 (專供圓盤顯示) ▼▼▼
+    function findCurrentYangJiuForDisplay(fullLimitArray, currentUserAge) {
+    if (!fullLimitArray || !Array.isArray(fullLimitArray)) return null;
+    const currentLimit = fullLimitArray.find(limit => {
+        if (!limit.ageRange) return false;
+        const [start, end] = limit.ageRange.split('-').map(Number);
+        return currentUserAge >= start && currentUserAge <= end;
+    });
+    // 回傳繪圖函式看得懂的物件格式
+    if (currentLimit) {
+        return { palaceId: currentLimit.palaceId, text: `陽九${currentLimit.ageRange}` };
+    }
+    return null;
+    }
+    // ▼▼▼ 查找「當前」百六大限 (專供圓盤顯示) ▼▼▼
+    function findCurrentBaiLiuForDisplay(fullLimitArray, currentUserAge) {
+    if (!fullLimitArray || !Array.isArray(fullLimitArray)) return null;
+    const currentLimit = fullLimitArray.find(limit => {
+        if (!limit.ageRange) return false;
+        const [start, end] = limit.ageRange.split('-').map(Number);
+        return currentUserAge >= start && currentUserAge <= end;
+    });
+    // 回傳繪圖函式看得懂的物件格式
+    if (currentLimit) {
+        return { palaceId: currentLimit.palaceId, text: `百六${currentLimit.ageRange}` };
+    }
+    return null;
+    }
+    // ▼▼▼ 查找「當前及未來兩個」大遊真限 (專供圓盤顯示) ▼▼▼
+    function findCurrentAndNextDaYouForDisplay(fullLimitArray, currentUserAge) {
+    if (!fullLimitArray || !Array.isArray(fullLimitArray)) return [];
+    const currentLimitIndex = fullLimitArray.findIndex(limit => {
+        if (!limit.ageRange) return false;
+        const [start, end] = limit.ageRange.split('-').map(Number);
+        return currentUserAge >= start && currentUserAge <= end;
+    });
+
+    if (currentLimitIndex === -1) return [];
+
+    const results = [];
+    for (let i = 0; i < 3; i++) {
+        const limitToShow = fullLimitArray[(currentLimitIndex + i) % fullLimitArray.length];
+        if (limitToShow) {
+            results.push({
+                palaceId: limitToShow.palaceId,
+                text: `大遊${limitToShow.ageRange}` // 組合好要顯示的文字
+            });
+        }
+    }
+    return results;
+    }
+    // ▼▼▼ 計算「陽九大限」(完整序列)的函式 ▼▼▼
     function calculateYangJiu(monthStem, gender) {
     const rule = YANG_JIU_RULES[monthStem];
     if (!rule) return [];
@@ -3241,6 +3292,12 @@ function renderFortuneChart(ageLabels, scoreData) {
         const guiRenData = calculateGuiRen(dataForCalculation.dayPillar.charAt(0), dataForCalculation.hourPillar.charAt(1), yueJiangData);
         huangEnResult = calculateHuangEn(dataForCalculation.dayPillar.charAt(1));
 
+         // ▼▼▼ 核心修改點：呼叫新的專用函式，為圓盤準備正確格式的資料 ▼▼▼
+        const yangJiuForDisplay = findCurrentYangJiuForDisplay(dataForCalculation.yangJiuResult, dataForCalculation.currentUserAge);
+        const baiLiuForDisplay = findCurrentBaiLiuForDisplay(dataForCalculation.baiLiuResult, dataForCalculation.currentUserAge);
+        const daYouForDisplay = findCurrentAndNextDaYouForDisplay(dataForCalculation.daYouZhenXianResult, dataForCalculation.currentUserAge);
+
+
         // ▼▼▼ 這邊有新增新星都要增加，注意要寫成dataForCalculation，這個函式是「建築師」 ▼▼▼
         const newMainChartData = generateMainChartData(
             lookupResult,
@@ -3257,7 +3314,7 @@ function renderFortuneChart(ageLabels, scoreData) {
              field4: dataForCalculation.suanStarsResult.centerStars[3] || ''
         };
 
-        renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData, dataForCalculation.yangJiuResult, dataForCalculation.baiLiuResult, dataForCalculation.baiLiuXiaoXianResult, dataForCalculation.daYouZhenXianResult, dataForCalculation.feiLuDaXianResult, dataForCalculation.feiMaDaXianResult, dataForCalculation.feiLuLiuNianResult, dataForCalculation.feiMaLiuNianResult, dataForCalculation.heiFuResult); 
+        renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData, yangJiuForDisplay, baiLiuForDisplay, dataForCalculation.baiLiuXiaoXianResult, daYouForDisplay, dataForCalculation.feiLuDaXianResult, dataForCalculation.feiMaDaXianResult, dataForCalculation.feiMaLiuNianResult, dataForCalculation.heiFuResult); 
 
         
 
@@ -3515,6 +3572,7 @@ function renderFortuneChart(ageLabels, scoreData) {
     dataForCalculation.annualChangingHexagramResult = calculateAnnualChangingHexagram(dataForCalculation.annualHexagramResult, dataForCalculation.baiLiuResult, dataForCalculation.currentUserAge);
     dataForCalculation.monthlyHexagramsResult = calculateMonthlyHexagrams(dataForCalculation.annualHexagramResult?.number);
     // ▼▼▼ 更新：一次性計算出所有大限的完整序列 ▼▼▼
+    
     dataForCalculation.yangJiuResult = calculateYangJiu(dataForCalculation.monthPillar.charAt(0), dataForCalculation.gender);
     dataForCalculation.baiLiuResult = calculateBaiLiuLimit(dataForCalculation.shouQiResult, dataForCalculation.gender);
     dataForCalculation.daYouZhenXianResult = calculateDaYouZhenXian(dataForCalculation.hourPillar.charAt(1));
