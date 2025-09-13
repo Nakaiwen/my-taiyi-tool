@@ -775,6 +775,26 @@ document.addEventListener('DOMContentLoaded', () => {
     '疾':'疾厄宮', '福':'福德宮', '貌':'相貌宮', '父':'父母宮' 
     };
 
+    // ▼▼▼ 星曜十二宮代表意義資料庫 ▼▼▼
+    const STAR_PALACE_DESCRIPTIONS = {
+    '小遊':   { '命宮': '主科甲，天資出眾，在身宮善於記憶。在命宮善於辨識善偽。', '兄弟宮': '主兄長品德好，兄弟和睦。或晚年弟弟多。', '夫妻宮': '主妻愛整潔，善家事。', '子孫宮': '主一子為貴，多子則秀氣散，反不能貴。', '財帛宮': '財帛豐盛，只愁日用不足，此為隔年愁星。', '田宅宮': '旺宮主家業田茂地盛，居陷先盛後蕭條。', '官祿宮': '居旺宮，一路功名跟隨到白頭。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '計神':   { '命宮': '主機智多端，百事成就。在旺宮為為館閣之貴（距離權力核心近）。', '兄弟宮': '主兄弟兩母無益。', '夫妻宮': '主妻能治家，善理財記帳。', '子孫宮': '主子孫才學出眾，居旺宮有二子。', '財帛宮': '善會計記帳，生財利，財帛充實。', '田宅宮': '主家宅華麗美觀。', '官祿宮': '主早年聲名，名高位顯。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '文昌':   { '命宮': '主仁識義理，化詞館星。遇到五福君基，為館閣之貴（距離權力核心近）。', '兄弟宮': '主兄弟文秀才美。', '夫妻宮': '主妻能治家。才美之婚，詩禮之門。', '子孫宮': '主子孫博學多聞，居旺宮有四子。', '財帛宮': '因文字書寫發財獲利。', '田宅宮': '主讀書起家，因文物書畫立業。', '官祿宮': '主文章蓋世，朝野聞名。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '始擊':   { '命宮': '主將帥。戊癸日生人，主貴。居陷為邊帥。幼時遠離父母。', '兄弟宮': '主孤兄獨弟，各自離散。', '夫妻宮': '主須防三妻四妾。主好酒色。', '子孫宮': '剋子息，可認義子。剋一二方保。', '財帛宮': '財帛聚散無常，居旺宮主突然發達，亦主積蓄不長久。見飛符要小心盜賊。', '田宅宮': '主破祖業而成家，居陷小心水火之厄。居旺則無礙。', '官祿宮': '主武職蓋世，名震邊城。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '時五福': { '命宮': '主福壽顯貴，享五福造化。在寅卯宮或入空亡宮，主清福孤高。', '兄弟宮': '主兄弟富貴，我卑微。將我的福份減半之意。', '夫妻宮': '主得妻力，獲得妻家財產資助。', '子孫宮': '主子孫顯貴，晚景安樂。在日時宮有二子。', '財帛宮': '坐旺宮金玉滿堂。', '田宅宮': '主享祖業厚產，祖上父母庇蔭。', '官祿宮': '官祿之途得五福佑之，無驚懼，若居陷利祿難成。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '君基':   { '命宮': '主顯貴，品德寬厚，對人尊重，話少。', '兄弟宮': '主兄弟貴，我微弱。奪我福祿，分我財產之意。', '夫妻宮': '主妻為極貴之人，若不應，則剋首任妻子。若四神同臨，妻好道奉佛，心慈樂善。', '子孫宮': '若一子，極貴。若三至四子，則秀氣散，反不能貴。年少即得兒。', '財帛宮': '主吃公家飯，得貴人財帛。', '田宅宮': '主良田萬頃，大廈高堂。最怕坐空亡宮。', '官祿宮': '主早發功名，登科甲。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '臣基':   { '命宮': '輔佐型人才，品德正直，為人守本分，謹言多思。', '兄弟宮': '主有姊無兄。或姊妹多，兄弟少。', '夫妻宮': '主妻能治家掌權，家業充實。', '子孫宮': '主女多男少，宜先女後男。', '財帛宮': '主財物豐盛，得女人財，或得妻家之財。', '田宅宮': '主多資產，宜朝北的房宅最利。', '官祿宮': '會吉星，必主大貴。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '民基':   { '命宮': '主富祿，好德享福。戊日生人，主遠離家鄉，發福大富。', '兄弟宮': '主兄弟成家，合德合心。', '夫妻宮': '主妻能治家，有積蓄，能得妻家財。', '子孫宮': '主子孫富厚，勤儉成家，居旺宮有三子。', '財帛宮': '主資財豐盛，大富。', '田宅宮': '主財富田多，主大門宅第之房。', '官祿宮': '會吉星，主納栗求名。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '天乙':   { '命宮': '主性孤剛強，不為錢與人同流合污。遇三基五福可國外貿易。適合離祖發展。', '兄弟宮': '主兄弟壽不長，可能有夭折兄弟。', '夫妻宮': '主妻善持家，但中途妻家家道衰敗。可娶年長妻。', '子孫宮': '主長子不利，寄名方保。', '財帛宮': '主財帛聚散不常，先散後聚，多積蓄，只愁日用不足，此為隔年愁星。', '田宅宮': '主祖業消散，自立成家，居旺宮得五金之利。', '官祿宮': '主武強文弱。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '地乙':   { '命宮': '主守土疆，性孤剛強，不為錢與人同流合污。適合離祖發展。', '兄弟宮': '主過房隔脈，孤立成長。', '夫妻宮': '主宜長配，可娶年長妻。否則易有病刑傷，二三任妻則無剋。', '子孫宮': '主多災，早生難育。剋三方保。', '財帛宮': '主得田園之利，成敗無常，先散後聚。', '田宅宮': '主祖業悠久，祖孫相繼。', '官祿宮': '主文武雙全。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '四神':   { '命宮': '主孤獨，六親疏離。得舟船魚鹽酒水之利。適合離祖發展。', '兄弟宮': '主兄弟離異不睦。', '夫妻宮': '命主有個性潔癖，個性沈靜，不一定會結婚。', '子孫宮': '主長子不利，剋三方保。申子宮一兒平安。', '財帛宮': '主財帛聚散不常，居旺宮主財帛豐盈。', '田宅宮': '主房產近水，離祖成家，享天廚之樂。', '官祿宮': '主功名悠久。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '飛符':   { '命宮': '主聰明伶俐，慷慨成性，喜符法爐火。適合離祖發展。', '兄弟宮': '主有隔脈的手足，分居二地。', '夫妻宮': '初婚刑剋首妻，二三任妻則無剋。', '子孫宮': '主不易有子，初得子而後喪，若只一女多富貴。', '財帛宮': '主蓄財聚散不常，居旺宮主突然發達，見始擊要小心盜賊。', '田宅宮': '主祖業更遷，居陷小心火厄。', '官祿宮': '主功名驟發。居陷因名破家，此星名為剝官煞，文職難就，唯利武職。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '主大':   { '命宮': '主高貴有權。旺宮為人清秀，陷宮身似蛇型。逢君基五福，有貴人提拔。', '兄弟宮': '主身為老大，有兄弟。', '夫妻宮': '主妻分擔夫權，可偕老。', '子孫宮': '主一子為貴。居旺宮得五子，反不能貴。', '財帛宮': '財發如泉湧，錦上添花。', '田宅宮': '主資產在市中心，田宅得利。', '官祿宮': '主清顯節名，朝野聞名，早年必發。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '主參':   { '命宮': '主依貴成事。需藉由貴人之力而發福。忌小遊與五凶同宮。', '兄弟宮': '主有隔脈的手足。', '夫妻宮': '主小三扶正掌家，二三任妻則無剋。', '子孫宮': '主庶出遲生。可得二子。', '財帛宮': '得外人扶持得財，因人成事，借力使力的獲財方式。', '田宅宮': '主依附祖父輩資產，基業壯盛。', '官祿宮': '主得貴人提攜，成就功名。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '客大':   { '命宮': '主性華麗，喜賓朋，近貴利，官顯達。會民基主蓋世英雄。遠離家鄉發展佳。', '兄弟宮': '主兄弟二人，相處上沒那麼和睦。', '夫妻宮': '主入贅妻家，否則易二婚離散。', '子孫宮': '主寄養過房。才能保住子孫。', '財帛宮': '主遊歷在外從商得財，經營得厚利，或合夥生財。', '田宅宮': '主離祖成家，產業興隆。', '官祿宮': '主遊歷發福，或歷邊疆之任。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' },
+    '客參':   { '命宮': '主依貴成事。需藉由貴人之力而發福。遠離家鄉發展佳，可從商。', '兄弟宮': '主有隔脈的手足。', '夫妻宮': '主入贅妻家，妻妾2人。', '子孫宮': '主庶出遲生。可得二子。', '財帛宮': '得外人扶持得財，因人成事，因貿易而獲利。', '田宅宮': '主離祖成家，依貴人享福。', '官祿宮': '主依貴食祿，事業需傍貴而成。', '奴僕宮': '待完成', '疾厄宮': '待完成', '福德宮': '待完成', '相貌宮': '待完成', '父母宮': '待完成' }
+    };  
+
 
 
 
@@ -2758,34 +2778,41 @@ function renderFortuneChart(ageLabels, scoreData) {
             }
         }
 
-        // 5. 組合宮位標題 (合併身、日、時宮)
-        let titleParts = [palaceFullName];
-        // 檢查並加入帶有紅色樣式的宮職名稱
-        if (sdrData[palaceId]?.includes('身')) titleParts.push('<span class="sdr-palace-highlight">身宮</span>');
-        if (sdrData[palaceId]?.includes('日')) titleParts.push('<span class="sdr-palace-highlight">日宮</span>');
-        if (sdrData[palaceId]?.includes('時')) titleParts.push('<span class="sdr-palace-highlight">時宮</span>');
-        const title = `<strong>${titleParts.join('/')}:</strong>`;
+    if (coreStars.length > 0) {
+            // 2. 組合宮位標題 (合併身、日、時宮)
+            let titleParts = [palaceFullName];
+            if (sdrData[palaceId]?.includes('身')) titleParts.push('<span class="sdr-palace-highlight">身宮</span>');
+            if (sdrData[palaceId]?.includes('日')) titleParts.push('<span class="sdr-palace-highlight">日宮</span>');
+            if (sdrData[palaceId]?.includes('時')) titleParts.push('<span class="sdr-palace-highlight">時宮</span>');
+            const title = `<strong>${titleParts.join('/')}:</strong>`;
 
-        // 6. 組合星曜資訊
-        let starStrings = [];
-        coreStars.forEach(star => {
-            let details = [];
-            if (star.strength) details.push(star.strength);
-            if (star.huaYao.length > 0) details.push(star.huaYao.join(', '));
-            if (details.length > 0) {
-                starStrings.push(`${star.name}(<span class="star-details">${details.join(' / ')}</span>)`);
-            } else {
-                starStrings.push(star.name);
-            }
-        });
-
-        // 只有當宮位內有核心星曜時，才產生這一行
-        if (starStrings.length > 0) {
-            htmlParts.push(`${title} ${starStrings.join('、')}`);
+            // 3. 為每一顆星建立獨立的條目
+            let starEntriesHtml = '';
+            coreStars.forEach(star => {
+                let details = [];
+                if (star.strength) details.push(star.strength);
+                if (star.huaYao.length > 0) details.push(star.huaYao.join(', '));
+                
+                let starNameAndDetails = star.name;
+                if (details.length > 0) {
+                    starNameAndDetails += `(<span class="star-details">${details.join(' / ')}</span>)`;
+                }
+                
+                let starLine = `<div class="star-entry">${starNameAndDetails}`;
+                
+                const description = STAR_PALACE_DESCRIPTIONS[star.name]?.[palaceFullName];
+                if (description && description !== '待完成') {
+                    starLine += `：<span class="star-palace-description">${description}</span>`;
+                }
+                starLine += `</div>`;
+                starEntriesHtml += starLine;
+            });
+            
+            htmlParts.push(`<div class="palace-info-block">${title}${starEntriesHtml}</div>`);
         }
     });
     
-    // ▼▼▼ 這裡就是處理中宮的完整程式碼 ▼▼▼
+    // 7. 處理中宮的資訊
     const centerPalaceData = chartModel['pCenter'];
     if (centerPalaceData && Object.keys(centerPalaceData.stars).length > 0) {
         let centerStarStrings = [];
@@ -2903,6 +2930,118 @@ function renderFortuneChart(ageLabels, scoreData) {
     return scores;
     }
 
+    // ▼▼▼ 分析「強旺建議」的函式 (已整合遞補邏輯) ▼▼▼
+    function analyzeStrengthSuggestions(chartModel) {
+    const suggestions = [];
+    const targetStars = Object.keys(STAR_PROPERTIES);
+    
+    let tier1_suggestions = []; // 存放滿足「三個條件」的完美結果
+    let tier2_suggestions = []; // 存放滿足「兩個條件」的優秀結果
+
+    Object.keys(chartModel).forEach(palaceId => {
+        const palaceData = chartModel[palaceId];
+        const branch = PALACE_ID_TO_BRANCH[palaceId];
+        if (!branch) return;
+
+        Object.values(palaceData.stars).forEach(star => {
+            const starName = star.name;
+            if (!targetStars.includes(starName)) return;
+
+            // 檢查三個條件是否滿足
+            const isTopRating = STAR_RATING_DATA[starName] && STAR_RATING_DATA[starName][branch] === '上';
+            const hasStrength = !!star.strength;
+            const hasHuaYao = star.huaYao.length > 0;
+
+            const conditionsMet = [isTopRating, hasStrength, hasHuaYao].filter(Boolean).length;
+            
+            let suggestionData = null;
+
+            if (conditionsMet === 3) {
+                // 如果滿足全部三個條件，放入第一級別的建議
+                suggestionData = { palaceId, starName, goodStems: [] };
+                tier1_suggestions.push(suggestionData);
+            } else if (conditionsMet === 2) {
+                // 如果只滿足兩個條件，放入第二級別的建議
+                suggestionData = { palaceId, starName, goodStems: [] };
+                tier2_suggestions.push(suggestionData);
+            }
+            
+            // 如果這顆星是候選者 (無論是第一級還是第二級)，都為它查找吉化天干
+            if (suggestionData) {
+                Object.keys(RI_GAN_HUA_YAO).forEach(gan => {
+                    const rule = RI_GAN_HUA_YAO[gan];
+                    Object.keys(rule).forEach(role => {
+                        if (rule[role].includes(starName) && role !== 'jiXing' && role !== 'guiXing') {
+                            suggestionData.goodStems.push(`${gan}/${HUA_YAO_ROLE_MAP[role]}`);
+                        }
+                    });
+                });
+            }
+        });
+    });
+    
+    // 最終決定：如果第一級有結果，就用第一級的；否則，才用第二級的
+    if (tier1_suggestions.length > 0) {
+        return tier1_suggestions;
+    } else {
+        return tier2_suggestions;
+    }
+    }
+    // ▼▼▼ 搜尋「單一強旺建議」的未來30天吉日 ▼▼▼
+    function findAuspiciousDaysForStrength(suggestion) {
+    const results = [];
+    if (!suggestion || suggestion.goodStems.length === 0) return results;
+    
+    const today = new Date();
+    const goodStemMap = {};
+    suggestion.goodStems.forEach(item => {
+        const [gan, role] = item.split('/');
+        goodStemMap[gan] = role;
+    });
+
+    for (let i = 0; i < 30; i++) {
+        const futureDate = new Date();
+        futureDate.setDate(today.getDate() + i);
+        const year = futureDate.getFullYear();
+        const month = futureDate.getMonth() + 1;
+        const day = futureDate.getDate();
+        const lunarDate = solarLunar.solar2lunar(year, month, day);
+        const dayPillar = lunarDate.getDayInGanZhi();
+        const dayStem = dayPillar.charAt(0);
+
+        if (goodStemMap[dayStem]) {
+            results.push(`${month}/${day} ${dayPillar}日(${goodStemMap[dayStem]})`);
+        }
+    }
+    return results;
+    }
+    // ▼▼▼ 格式化「強旺建議」顯示文字的函式 ▼▼▼
+    function formatStrengthInfo(suggestions, arrangedLifePalaces, sdrData) {
+    if (!suggestions || suggestions.length === 0) return '';
+
+    let html = `<strong>未來30天 - 運勢強旺參考日：</strong><br>`;
+    const palaceFullNameMap = { '命':'命宮', '兄':'兄弟宮', '妻':'夫妻宮', '孫':'子孫宮', '財':'財帛宮', '田':'田宅宮', '官':'官祿宮', '奴':'奴僕宮', '疾':'疾厄宮', '福':'福德宮', '貌':'相貌宮', '父':'父母宮' };
+
+    suggestions.forEach(sugg => {
+        const palaceIndex = VALID_PALACES_CLOCKWISE.indexOf(sugg.palaceId);
+        const palaceShortName = arrangedLifePalaces[palaceIndex];
+        const palaceFullName = palaceFullNameMap[palaceShortName] || palaceShortName;
+        let titleParts = [palaceFullName];
+        if (sdrData[sugg.palaceId]?.includes('身')) titleParts.push('身宮');
+        if (sdrData[sugg.palaceId]?.includes('日')) titleParts.push('日宮');
+        if (sdrData[sugg.palaceId]?.includes('時')) titleParts.push('時宮');
+        
+        const auspiciousDays = findAuspiciousDaysForStrength(sugg);
+        if (auspiciousDays.length > 0) {
+            html += `<div class="strength-item">${titleParts.join('/')}: ${sugg.starName}`;
+            html += `<br><span class="strength-good">吉日：</span>${auspiciousDays.join('、 ')}`;
+            html += `</div>`;
+        }
+    });
+    
+    return html;
+    }
+
     // ▼▼▼ 分析「解厄建議」的函式 (已整合新規則) ▼▼▼
     function analyzeRemedySuggestions(chartModel, arrangedLifePalaces) {
     const suggestions = [];
@@ -2970,15 +3109,60 @@ function renderFortuneChart(ageLabels, scoreData) {
     
     return suggestions;
     }
-    // ▼▼▼ 格式化「解厄建議」顯示文字的函式 ▼▼▼
-    function formatRemedyInfo(suggestions, arrangedLifePalaces, sdrData) {
-    if (!suggestions || suggestions.length === 0) return ''; // 如果沒有建議，就顯示空白
+    // ▼▼▼ 搜尋「單一建議」的未來30天吉凶日 ▼▼▼
+    function findDaysForSuggestion(suggestion) {
+    const results = { goodDays: [], badDays: [] };
+    if (!suggestion) return results;
 
-    let html = `<strong>解厄建議：</strong><br>`;
+    const today = new Date();
+    
+    // 只針對傳入的「單一」建議，建立吉凶天干的查找表
+    const goodStemMap = {};
+    suggestion.goodStems.forEach(item => {
+        const [gan, role] = item.split('/');
+        goodStemMap[gan] = role;
+    });
+
+    const badStemMap = {};
+    suggestion.badStems.forEach(item => {
+        const [gan, role] = item.split('/');
+        badStemMap[gan] = role;
+    });
+
+    // 遍歷未來30天
+    for (let i = 0; i < 30; i++) {
+        const futureDate = new Date();
+        futureDate.setDate(today.getDate() + i);
+        const year = futureDate.getFullYear();
+        const month = futureDate.getMonth() + 1;
+        const day = futureDate.getDate();
+
+        const lunarDate = solarLunar.solar2lunar(year, month, day);
+        const dayPillar = lunarDate.getDayInGanZhi();
+        const dayStem = dayPillar.charAt(0);
+
+        // 檢查是否為此建議的吉日天干
+        if (goodStemMap[dayStem]) {
+            results.goodDays.push(`${month}/${day} ${dayPillar}日(${goodStemMap[dayStem]})`);
+        }
+        // 檢查是否為此建議的凶日天干
+        if (badStemMap[dayStem]) {
+            results.badDays.push(`${month}/${day} ${dayPillar}日(${badStemMap[dayStem]})`);
+        }
+    }
+    return results;
+    }
+    // ▼▼▼ 格式化「解厄建議」顯示文字的函式 (已修正重複問題) ▼▼▼
+    function formatRemedyInfo(suggestions, arrangedLifePalaces, sdrData) {
+    if (!suggestions || suggestions.length === 0) return '';
+
+    let html = `<strong>未來30天 - 解厄吉凶參考日：</strong><br>`;
     const palaceFullNameMap = { '命':'命宮', '兄':'兄弟宮', '妻':'夫妻宮', '孫':'子孫宮', '財':'財帛宮', '田':'田宅宮', '官':'官祿宮', '奴':'奴僕宮', '疾':'疾厄宮', '福':'福德宮', '貌':'相貌宮', '父':'父母宮' };
 
+    // 遍歷每一個需要建議的凶星
     suggestions.forEach(sugg => {
         const palaceIndex = VALID_PALACES_CLOCKWISE.indexOf(sugg.palaceId);
+        if (palaceIndex === -1) return;
         const palaceShortName = arrangedLifePalaces[palaceIndex];
         const palaceFullName = palaceFullNameMap[palaceShortName] || palaceShortName;
 
@@ -2988,11 +3172,15 @@ function renderFortuneChart(ageLabels, scoreData) {
         if (sdrData[sugg.palaceId]?.includes('時')) titleParts.push('時宮');
         
         html += `<div class="remedy-item">${titleParts.join('/')}: ${sugg.starName}`;
-        if (sugg.goodStems.length > 0) {
-            html += `<br><span class="remedy-good">吉日天干：</span>${sugg.goodStems.join('、')}`;
+        
+        // ▼▼▼ 核心修改點：為「每一個」建議，都獨立呼叫一次日期搜尋 ▼▼▼
+        const auspiciousDays = findDaysForSuggestion(sugg);
+        
+        if (auspiciousDays.goodDays.length > 0) {
+            html += `<br><span class="remedy-good">吉日：</span>${auspiciousDays.goodDays.join('、 ')}`;
         }
-        if (sugg.badStems.length > 0) {
-            html += `<br><span class="remedy-bad">凶日天干：</span>${sugg.badStems.join('、')}`;
+        if (auspiciousDays.badDays.length > 0) {
+            html += `<br><span class="remedy-bad">凶日：</span>${auspiciousDays.badDays.join('、 ')}`;
         }
         if (sugg.goodBranches.length > 0) {
              html += `<br><span class="remedy-good">吉日地支：</span>${sugg.goodBranches.join('、')}`;
@@ -3314,7 +3502,7 @@ function renderFortuneChart(ageLabels, scoreData) {
              field4: dataForCalculation.suanStarsResult.centerStars[3] || ''
         };
 
-        renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData, yangJiuForDisplay, baiLiuForDisplay, dataForCalculation.baiLiuXiaoXianResult, daYouForDisplay, dataForCalculation.feiLuDaXianResult, dataForCalculation.feiMaDaXianResult, dataForCalculation.feiMaLiuNianResult, dataForCalculation.heiFuResult); 
+        renderChart(newMainChartData, newLifePalacesData, newAgeLimitData, newSdrData, centerData, outerRingData, xingNianData, yangJiuForDisplay, baiLiuForDisplay, dataForCalculation.baiLiuXiaoXianResult, daYouForDisplay, dataForCalculation.feiLuDaXianResult, dataForCalculation.feiMaDaXianResult, dataForCalculation.feiMaLiuNianResult, dataForCalculation.feiLuLiuNianResult, dataForCalculation.heiFuResult); 
 
         
 
@@ -3395,9 +3583,15 @@ function renderFortuneChart(ageLabels, scoreData) {
         document.querySelector('input[name="chart-mode"][value="mingGong"]').checked = true; // 預設選中命宮
         updateChart(); 
         
+        // 解厄建議區塊 ▼▼▼
         const remedyInfoDiv = document.getElementById('remedy-info');
         if (remedyInfoDiv) {
         remedyInfoDiv.innerHTML = formatRemedyInfo(dataForCalculation.remedySuggestions, newLifePalacesData, newSdrData);
+        }
+        // 強旺建議區塊 ▼▼▼
+        const strengthInfoDiv = document.getElementById('strength-info');
+        if (strengthInfoDiv) {
+        strengthInfoDiv.innerHTML = formatStrengthInfo(dataForCalculation.strengthSuggestions, newLifePalacesData, newSdrData);
         }
 
 
@@ -3578,6 +3772,7 @@ function renderFortuneChart(ageLabels, scoreData) {
     dataForCalculation.daYouZhenXianResult = calculateDaYouZhenXian(dataForCalculation.hourPillar.charAt(1));
     dataForCalculation.chartModel = buildChartModel(dataForCalculation);
     dataForCalculation.remedySuggestions = analyzeRemedySuggestions(dataForCalculation.chartModel, dataForCalculation.arrangedLifePalaces);
+    dataForCalculation.strengthSuggestions = analyzeStrengthSuggestions(dataForCalculation.chartModel);
     currentChartData = dataForCalculation; // 將所有計算結果存到全域變數
 
     runCalculation(dataForCalculation, hour, xingNianData); 
